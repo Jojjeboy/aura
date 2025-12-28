@@ -1,8 +1,11 @@
 <template>
   <header class="sticky top-0 z-50 bg-white dark:bg-aura-bg-dark border-b border-slate-200 dark:border-slate-800 shadow-lg transition-colors duration-300">
     <div class="px-6 py-4 flex justify-between items-center max-w-lg mx-auto">
-      <div class="flex items-center gap-3">
-        <div class="w-12 h-12 rounded-full flex items-center justify-center p-1.5 shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden bg-white dark:bg-slate-900 transition-colors">
+      <div
+        @click="router.push('/journal')"
+        class="flex items-center gap-3 cursor-pointer group"
+      >
+        <div class="w-12 h-12 rounded-full flex items-center justify-center p-1.5 shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden bg-white dark:bg-slate-900 transition-colors group-hover:border-aura-accent/50">
           <img
             src="/logo.jpg"
             alt="Aura Logo"
@@ -10,7 +13,7 @@
           />
         </div>
         <div class="flex flex-col">
-          <h1 class="text-2xl font-black text-slate-800 dark:text-white tracking-tighter">
+          <h1 class="text-2xl font-black text-slate-800 dark:text-white tracking-tighter group-hover:text-aura-accent transition-colors">
             {{ $t('app_name') }}
           </h1>
         </div>
@@ -36,6 +39,8 @@
 
 <script setup lang="ts">
 import { useSettingsStore } from '@/stores/settings'
+import { useRouter } from 'vue-router'
 
 const settingsStore = useSettingsStore()
+const router = useRouter()
 </script>

@@ -6,8 +6,12 @@
   "streak": "{count} Day Streak",
   "grateful_prompt": "I am grateful for...",
   "grateful_placeholder": "I am grateful for...",
-  "how_feeling": "How are you feeling today?",
+  "mood_prompt": "What's your mood?",
   "save_entry": "Save Entry",
+  "update_entry": "Update Entry",
+  "edit_entry": "Edit Entry",
+  "editing_entry": "Editing Entry",
+  "cancel_edit": "Cancel",
   "scales": {
     "sleep": "Sleep Quality",
     "food": "Nutrition",

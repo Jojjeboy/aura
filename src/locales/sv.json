@@ -6,8 +6,12 @@
   "streak": "{count} Dagars Streak",
   "grateful_prompt": "Jag är tacksam för...",
   "grateful_placeholder": "Jag är tacksam för...",
-  "how_feeling": "Hur mår du idag?",
+  "mood_prompt": "Hur är ditt humör?",
   "save_entry": "Spara Inlägg",
+  "update_entry": "Uppdatera Inlägg",
+  "edit_entry": "Redigera Inlägg",
+  "editing_entry": "Redigerar inlägg",
+  "cancel_edit": "Avbryt",
   "scales": {
     "sleep": "Sömnkvalitet",
     "food": "Kost",

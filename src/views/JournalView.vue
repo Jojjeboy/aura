@@ -6,8 +6,8 @@
         <p class="text-aura-muted text-sm transition-colors duration-300">{{ $t('greeting_sub') }}</p>
     </section>
 
-      <!-- Already Logged State -->
-      <div v-if="hasLoggedToday && !isUnlocked" class="flex flex-col items-center justify-center py-20 animate-in fade-in duration-500">
+      <!-- Already Logged State (Only show if NOT currently editing something) -->
+      <div v-if="hasLoggedToday && !isUnlocked && !store.isEditing" class="flex flex-col items-center justify-center py-20 animate-in fade-in duration-500">
          <div class="bg-aura-accent/10 p-6 rounded-full mb-6">
             <span class="text-4xl">✨</span>
          </div>
@@ -25,6 +25,17 @@
       </div>
 
       <main v-else class="px-6 space-y-8 mt-4 animate-in slide-in-from-bottom-4 duration-500">
+        <!-- Editing Info -->
+        <div v-if="store.isEditing" class="bg-aura-accent/5 p-4 rounded-2xl flex justify-between items-center border border-aura-accent/10">
+          <div class="flex flex-col">
+            <span class="text-[0.6rem] uppercase tracking-wider text-aura-muted font-bold">{{ $t('editing_entry') }}</span>
+            <span class="text-sm font-bold text-aura-text dark:text-aura-text-dark">{{ store.currentEntry.date ? new Date(store.currentEntry.date).toLocaleDateString() : '' }}</span>
+          </div>
+          <button @click="store.resetEntry()" class="text-xs font-bold text-red-500 hover:opacity-70 transition-opacity">
+            {{ $t('cancel_edit') }}
+          </button>
+        </div>
+
         <!-- Gratitude Section -->
         <section>
           <h2 class="text-lg font-semibold text-aura-text dark:text-aura-text-dark mb-4 ml-2 transition-colors duration-300">{{ $t('grateful_prompt') }}</h2>
@@ -42,7 +53,7 @@
             @click="save"
             class="bg-aura-accent text-white px-8 py-3 rounded-[2rem] font-semibold shadow-glow hover:shadow-[0_0_25px_rgba(66,184,131,0.6)] transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0"
           >
-            {{ $t('save_entry') }}
+            {{ store.isEditing ? $t('update_entry') : $t('save_entry') }}
           </button>
         </div>
       </main>

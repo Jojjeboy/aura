@@ -20,7 +20,7 @@
     <div class="space-y-4">
       <div v-for="scale in scales" :key="scale.name" class="space-y-2">
         <div class="flex justify-between text-sm">
-          <span class="text-aura-muted capitalize">{{ $t(`health.${scale.key}`) }}</span>
+          <span class="text-aura-muted capitalize">{{ $t(`scales.${scale.key}`) }}</span>
           <span class="font-bold text-aura-accent">{{ store.currentEntry.health?.[scale.key] }}/5</span>
         </div>
         <div class="flex justify-between gap-1">

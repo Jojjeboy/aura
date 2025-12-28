@@ -44,11 +44,7 @@ export const useJournalStore = defineStore('journal', () => {
     }
 
     // Reset current entry
-    currentEntry.value = {
-      gratitude: ['', '', ''],
-      moods: [],
-      health: { sleep: 3, food: 3, movement: 3 }
-    }
+    resetEntry()
 
     // Trigger Sync if online (placeholder)
     if (online.value) {
@@ -107,6 +103,18 @@ export const useJournalStore = defineStore('journal', () => {
     }
   }
 
+  const resetEntry = () => {
+    currentEntry.value = {
+      gratitude: ['', '', ''],
+      moods: [],
+      health: { sleep: 3, food: 3, movement: 3 }
+    }
+  }
+
+  const editEntry = (entry: JournalEntry) => {
+    currentEntry.value = structuredClone(entry)
+  }
+
   // Computed for Streak (placeholder logic)
   const streak = computed(() => {
     // efficient streak calc logic would go here
@@ -114,6 +122,8 @@ export const useJournalStore = defineStore('journal', () => {
   })
 
   // Check if there is an entry for today
+  const isEditing = computed(() => !!currentEntry.value.id)
+
   const todayEntry = computed(() => {
     const today = new Date().toLocaleDateString()
     return entries.value.find(e => new Date(e.date).toLocaleDateString() === today)
@@ -131,6 +141,9 @@ export const useJournalStore = defineStore('journal', () => {
     deleteNote,
     loadNotes,
     streak,
-    todayEntry
+    todayEntry,
+    isEditing,
+    resetEntry,
+    editEntry
   }
 })

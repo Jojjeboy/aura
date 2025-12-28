@@ -45,6 +45,15 @@
                   • {{ g }}
               </p>
           </div>
+          <div class="flex justify-end mt-4 pt-3 border-t border-slate-50 dark:border-slate-800/50">
+            <button
+              @click="handleEdit(entry)"
+              class="text-xs font-bold text-aura-accent flex items-center gap-1 hover:opacity-70 transition-opacity"
+            >
+              <span>✎</span>
+              <span>{{ $t('edit_entry') || 'Edit Entry' }}</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -57,8 +66,11 @@ import { storeToRefs } from 'pinia'
 import { onMounted, ref } from 'vue'
 import { useSettingsStore } from '@/stores/settings'
 import { useBiometricLock } from '@/composables/useBiometricLock'
+import { useRouter } from 'vue-router'
+import type { JournalEntry } from '@/db'
 
 const store = useJournalStore()
+const router = useRouter()
 const { entries, loading } = storeToRefs(store)
 const settingsStore = useSettingsStore()
 
@@ -70,6 +82,11 @@ const unlock = async () => {
   if (success) {
     isAuthenticated.value = true
   }
+}
+
+const handleEdit = (entry: JournalEntry) => {
+  store.editEntry(entry)
+  router.push('/')
 }
 
 onMounted(() => {

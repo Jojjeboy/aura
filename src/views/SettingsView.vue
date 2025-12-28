@@ -62,6 +62,46 @@
          </div>
       </section>
 
+      <!-- Daily Reminder -->
+      <section class="space-y-4">
+        <h2 class="text-sm font-semibold text-aura-muted uppercase tracking-wider">{{ $t('daily_reminder') }}</h2>
+        <div class="bg-white dark:bg-aura-card-dark rounded-card shadow-soft p-6 space-y-4">
+          <div class="flex items-center justify-between">
+            <div class="flex-1">
+              <h3 class="font-semibold text-aura-text dark:text-aura-text-dark">{{ $t('enable_reminder') }}</h3>
+              <p class="text-xs text-aura-muted mt-1">{{ $t('reminder_desc') }}</p>
+            </div>
+            <button
+              @click="toggleReminder"
+              :class="[
+                'relative inline-flex h-6 w-11 items-center rounded-full transition-colors',
+                settingsStore.reminderEnabled ? 'bg-aura-accent' : 'bg-slate-300 dark:bg-slate-700'
+              ]"
+            >
+              <span
+                :class="[
+                  'inline-block h-4 w-4 transform rounded-full bg-white transition-transform',
+                  settingsStore.reminderEnabled ? 'translate-x-6' : 'translate-x-1'
+                ]"
+              />
+            </button>
+          </div>
+
+          <div v-if="settingsStore.reminderEnabled" class="space-y-2">
+            <label class="text-sm font-medium text-aura-text dark:text-aura-text-dark">{{ $t('reminder_time') }}</label>
+            <input
+              v-model="settingsStore.reminderTime"
+              @change="handleTimeChange"
+              type="time"
+              class="w-full px-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-aura-text dark:text-aura-text-dark focus:outline-none focus:ring-2 focus:ring-aura-accent"
+            />
+            <p v-if="notificationPermission !== 'granted'" class="text-xs text-amber-600 dark:text-amber-400">
+              {{ $t('notification_permission_needed') }}
+            </p>
+          </div>
+        </div>
+      </section>
+
       <!-- Features -->
       <section class="space-y-4">
          <h2 class="text-sm font-semibold text-aura-muted uppercase tracking-wider">{{ $t('settings.features') }}</h2>
@@ -139,6 +179,7 @@ import { ref } from 'vue'
 import { useSettingsStore } from '@/stores/settings'
 import { auth } from '@/firebase'
 import { signOut } from 'firebase/auth'
+import { useNotifications } from '@/composables/useNotifications'
 
 import PinPad from '@/components/ui/PinPad.vue'
 import { useRegisterSW } from 'virtual:pwa-register/vue'
@@ -152,6 +193,7 @@ const handleForceUpdate = async () => {
 
 const router = useRouter()
 const settingsStore = useSettingsStore()
+const { notificationPermission, requestPermission, scheduleReminder } = useNotifications()
 
 const user = ref(auth.currentUser)
 const availableLocales = ['en', 'sv']
@@ -196,6 +238,28 @@ const handlePinSubmit = async (pin: string) => {
 const handleRemovePin = async () => {
     if (confirm('Are you sure you want to remove the App Lock?')) {
         await settingsStore.removePin()
+    }
+}
+
+const toggleReminder = async () => {
+    settingsStore.reminderEnabled = !settingsStore.reminderEnabled
+    await settingsStore.saveSettings()
+
+    if (settingsStore.reminderEnabled) {
+        const granted = await requestPermission()
+        if (granted) {
+            scheduleReminder()
+        } else {
+            settingsStore.reminderEnabled = false
+            await settingsStore.saveSettings()
+        }
+    }
+}
+
+const handleTimeChange = async () => {
+    await settingsStore.saveSettings()
+    if (settingsStore.reminderEnabled) {
+        scheduleReminder()
     }
 }
 

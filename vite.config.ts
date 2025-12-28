@@ -12,7 +12,7 @@ export default defineConfig({
     vueDevTools(),
     VitePWA({
       registerType: 'prompt',
-      includeAssets: ['logo.png', 'apple-touch-icon.png', 'masked-icon.svg'],
+      includeAssets: ['logo.jpg', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
         name: 'Aura - Micro Journal',
         short_name: 'Aura',
@@ -20,9 +20,9 @@ export default defineConfig({
         theme_color: '#ffffff',
         icons: [
           {
-            src: 'logo.png',
+            src: 'logo.jpg',
             sizes: '512x512',
-            type: 'image/png',
+            type: 'image/jpeg',
             purpose: 'any maskable'
           },
         ],

@@ -18,8 +18,8 @@ const handleLogin = async () => {
 <template>
   <main class="min-h-screen flex items-center justify-center bg-aura-bg dark:bg-aura-bg-dark p-6 transition-colors duration-300">
     <div class="max-w-md w-full bg-white dark:bg-aura-card-dark rounded-card p-12 shadow-soft border border-slate-100 dark:border-slate-800 text-center animate-fade-in">
-      <div class="mb-10 w-28 h-28 mx-auto rounded-3xl bg-white flex items-center justify-center shadow-lg transform hover:scale-105 transition-transform duration-300">
-        <img src="/logo.png" alt="Aura Logo" class="w-20 h-20 object-contain mix-blend-multiply" />
+      <div class="mb-10 w-28 h-28 mx-auto rounded-3xl dark:rounded-[50%] bg-white flex items-center justify-center shadow-lg transform hover:scale-105 transition-transform duration-300 overflow-hidden">
+        <img src="/logo.jpg" alt="Aura Logo" class="w-20 h-20 object-contain dark:rounded-full" />
       </div>
 
       <h1 class="text-5xl font-black mb-1 text-slate-800 dark:text-white tracking-tighter">{{ $t('app_name') }}</h1>

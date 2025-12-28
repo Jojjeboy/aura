@@ -82,5 +82,10 @@
   "turn_off_lock": "Turn Off Lock",
   "check_updates": "Check for Updates",
   "changelog": "What's New",
-  "no_commits_found": "No change history found."
+  "no_commits_found": "No change history found.",
+  "daily_reminder": "Daily Reminder",
+  "enable_reminder": "Enable Daily Reminder",
+  "reminder_desc": "Get notified if you haven't logged today",
+  "reminder_time": "Reminder Time",
+  "notification_permission_needed": "Please allow notifications in your browser"
 }

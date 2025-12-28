@@ -11,6 +11,8 @@ export const useSettingsStore = defineStore('settings', () => {
   const toggleDark = useToggle(isDark)
   const { locale } = useI18n()
   const pinHash = ref<string | null>(localStorage.getItem('aura-pin-hash'))
+  const reminderEnabled = ref(false)
+  const reminderTime = ref('20:00') // Default 8 PM
 
   const loading = ref(false)
   let unsubscribe: (() => void) | null = null
@@ -57,6 +59,8 @@ export const useSettingsStore = defineStore('settings', () => {
         isDark: isDark.value,
         locale: locale.value,
         pinHash: pinHash.value,
+        reminderEnabled: reminderEnabled.value,
+        reminderTime: reminderTime.value,
         updatedAt: serverTimestamp()
       }, { merge: true })
     } catch (error) {
@@ -84,6 +88,8 @@ export const useSettingsStore = defineStore('settings', () => {
              localStorage.removeItem('aura-pin-hash')
           }
         }
+        if (data.reminderEnabled !== undefined) reminderEnabled.value = data.reminderEnabled
+        if (data.reminderTime) reminderTime.value = data.reminderTime
       }
     } catch (error) {
       console.error('Error loading settings:', error)
@@ -107,6 +113,8 @@ export const useSettingsStore = defineStore('settings', () => {
               localStorage.removeItem('aura-pin-hash')
            }
         }
+        if (data.reminderEnabled !== undefined) reminderEnabled.value = data.reminderEnabled
+        if (data.reminderTime) reminderTime.value = data.reminderTime
       }
     })
   }
@@ -128,6 +136,8 @@ export const useSettingsStore = defineStore('settings', () => {
     toggleDark,
     locale,
     pinHash,
+    reminderEnabled,
+    reminderTime,
     loading,
     setPin,
     removePin,

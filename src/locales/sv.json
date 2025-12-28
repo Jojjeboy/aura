@@ -82,5 +82,10 @@
   "turn_off_lock": "Stäng av lås",
   "check_updates": "Sök efter uppdateringar",
   "changelog": "Nyheter",
-  "no_commits_found": "Ingen ändringshistorik hittades."
+  "no_commits_found": "Ingen ändringshistorik hittades.",
+  "daily_reminder": "Daglig påminnelse",
+  "enable_reminder": "Aktivera daglig påminnelse",
+  "reminder_desc": "Få notis om du inte har loggat idag",
+  "reminder_time": "Påminnelsetid",
+  "notification_permission_needed": "Tillåt notiser i din webbläsare"
 }

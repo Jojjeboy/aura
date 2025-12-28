@@ -8,11 +8,13 @@ import ReloadPrompt from '@/components/ui/ReloadPrompt.vue'
 
 import { useAuthStore } from '@/stores/auth'
 import { useSettingsStore } from '@/stores/settings'
+import { useNotifications } from '@/composables/useNotifications'
 
 const route = useRoute()
 const authStore = useAuthStore()
 const settingsStore = useSettingsStore()
 const { t, locale } = useI18n()
+const { init } = useNotifications()
 
 const updateTitle = () => {
   const appName = t('app_name')
@@ -39,6 +41,8 @@ onMounted(() => {
   updateTitle()
   if (authStore.user) {
     settingsStore.loadSettings()
+    // Initialize notification system
+    init()
   }
 })
 </script>

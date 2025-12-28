@@ -40,7 +40,7 @@
       </div>
 
       <!-- Notes List -->
-      <div v-if="loading" class="text-center text-aura-muted py-8 max-w-sm mx-auto">Loading notes...</div>
+      <div v-if="store.loading" class="text-center text-aura-muted py-8 max-w-sm mx-auto">Loading notes...</div>
 
       <div v-else-if="store.notes.length === 0 && !showCreate" class="text-center text-aura-muted py-12">
         <p>No notes yet. Tap + to create one.</p>
@@ -73,23 +73,25 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useJournalStore } from '@/stores/journal'
+import { useNotesStore } from '@/stores/notes'
 
 const router = useRouter()
-const store = useJournalStore()
+const store = useNotesStore()
 const showCreate = ref(false)
-const loading = ref(true)
 
 // Form State
 const editingId = ref<string | null>(null)
 const noteTitle = ref('')
 const noteContent = ref('')
 
-onMounted(async () => {
-  await store.loadNotes()
-  loading.value = false
+onMounted(() => {
+  store.loadNotes()
+})
+
+onUnmounted(() => {
+  store.clearNotes()
 })
 
 const openCreate = () => {
@@ -99,7 +101,9 @@ const openCreate = () => {
   showCreate.value = true
 }
 
-const openEdit = (note: import('@/db').Note) => {
+import type { Note } from '@/db'
+
+const openEdit = (note: Note) => {
   editingId.value = note.id
   noteTitle.value = note.title
   noteContent.value = note.content

@@ -75,7 +75,7 @@
                 <span>{{ $t('grateful_prompt') }}</span>
               </h4>
               <div class="space-y-1">
-                <p v-for="(g, i) in entry.gratitude" :key="i" class="text-sm text-aura-text dark:text-aura-text-dark leading-relaxed break-words">
+                <p v-for="(g, i) in entry.gratitude.filter(item => item.trim() !== '')" :key="i" class="text-sm text-aura-text dark:text-aura-text-dark leading-relaxed break-words">
                   <span class="text-aura-accent opacity-50">•</span> {{ g }}
                 </p>
               </div>

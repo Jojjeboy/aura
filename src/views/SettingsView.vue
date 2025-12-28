@@ -245,21 +245,30 @@ const handleRemovePin = async () => {
     }
 }
 
-const toggleReminder = async () => {
-    settingsStore.reminderEnabled = !settingsStore.reminderEnabled
-    await settingsStore.saveSettings()
 
-    if (settingsStore.reminderEnabled) {
+const toggleReminder = async () => {
+    // If trying to enable, request permission first
+    if (!settingsStore.reminderEnabled) {
+        // Check current permission state
+        if (Notification.permission === 'denied') {
+            error('Notifications blocked. Please enable them in your browser settings.')
+            return
+        }
+
+        // Request permission
         const granted = await requestPermission()
         if (granted) {
+            settingsStore.reminderEnabled = true
+            await settingsStore.saveSettings()
             scheduleReminder()
             success('Daily reminder enabled!')
         } else {
-            settingsStore.reminderEnabled = false
-            await settingsStore.saveSettings()
             error('Notification permission denied')
         }
     } else {
+        // Disabling the reminder
+        settingsStore.reminderEnabled = false
+        await settingsStore.saveSettings()
         info('Daily reminder disabled')
     }
 }

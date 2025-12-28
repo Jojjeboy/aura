@@ -15,7 +15,8 @@
   "scales": {
     "sleep": "Sleep Quality",
     "food": "Nutrition",
-    "movement": "Activity"
+    "movement": "Activity",
+    "health": "Daily Metrics"
   },
   "nav_today": "Log Today",
   "nav_history": "Logged Earlier",

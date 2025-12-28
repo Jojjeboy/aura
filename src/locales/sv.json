@@ -15,7 +15,8 @@
   "scales": {
     "sleep": "Sömnkvalitet",
     "food": "Kost",
-    "movement": "Rörelse"
+    "movement": "Rörelse",
+    "health": "Daglig Hälsa"
   },
   "nav_today": "Logga Idag",
   "nav_history": "Tidigare",

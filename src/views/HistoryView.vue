@@ -42,33 +42,104 @@
         <div
           v-for="entry in entries"
           :key="entry.id"
-          class="bg-white dark:bg-aura-card-dark rounded-card shadow-soft p-5 transition-colors duration-300"
+          class="bg-white dark:bg-aura-card-dark rounded-card shadow-soft p-5 border border-transparent hover:border-aura-accent/20 transition-all duration-300"
         >
-          <div class="flex justify-between items-start mb-2">
-              <span class="text-xs text-aura-muted font-medium">{{ new Date(entry.date).toLocaleDateString() }}</span>
-              <div class="flex flex-wrap gap-1 justify-end max-w-[50%]">
-                <span
-                  v-for="(mood, idx) in entry.moods"
-                  :key="idx"
-                  class="px-2 py-0.5 text-xs rounded-full whitespace-nowrap"
-                  :class="idx === 0 ? 'bg-aura-accent/10 text-aura-accent' : 'bg-aura-accent/5 text-aura-accent/70'"
-                >
-                  {{ $t(`emotions.${mood}`) }}
-                </span>
+          <!-- Header: Date and Moods -->
+          <div class="flex justify-between items-start mb-4">
+            <div class="flex flex-col">
+              <span class="text-[0.65rem] uppercase tracking-wider text-aura-muted font-bold mb-0.5">
+                {{ new Date(entry.date).toLocaleDateString(undefined, { weekday: 'long' }) }}
+              </span>
+              <span class="text-sm font-bold text-aura-text dark:text-aura-text-dark">
+                {{ new Date(entry.date).toLocaleDateString() }}
+              </span>
+            </div>
+            <div class="flex flex-wrap gap-1 justify-end max-w-[50%]">
+              <span
+                v-for="(mood, idx) in entry.moods"
+                :key="idx"
+                class="px-2.5 py-1 text-[0.65rem] font-bold rounded-full whitespace-nowrap"
+                :class="idx === 0 ? 'bg-aura-accent text-white' : 'bg-aura-accent/10 text-aura-accent'"
+              >
+                {{ $t(`emotions.${mood}`) }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Content: Gratitude & Health -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 py-4 border-y border-slate-50 dark:border-slate-800/30">
+            <!-- Gratitude Section -->
+            <div class="space-y-1.5">
+              <h4 class="text-[0.6rem] uppercase tracking-wider text-aura-muted font-black mb-1 flex items-center gap-1">
+                <span>✨</span>
+                <span>{{ $t('grateful_prompt') }}</span>
+              </h4>
+              <div class="space-y-1">
+                <p v-for="(g, i) in entry.gratitude" :key="i" class="text-sm text-aura-text dark:text-aura-text-dark leading-relaxed break-words">
+                  <span class="text-aura-accent opacity-50">•</span> {{ g }}
+                </p>
               </div>
+            </div>
+
+            <!-- Health Metrics Section -->
+            <div class="bg-slate-50/50 dark:bg-slate-800/30 rounded-2xl p-4 space-y-3">
+              <h4 class="text-[0.6rem] uppercase tracking-wider text-aura-muted font-black mb-1">{{ $t('scales.health') || 'Daily Metrics' }}</h4>
+
+              <div class="flex items-center justify-between group">
+                <div class="flex items-center gap-2">
+                  <span class="text-lg filter grayscale group-hover:grayscale-0 transition-all duration-300">🌙</span>
+                  <span class="text-xs font-semibold text-aura-text dark:text-aura-text-dark">{{ $t('scales.sleep') }}</span>
+                </div>
+                <div class="flex gap-0.5">
+                  <div
+                    v-for="i in 5"
+                    :key="i"
+                    class="w-1.5 h-1.5 rounded-full"
+                    :class="i <= (entry.health?.sleep || 0) ? 'bg-sky-400 shadow-[0_0_5px_rgba(56,189,248,0.5)]' : 'bg-slate-200 dark:bg-slate-700'"
+                  ></div>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between group">
+                <div class="flex items-center gap-2">
+                  <span class="text-lg filter grayscale group-hover:grayscale-0 transition-all duration-300">🍏</span>
+                  <span class="text-xs font-semibold text-aura-text dark:text-aura-text-dark">{{ $t('scales.food') }}</span>
+                </div>
+                <div class="flex gap-0.5">
+                  <div
+                    v-for="i in 5"
+                    :key="i"
+                    class="w-1.5 h-1.5 rounded-full"
+                    :class="i <= (entry.health?.food || 0) ? 'bg-green-400 shadow-[0_0_5px_rgba(74,222,128,0.5)]' : 'bg-slate-200 dark:bg-slate-700'"
+                  ></div>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between group">
+                <div class="flex items-center gap-2">
+                  <span class="text-lg filter grayscale group-hover:grayscale-0 transition-all duration-300">🏃</span>
+                  <span class="text-xs font-semibold text-aura-text dark:text-aura-text-dark">{{ $t('scales.movement') }}</span>
+                </div>
+                <div class="flex gap-0.5">
+                  <div
+                    v-for="i in 5"
+                    :key="i"
+                    class="w-1.5 h-1.5 rounded-full"
+                    :class="i <= (entry.health?.movement || 0) ? 'bg-orange-400 shadow-[0_0_5px_rgba(251,146,60,0.5)]' : 'bg-slate-200 dark:bg-slate-700'"
+                  ></div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="space-y-1">
-              <p v-for="(g, i) in entry.gratitude" :key="i" class="text-sm text-aura-text dark:text-aura-text-dark line-clamp-1 break-words">
-                  • {{ g }}
-              </p>
-          </div>
-          <div class="flex justify-end mt-4 pt-3 border-t border-slate-50 dark:border-slate-800/50">
+
+          <!-- Footer Actions -->
+          <div class="flex justify-end mt-4">
             <button
               @click="handleEdit(entry)"
-              class="text-xs font-bold text-aura-accent flex items-center gap-1 hover:opacity-70 transition-opacity"
+              class="text-[0.7rem] font-black p-2 uppercase tracking-tighter text-aura-accent hover:bg-aura-accent/5 rounded-lg transition-all flex items-center gap-1.5"
             >
               <span>✎</span>
-              <span>{{ $t('edit_entry') || 'Edit Entry' }}</span>
+              <span>{{ $t('edit_entry') }}</span>
             </button>
           </div>
         </div>

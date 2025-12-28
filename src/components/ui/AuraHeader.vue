@@ -9,13 +9,10 @@
             class="w-full h-full object-contain dark:rounded-full"
           />
         </div>
-        <div class="flex flex-col -space-y-1">
+        <div class="flex flex-col">
           <h1 class="text-2xl font-black text-slate-800 dark:text-white tracking-tighter">
             {{ $t('app_name') }}
           </h1>
-          <span class="text-[0.65rem] uppercase tracking-[0.2em] text-aura-muted font-bold ml-0.5">
-            {{ $t('app_sub_title') }}
-          </span>
         </div>
       </div>
 

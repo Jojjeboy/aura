@@ -133,20 +133,20 @@
           </div>
 
           <!-- Footer Actions -->
-          <div class="flex justify-end mt-4 gap-2">
+          <div class="flex justify-end mt-4 gap-1">
             <button
               @click="handleDelete(entry)"
-              class="text-[0.7rem] font-black p-2 uppercase tracking-tighter text-red-400 hover:bg-red-500/5 rounded-lg transition-all flex items-center gap-1.5"
+              class="w-8 h-8 flex items-center justify-center text-red-400 hover:bg-red-500/5 rounded-full transition-all"
+              :title="$t('delete_entry')"
             >
               <span>🗑</span>
-              <span>{{ $t('delete_entry') }}</span>
             </button>
             <button
               @click="handleEdit(entry)"
-              class="text-[0.7rem] font-black p-2 uppercase tracking-tighter text-aura-accent hover:bg-aura-accent/5 rounded-lg transition-all flex items-center gap-1.5"
+              class="w-8 h-8 flex items-center justify-center text-aura-accent hover:bg-aura-accent/5 rounded-full transition-all"
+              :title="$t('edit_entry')"
             >
               <span>✎</span>
-              <span>{{ $t('edit_entry') }}</span>
             </button>
           </div>
         </div>

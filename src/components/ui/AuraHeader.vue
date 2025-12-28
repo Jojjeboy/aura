@@ -25,9 +25,9 @@
         <svg v-if="settingsStore.isDark" class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5V3m0 18v-2M7.1 7.1 5.7 5.7m12.6 12.6-1.4-1.4M5 12H3m18 0h-2M7.1 16.9l-1.4 1.4m12.6-12.6-1.4 1.4M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10Z"/>
         </svg>
-        <!-- Moon Icon -->
-        <svg v-else class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21a9 9 0 0 1-.5-18 7.5 7.5 0 0 0 0 15 9 9 0 0 1 .5 3Z"/>
+        <!-- Moon Icon (Solid) -->
+        <svg v-else class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M11.675 2.015a.746.746 0 0 0-.356.073A10.513 10.513 0 0 0 2 12.5a10.5 10.5 0 0 0 10.5 10.5c4.71 0 8.74-3.12 10.05-7.4a.75.75 0 0 0-.962-.924 8.994 8.994 0 0 1-8.913-8.912.75.75 0 0 0-.925-.962 10.457 10.457 0 0 0-1.075-.287Z"/>
         </svg>
       </button>
     </div>

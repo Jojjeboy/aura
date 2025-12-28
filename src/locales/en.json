@@ -18,7 +18,7 @@
     "movement": "Activity",
     "health": "Daily Metrics"
   },
-  "nav_today": "Log Today",
+  "nav_today": "Today",
   "nav_history": "Logged Earlier",
   "nav_settings": "Settings",
   "mode_light": "Light Mode",

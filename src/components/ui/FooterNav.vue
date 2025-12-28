@@ -23,16 +23,6 @@
         <span class="text-[0.6rem] font-bold uppercase tracking-tighter">{{ $t('nav_history') }}</span>
       </button>
 
-      <button
-        @click="router.push('/notes')"
-        class="flex flex-col items-center gap-1 p-2 rounded-xl transition-all flex-1"
-        :class="route.path === '/notes' ? 'text-aura-accent' : 'text-slate-400 hover:text-aura-text dark:text-slate-500 dark:hover:text-slate-300'"
-      >
-        <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8 1-1h4a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h1l1 1Z"/>
-        </svg>
-        <span class="text-[0.6rem] font-bold uppercase tracking-tighter text-center line-clamp-1">{{ $t('settings.my_notes') }}</span>
-      </button>
 
       <button
         @click="router.push('/settings')"

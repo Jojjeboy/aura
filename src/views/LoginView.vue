@@ -18,11 +18,8 @@ const handleLogin = async () => {
 <template>
   <main class="center-content">
     <div class="glass-container">
-      <h1>Boilerplate App</h1>
-      <p>
-        This is a minimal boilerplate application using Vue 3 and Firebase Authentication. It
-        contains no complex UI frameworks, just clean CSS and functional structure.
-      </p>
+      <h1>Aura</h1>
+
 
       <ul>
         <li><strong>Vue 3</strong> (Composition API)</li>

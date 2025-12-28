@@ -96,5 +96,8 @@
   "no_entry_for_date": "Ingen loggning för detta datum",
   "add_entry": "Lägg till inlägg",
   "entry_saved": "Inlägget har sparats!",
-  "entry_updated": "Inlägget har uppdaterats!"
+  "entry_updated": "Inlägget har uppdaterats!",
+  "entry_deleted": "Inlägget har raderats!",
+  "delete_entry": "Ta bort inlägg",
+  "delete_confirm": "Är du säker på att du vill ta bort detta inlägg? Detta går inte att ångra."
 }

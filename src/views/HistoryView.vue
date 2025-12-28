@@ -133,7 +133,14 @@
           </div>
 
           <!-- Footer Actions -->
-          <div class="flex justify-end mt-4">
+          <div class="flex justify-end mt-4 gap-2">
+            <button
+              @click="handleDelete(entry)"
+              class="text-[0.7rem] font-black p-2 uppercase tracking-tighter text-red-400 hover:bg-red-500/5 rounded-lg transition-all flex items-center gap-1.5"
+            >
+              <span>🗑</span>
+              <span>{{ $t('delete_entry') }}</span>
+            </button>
             <button
               @click="handleEdit(entry)"
               class="text-[0.7rem] font-black p-2 uppercase tracking-tighter text-aura-accent hover:bg-aura-accent/5 rounded-lg transition-all flex items-center gap-1.5"
@@ -285,6 +292,7 @@ import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 import type { JournalEntry } from '@/db'
 import { useToast } from '@/composables/useToast'
+import { useI18n } from 'vue-i18n'
 
 const store = useJournalStore()
 const router = useRouter()
@@ -292,6 +300,7 @@ const { entries, loading } = storeToRefs(store)
 const settingsStore = useSettingsStore()
 const authStore = useAuthStore()
 const { success, error: toastError } = useToast()
+const { t } = useI18n()
 
 const error = ref('')
 const activeTab = ref<'log' | 'calendar'>('log')
@@ -402,6 +411,14 @@ const handleForgot = async () => {
 const handleEdit = (entry: JournalEntry) => {
   store.editEntry(entry)
   router.push('/')
+}
+
+const handleDelete = async (entry: JournalEntry) => {
+  if (!entry.id) return
+  if (confirm(t('delete_confirm'))) {
+    await store.deleteEntry(entry.id)
+    success(t('entry_deleted'))
+  }
 }
 
 onMounted(() => {

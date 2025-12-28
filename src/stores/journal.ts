@@ -70,6 +70,11 @@ export const useJournalStore = defineStore('journal', () => {
     currentEntry.value = JSON.parse(JSON.stringify(entry))
   }
 
+  const deleteEntry = async (id: string) => {
+    await db.journal_entries.delete(id)
+    entries.value = entries.value.filter(e => e.id !== id)
+  }
+
   // Computed for Streak (placeholder logic)
   const streak = computed(() => {
     // efficient streak calc logic would go here
@@ -94,6 +99,7 @@ export const useJournalStore = defineStore('journal', () => {
     todayEntry,
     isEditing,
     resetEntry,
-    editEntry
+    editEntry,
+    deleteEntry
   }
 })

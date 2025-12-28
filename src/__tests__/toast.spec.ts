@@ -13,8 +13,8 @@ describe('useToast Composable', () => {
     success('Operation successful')
 
     expect(toasts.value.length).toBe(1)
-    expect(toasts.value[0].message).toBe('Operation successful')
-    expect(toasts.value[0].type).toBe('success')
+    expect(toasts.value[0]!.message).toBe('Operation successful')
+    expect(toasts.value[0]!.type).toBe('success')
   })
 
   it('adds an error toast', () => {
@@ -25,8 +25,8 @@ describe('useToast Composable', () => {
     error('Something went wrong')
 
     expect(toasts.value.length).toBe(1)
-    expect(toasts.value[0].message).toBe('Something went wrong')
-    expect(toasts.value[0].type).toBe('error')
+    expect(toasts.value[0]!.message).toBe('Something went wrong')
+    expect(toasts.value[0]!.type).toBe('error')
   })
 
   it('removes a toast after timeout', async () => {
@@ -49,7 +49,7 @@ describe('useToast Composable', () => {
     toasts.value = []
 
     success('Message to remove')
-    const id = toasts.value[0].id
+    const id = toasts.value[0]!.id
 
     remove(id)
     expect(toasts.value.length).toBe(0)

@@ -61,5 +61,9 @@
   "caught_up_sub": "You've already logged your gratitude and mood for today. Great job tending to your aura!",
   "view_edit_entry": "View or Edit Entry",
   "language": "Language",
-  "system_language": "System Language"
+  "system_language": "System Language",
+  "pwa_update_available": "New Update Available",
+  "pwa_update_desc": "A new version of Aura is available. Update now to get the latest features and improvements.",
+  "pwa_update_button": "Update Now",
+  "pwa_close": "Not Now"
 }

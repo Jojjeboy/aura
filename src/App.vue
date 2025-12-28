@@ -4,6 +4,7 @@ import { watch, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import FooterNav from '@/components/ui/FooterNav.vue'
 import AuraHeader from '@/components/ui/AuraHeader.vue'
+import ReloadPrompt from '@/components/ui/ReloadPrompt.vue'
 
 import { useAuthStore } from '@/stores/auth'
 import { useSettingsStore } from '@/stores/settings'
@@ -43,6 +44,7 @@ onMounted(() => {
 </script>
 
 <template>
+  <ReloadPrompt />
   <AuraHeader v-if="route.name && route.name !== 'login'" />
   <RouterView />
   <FooterNav v-if="route.name && route.name !== 'login'" />

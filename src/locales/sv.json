@@ -61,5 +61,9 @@
   "caught_up_sub": "Du har redan loggat din tacksamhet och ditt humör för idag. Bra jobbat med att vårda din aura!",
   "view_edit_entry": "Visa eller ändra inlägg",
   "language": "Språk",
-  "system_language": "Systemspråk"
+  "system_language": "Systemspråk",
+  "pwa_update_available": "Ny uppdatering tillgänglig",
+  "pwa_update_desc": "En ny version av Aura finns tillgänglig. Uppdatera nu för att få de senaste funktionerna och förbättringarna.",
+  "pwa_update_button": "Uppdatera Nu",
+  "pwa_close": "Inte nu"
 }

@@ -55,16 +55,16 @@ export const useJournalStore = defineStore('journal', () => {
 
     const id = currentEntry.value.id || uuidv4()
 
-    // Create the entry object
-    const rawEntry: JournalEntry = {
+    // Create the entry object and ensure it is deeply cloned (no proxies)
+    const rawEntry: JournalEntry = JSON.parse(JSON.stringify({
         id,
         date: currentEntry.value.date || new Date().toISOString(),
-        gratitude: currentEntry.value.gratitude as string[],
-        moods: currentEntry.value.moods as string[],
-        health: currentEntry.value.health as JournalEntry['health'],
+        gratitude: currentEntry.value.gratitude,
+        moods: currentEntry.value.moods,
+        health: currentEntry.value.health,
         synced: 0,
         updatedAt: Date.now()
-    }
+    }))
 
     // Save to IndexedDB (Upsert)
     await dexieDb.journal_entries.put(rawEntry)

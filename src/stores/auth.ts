@@ -12,6 +12,7 @@ import {
 export const useAuthStore = defineStore('auth', () => {
   const user = ref<User | null>(null)
   const loading = ref(true)
+  const isHistoryUnlocked = ref(false)
 
   // Initialize auth listener
   const initAuth = () => {
@@ -54,5 +55,5 @@ export const useAuthStore = defineStore('auth', () => {
     await signOut(auth)
   }
 
-  return { user, loading, initAuth, loginWithGoogle, logout, reauthenticate }
+  return { user, loading, isHistoryUnlocked, initAuth, loginWithGoogle, logout, reauthenticate }
 })

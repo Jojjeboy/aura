@@ -3,7 +3,7 @@
     <h1 class="text-2xl font-bold text-aura-text dark:text-aura-text-dark mb-6">{{ $t('nav_history') }}</h1>
 
     <!-- Lock State -->
-    <div v-if="settingsStore.pinHash && !isAuthenticated" class="flex flex-col items-center justify-center py-10">
+    <div v-if="settingsStore.pinHash && !authStore.isHistoryUnlocked" class="flex flex-col items-center justify-center py-10">
       <PinPad
         mode="unlock"
         :error="error"
@@ -222,7 +222,6 @@ const settingsStore = useSettingsStore()
 const authStore = useAuthStore()
 const { success, error: toastError } = useToast()
 
-const isAuthenticated = ref(false)
 const error = ref('')
 const activeTab = ref<'log' | 'calendar'>('log')
 const selectedDate = ref<Date | null>(null)
@@ -306,7 +305,7 @@ const nextMonth = () => {
 const handleUnlock = async (pin: string) => {
   const isValid = await settingsStore.verifyPin(pin)
   if (isValid) {
-    isAuthenticated.value = true
+    authStore.isHistoryUnlocked = true
     error.value = ''
   } else {
     // Shake effect managed by error prop existing generally or we can just show text
@@ -322,7 +321,7 @@ const handleForgot = async () => {
        // Reset PIN
        await settingsStore.removePin()
        success('App Lock removed!')
-       isAuthenticated.value = true
+       authStore.isHistoryUnlocked = true
     } else {
        toastError('Authentication failed.')
     }

@@ -87,5 +87,9 @@
   "enable_reminder": "Aktivera daglig påminnelse",
   "reminder_desc": "Få notis om du inte har loggat idag",
   "reminder_time": "Påminnelsetid",
-  "notification_permission_needed": "Tillåt notiser i din webbläsare"
+  "notification_permission_needed": "Tillåt notiser i din webbläsare",
+  "log_tab": "Logg",
+  "calendar_tab": "Kalender",
+  "next_month": "Nästa månad",
+  "prev_month": "Föregående månad"
 }

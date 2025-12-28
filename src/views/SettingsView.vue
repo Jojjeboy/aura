@@ -247,10 +247,16 @@ const handleRemovePin = async () => {
 
 
 const toggleReminder = async () => {
+    // Check if browser supports notifications
+    if (globalThis.Notification === undefined) {
+        error('Notifications are not supported in this browser.')
+        return
+    }
+
     // If trying to enable, request permission first
     if (!settingsStore.reminderEnabled) {
         // Check current permission state
-        if (Notification.permission === 'denied') {
+        if (globalThis.Notification.permission === 'denied') {
             error('Notifications blocked. Please enable them in your browser settings.')
             return
         }

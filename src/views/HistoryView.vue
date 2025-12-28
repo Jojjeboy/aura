@@ -56,21 +56,68 @@
 <script setup lang="ts">
 import { useJournalStore } from '@/stores/journal'
 import { storeToRefs } from 'pinia'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { useSettingsStore } from '@/stores/settings'
 import PinPad from '@/components/ui/PinPad.vue'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 import type { JournalEntry } from '@/db'
+import { useToast } from '@/composables/useToast'
 
 const store = useJournalStore()
 const router = useRouter()
 const { entries, loading } = storeToRefs(store)
 const settingsStore = useSettingsStore()
 const authStore = useAuthStore()
+const { success, error: toastError } = useToast()
 
 const isAuthenticated = ref(false)
 const error = ref('')
+const activeTab = ref<'log' | 'calendar'>('log')
+
+// Calendar Logic
+const currentDate = ref(new Date())
+
+const currentMonthName = computed(() => {
+  return currentDate.value.toLocaleString('default', { month: 'long', year: 'numeric' })
+})
+
+const calendarDays = computed(() => {
+  const year = currentDate.value.getFullYear()
+  const month = currentDate.value.getMonth()
+  const firstDay = new Date(year, month, 1)
+  const lastDay = new Date(year, month + 1, 0)
+
+  const days = []
+
+  // Fill in empty days before the first day of the month
+  let startDay = firstDay.getDay()
+  // Adjust key to start week on Monday (0 = Sunday in JS, but 1 = Monday is standard here)
+  // Standard JS: 0=Sun, 1=Mon... 6=Sat
+  // We want to shift so Mon is first.
+  // If Sun(0), padding is 6. If Mon(1), padding is 0.
+  const padding = startDay === 0 ? 6 : startDay - 1
+
+  for (let i = 0; i < padding; i++) {
+    days.push({ day: null, date: null })
+  }
+
+  for (let i = 1; i <= lastDay.getDate(); i++) {
+    const dateStr = new Date(year, month, i).toDateString()
+    const hasEntry = entries.value.some(e => new Date(e.date).toDateString() === dateStr)
+    days.push({ day: i, date: new Date(year, month, i), hasEntry })
+  }
+
+  return days
+})
+
+const prevMonth = () => {
+  currentDate.value = new Date(currentDate.value.getFullYear(), currentDate.value.getMonth() - 1, 1)
+}
+
+const nextMonth = () => {
+  currentDate.value = new Date(currentDate.value.getFullYear(), currentDate.value.getMonth() + 1, 1)
+}
 
 const handleUnlock = async (pin: string) => {
   const isValid = await settingsStore.verifyPin(pin)
@@ -86,14 +133,14 @@ const handleUnlock = async (pin: string) => {
 
 const handleForgot = async () => {
   if (confirm('Authenticate with Google to reset your PIN?')) {
-    const success = await authStore.reauthenticate()
-    if (success) {
+    const isSuccess = await authStore.reauthenticate()
+    if (isSuccess) {
        // Reset PIN
        await settingsStore.removePin()
-       alert('PIN removed. You can set a new one in Settings.')
+       success('App Lock removed!')
        isAuthenticated.value = true
     } else {
-       alert('Authentication failed.')
+       toastError('Authentication failed.')
     }
   }
 }

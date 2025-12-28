@@ -2,30 +2,40 @@ import { ref } from 'vue'
 import { useJournalStore } from '@/stores/journal'
 import { useSettingsStore } from '@/stores/settings'
 
+// Shared state for notification permission
+const notificationPermission = ref<NotificationPermission | 'not-supported'>(
+  globalThis.Notification === undefined ? 'not-supported' : globalThis.Notification.permission
+)
+
 export function useNotifications() {
-  const notificationPermission = ref<NotificationPermission>('default')
   const journalStore = useJournalStore()
   const settingsStore = useSettingsStore()
 
   // Request notification permission
   const requestPermission = async (): Promise<boolean> => {
-    if (!('Notification' in globalThis)) {
+    if (globalThis.Notification === undefined) {
       console.warn('This browser does not support notifications')
+      notificationPermission.value = 'not-supported'
       return false
     }
 
-    if (Notification.permission === 'granted') {
+    if (globalThis.Notification.permission === 'granted') {
       notificationPermission.value = 'granted'
       return true
     }
 
-    if (Notification.permission !== 'denied') {
-      const permission = await Notification.requestPermission()
-      notificationPermission.value = permission
-      return permission === 'granted'
+    if (globalThis.Notification.permission !== 'denied') {
+      try {
+        const permission = await globalThis.Notification.requestPermission()
+        notificationPermission.value = permission
+        return permission === 'granted'
+      } catch (error) {
+        console.error('Error requesting notification permission:', error)
+        return false
+      }
     }
 
-    notificationPermission.value = Notification.permission
+    notificationPermission.value = globalThis.Notification.permission
     return false
   }
 
@@ -39,14 +49,15 @@ export function useNotifications() {
 
   // Show notification
   const showReminder = () => {
-    if (Notification.permission === 'granted' && !hasLoggedToday()) {
-      new Notification('Aura - Time to reflect', {
+    if (globalThis.Notification?.permission === 'granted' && !hasLoggedToday()) {
+      const n = new globalThis.Notification('Aura - Time to reflect', {
         body: 'Don\'t forget to log your daily entry! 📝',
         icon: '/logo.jpg',
         badge: '/logo.jpg',
         tag: 'daily-reminder',
         requireInteraction: false
       })
+      console.log('Notification shown:', n.title)
     }
   }
 
@@ -71,18 +82,25 @@ export function useNotifications() {
 
     // Schedule the reminder
     setTimeout(() => {
-      showReminder()
-      // Re-schedule for next day
-      scheduleReminder()
+      // Re-check enabled state before showing
+      if (settingsStore.reminderEnabled) {
+        showReminder()
+        // Re-schedule for next day
+        scheduleReminder()
+      }
     }, timeUntilReminder)
   }
 
   // Initialize notifications
   const init = async () => {
     if (settingsStore.reminderEnabled) {
-      const granted = await requestPermission()
-      if (granted) {
+      // Don't auto-request on init as browsers might block it
+      // Just check current state and schedule if granted
+      if (globalThis.Notification?.permission === 'granted') {
+        notificationPermission.value = 'granted'
         scheduleReminder()
+      } else if (globalThis.Notification !== undefined) {
+        notificationPermission.value = globalThis.Notification.permission
       }
     }
   }

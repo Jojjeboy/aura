@@ -87,5 +87,9 @@
   "enable_reminder": "Enable Daily Reminder",
   "reminder_desc": "Get notified if you haven't logged today",
   "reminder_time": "Reminder Time",
-  "notification_permission_needed": "Please allow notifications in your browser"
+  "notification_permission_needed": "Please allow notifications in your browser",
+  "log_tab": "Log",
+  "calendar_tab": "Calendar",
+  "next_month": "Next Month",
+  "prev_month": "Previous Month"
 }

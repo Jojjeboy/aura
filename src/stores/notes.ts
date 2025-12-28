@@ -52,7 +52,7 @@ export const useNotesStore = defineStore('notes', () => {
       content,
       date: new Date().toISOString(),
       updatedAt: serverTimestamp(),
-      synced: true
+      synced: 1
     }
 
     try {

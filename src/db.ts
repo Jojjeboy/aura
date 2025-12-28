@@ -10,7 +10,7 @@ export interface JournalEntry {
     food: number
     movement: number
   }
-  synced: boolean // 0 or 1 for indexing efficiency
+  synced: number // 0 or 1 for indexing efficiency
   updatedAt: number // timestamp
 }
 
@@ -19,7 +19,7 @@ export interface Note {
   title: string
   content: string
   date: string
-  synced: boolean
+  synced: number
   updatedAt: number
 }
 

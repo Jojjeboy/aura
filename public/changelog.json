@@ -1,0 +1,74 @@
+[
+  {
+    "hash": "47dd419",
+    "author": "Jojjeboy",
+    "date": "Sun Dec 28 14:27:36 2025 +0100",
+    "message": "Package.json"
+  },
+  {
+    "hash": "bee7cc4",
+    "author": "Jojjeboy",
+    "date": "Sun Dec 28 14:24:21 2025 +0100",
+    "message": "3.0"
+  },
+  {
+    "hash": "c867c03",
+    "author": "Jojjeboy",
+    "date": "Sun Dec 28 14:21:18 2025 +0100",
+    "message": "Fixes"
+  },
+  {
+    "hash": "ef9ed61",
+    "author": "Jojjeboy",
+    "date": "Sun Dec 28 14:00:36 2025 +0100",
+    "message": "Biometric 2"
+  },
+  {
+    "hash": "3661fb5",
+    "author": "Jojjeboy",
+    "date": "Sun Dec 28 13:56:32 2025 +0100",
+    "message": "Update app modal"
+  },
+  {
+    "hash": "94ef2ba",
+    "author": "Jojjeboy",
+    "date": "Sun Dec 28 13:52:52 2025 +0100",
+    "message": "Biometric"
+  },
+  {
+    "hash": "bc83d9c",
+    "author": "Jojjeboy",
+    "date": "Sun Dec 28 13:10:43 2025 +0100",
+    "message": "Moooore fix"
+  },
+  {
+    "hash": "d07bc1b",
+    "author": "Jojjeboy",
+    "date": "Sun Dec 28 12:59:50 2025 +0100",
+    "message": "Pretty much the basics of the app"
+  },
+  {
+    "hash": "b126ae8",
+    "author": "Jojjeboy",
+    "date": "Sun Dec 28 10:30:11 2025 +0100",
+    "message": "mc"
+  },
+  {
+    "hash": "3871a49",
+    "author": "Jojjeboy",
+    "date": "Sun Dec 28 10:12:12 2025 +0100",
+    "message": "Github workflows"
+  },
+  {
+    "hash": "b5108d7",
+    "author": "Jojjeboy",
+    "date": "Sun Dec 28 10:00:56 2025 +0100",
+    "message": ".env"
+  },
+  {
+    "hash": "f39aa9e",
+    "author": "Jojjeboy",
+    "date": "Sun Dec 28 09:58:44 2025 +0100",
+    "message": "Initial"
+  }
+]

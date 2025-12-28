@@ -80,5 +80,7 @@
   "app_lock_desc": "Secure your history with a PIN code.",
   "change_pin": "Change PIN",
   "turn_off_lock": "Turn Off Lock",
-  "check_updates": "Check for Updates"
+  "check_updates": "Check for Updates",
+  "changelog": "What's New",
+  "no_commits_found": "No change history found."
 }

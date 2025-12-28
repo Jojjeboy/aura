@@ -80,6 +80,13 @@
                <span class="text-aura-text dark:text-aura-text-dark font-medium">{{ $t('check_updates') }}</span>
                <span class="text-xs text-aura-muted">v{{ appVersion }}</span>
             </button>
+            <button
+               @click="router.push('/changelog')"
+               class="w-full flex justify-between items-center p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-3xl transition-colors"
+            >
+               <span class="text-aura-text dark:text-aura-text-dark font-medium">{{ $t('changelog') }}</span>
+               <span class="text-aura-muted">→</span>
+            </button>
          </div>
       </section>
 

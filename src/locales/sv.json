@@ -80,5 +80,7 @@
   "app_lock_desc": "Skydda din historik med en PIN-kod.",
   "change_pin": "Ändra PIN",
   "turn_off_lock": "Stäng av lås",
-  "check_updates": "Sök efter uppdateringar"
+  "check_updates": "Sök efter uppdateringar",
+  "changelog": "Nyheter",
+  "no_commits_found": "Ingen ändringshistorik hittades."
 }

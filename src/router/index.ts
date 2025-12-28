@@ -43,6 +43,12 @@ const router = createRouter({
       component: NotesView,
       meta: { requiresAuth: true }
     },
+    {
+      path: '/changelog',
+      name: 'changelog',
+      component: () => import('../views/ChangelogView.vue'),
+      meta: { requiresAuth: true }
+    },
   ],
 })
 

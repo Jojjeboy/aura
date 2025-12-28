@@ -6,8 +6,8 @@
         <p class="text-aura-muted text-sm transition-colors duration-300">{{ $t('greeting_sub') }}</p>
     </section>
 
-      <!-- Already Logged State (Only show if NOT currently editing something) -->
-      <div v-if="hasLoggedToday && !isUnlocked && !store.isEditing" class="flex flex-col items-center justify-center py-20 animate-in fade-in duration-500">
+      <!-- Already Logged State (Only show if NOT currently editing/creating a specific date) -->
+      <div v-if="hasLoggedToday && !isUnlocked && !store.isEditing && isTargetingToday" class="flex flex-col items-center justify-center py-20 animate-in fade-in duration-500">
          <div class="bg-aura-accent/10 p-6 rounded-full mb-6">
             <span class="text-4xl">✨</span>
          </div>
@@ -68,19 +68,45 @@ import { useRouter } from 'vue-router'
 import { computed, ref, onMounted } from 'vue'
 import { useBiometricLock } from '@/composables/useBiometricLock'
 import { useI18n } from 'vue-i18n'
+import { useToast } from '@/composables/useToast'
 
 const store = useJournalStore()
 const router = useRouter()
 const { t } = useI18n()
 const { authenticate } = useBiometricLock()
+const { error: toastError, success } = useToast()
 
 const isUnlocked = ref(false)
 
 onMounted(async () => {
   await store.loadEntries()
+
+  // Check for date in query parameter (for past date logging from calendar)
+  const queryDate = router.currentRoute.value.query.date as string
+  if (queryDate && !store.isEditing) {
+    const targetDate = new Date(queryDate)
+    if (!Number.isNaN(targetDate.getTime())) {
+      // Check if entry already exists for this date
+      const dateStr = targetDate.toLocaleDateString()
+      const existing = store.entries.find(e => new Date(e.date).toLocaleDateString() === dateStr)
+
+      if (existing) {
+        store.editEntry(existing)
+      } else {
+        store.resetEntry()
+        store.currentEntry.date = targetDate.toISOString()
+      }
+    }
+  }
 })
 
 const hasLoggedToday = computed(() => !!store.todayEntry)
+
+const isTargetingToday = computed(() => {
+  if (!store.currentEntry.date) return true
+  const today = new Date().toLocaleDateString()
+  return new Date(store.currentEntry.date).toLocaleDateString() === today
+})
 
 // If user navigates away and back, reset lock state for security
 onMounted(() => {
@@ -88,20 +114,21 @@ onMounted(() => {
 })
 
 const unlockEntry = async () => {
-    const success = await authenticate()
-    if (success) {
+    const successResult = await authenticate()
+    if (successResult) {
         isUnlocked.value = true
         // Load the existing entry into the editing state
         if (store.todayEntry) {
-            store.currentEntry = JSON.parse(JSON.stringify(store.todayEntry))
+            store.currentEntry = structuredClone(store.todayEntry)
         }
     } else {
-        alert(t('auth_failed'))
+        toastError(t('auth_failed'))
     }
 }
 
 const save = async () => {
     await store.saveEntry()
+    success(store.isEditing ? t('entry_updated') || 'Entry updated!' : t('entry_saved') || 'Entry saved!')
     router.push('/history')
 }
 </script>

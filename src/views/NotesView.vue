@@ -76,9 +76,11 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useNotesStore } from '@/stores/notes'
+import { useToast } from '@/composables/useToast'
 
 const router = useRouter()
 const store = useNotesStore()
+const { success } = useToast()
 const showCreate = ref(false)
 
 // Form State
@@ -115,8 +117,10 @@ const saveNote = async () => {
 
   if (editingId.value) {
     await store.updateNote(editingId.value, noteTitle.value, noteContent.value)
+    success('Note updated!')
   } else {
     await store.saveNote(noteTitle.value, noteContent.value)
+    success('Note saved!')
   }
 
   closeForm()
@@ -125,6 +129,7 @@ const saveNote = async () => {
 const deleteNote = async (id: string) => {
   if (confirm('Are you sure you want to delete this note?')) {
     await store.deleteNote(id)
+    success('Note deleted')
   }
 }
 

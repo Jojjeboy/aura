@@ -91,5 +91,9 @@
   "log_tab": "Logg",
   "calendar_tab": "Kalender",
   "next_month": "Nästa månad",
-  "prev_month": "Föregående månad"
+  "prev_month": "Föregående månad",
+  "no_entry_for_date": "Ingen loggning för detta datum",
+  "add_entry": "Lägg till inlägg",
+  "entry_saved": "Inlägget har sparats!",
+  "entry_updated": "Inlägget har uppdaterats!"
 }

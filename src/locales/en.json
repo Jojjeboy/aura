@@ -91,5 +91,9 @@
   "log_tab": "Log",
   "calendar_tab": "Calendar",
   "next_month": "Next Month",
-  "prev_month": "Previous Month"
+  "prev_month": "Previous Month",
+  "no_entry_for_date": "No entry logged for this date",
+  "add_entry": "Add Entry",
+  "entry_saved": "Entry saved successfully!",
+  "entry_updated": "Entry updated successfully!"
 }

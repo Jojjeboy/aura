@@ -7,10 +7,10 @@ import {
   setDoc,
   deleteDoc,
   serverTimestamp,
-  getDocs,
   collection,
   query,
-  orderBy
+  orderBy,
+  onSnapshot
 } from 'firebase/firestore'
 import { v4 as uuidv4 } from 'uuid'
 import { useOnline } from '@vueuse/core'
@@ -25,22 +25,23 @@ export const useJournalStore = defineStore('journal', () => {
 
   const entries = ref<JournalEntry[]>([])
   const loading = ref(false)
+  let unsubscribe: (() => void) | null = null
 
-  // Helper: Sync a single entry to Firestore
+  // Helper: Sync a single entry to Firestore (for offline-to-online sync)
   const syncToFirestore = async (entry: JournalEntry) => {
     if (!online.value || !auth.currentUser) return false
 
     try {
       const entryRef = doc(firestore, 'users', auth.currentUser.uid, 'journal_entries', entry.id!)
 
-      // Prepare data for Firestore (remove synced flag and add server timestamp)
-      const { synced, ...firestoreData } = entry
+      const firestoreData = { ...entry } as any
+      delete firestoreData.synced
+
       await setDoc(entryRef, {
         ...firestoreData,
         updatedAt: serverTimestamp()
       })
 
-      // Update local synced status
       await dexieDb.journal_entries.update(entry.id!, { synced: 1 })
       return true
     } catch (error) {
@@ -49,13 +50,49 @@ export const useJournalStore = defineStore('journal', () => {
     }
   }
 
+  // Real-time synchronization
+  const startRealtimeSync = () => {
+    if (!auth.currentUser) return
+    if (unsubscribe) unsubscribe()
+
+    loading.value = true
+    const entriesRef = collection(firestore, 'users', auth.currentUser.uid, 'journal_entries')
+    const q = query(entriesRef, orderBy('date', 'desc'))
+
+    unsubscribe = onSnapshot(q, async (snapshot) => {
+      // Process changes individually
+      for (const change of snapshot.docChanges()) {
+        const data = change.doc.data()
+        const id = change.doc.id
+
+        if (change.type === 'added' || change.type === 'modified') {
+          const entry = {
+            ...data,
+            id,
+            synced: 1,
+            updatedAt: (data.updatedAt as { toMillis?: () => number })?.toMillis?.() || Date.now()
+          } as JournalEntry
+          await dexieDb.journal_entries.put(entry)
+        } else if (change.type === 'removed') {
+          await dexieDb.journal_entries.delete(id)
+        }
+      }
+
+      // After all processing, refresh the local list from Dexie
+      entries.value = await dexieDb.journal_entries.orderBy('date').reverse().toArray()
+      loading.value = false
+    }, (error) => {
+      console.error('Firestore snapshot error:', error)
+      loading.value = false
+    })
+  }
+
   // Actions
   const saveEntry = async () => {
     if (!currentEntry.value.moods?.length) return
 
     const id = currentEntry.value.id || uuidv4()
 
-    // Create the entry object and ensure it is deeply cloned (no proxies)
     const rawEntry: JournalEntry = JSON.parse(JSON.stringify({
         id,
         date: currentEntry.value.date || new Date().toISOString(),
@@ -66,10 +103,11 @@ export const useJournalStore = defineStore('journal', () => {
         updatedAt: Date.now()
     }))
 
-    // Save to IndexedDB (Upsert)
+    // Save to Local indexedDB first (Offline-first)
     await dexieDb.journal_entries.put(rawEntry)
 
-    // Optimistic UI update
+    // Manual refresh of local state for immediate feedback
+    // (Snapshot listener will eventually fire, but we want it NOW)
     const index = entries.value.findIndex(e => e.id === rawEntry.id)
     if (index > -1) {
        entries.value[index] = rawEntry
@@ -77,49 +115,20 @@ export const useJournalStore = defineStore('journal', () => {
        entries.value.unshift(rawEntry)
     }
 
-    // Attempt to sync to Firestore
-    const syncSuccess = await syncToFirestore(rawEntry)
-    if (syncSuccess) {
-        rawEntry.synced = 1
-    }
+    // Sync to Firestore
+    await syncToFirestore(rawEntry)
 
-    // Reset current entry
     resetEntry()
   }
 
   const loadEntries = async () => {
-      loading.value = true
+      // Always load from local Dexie first for speed
+      entries.value = await dexieDb.journal_entries.orderBy('date').reverse().toArray()
 
-      // Load from Dexie sorted by date desc
-      let localEntries = await dexieDb.journal_entries.orderBy('date').reverse().toArray()
-
-      // If local is empty and we are online, try to fetch from Firestore
-      if (localEntries.length === 0 && online.value && auth.currentUser) {
-          try {
-              const entriesRef = collection(firestore, 'users', auth.currentUser.uid, 'journal_entries')
-              const q = query(entriesRef, orderBy('date', 'desc'))
-              const snapshot = await getDocs(q)
-
-              if (!snapshot.empty) {
-                  const remoteEntries = snapshot.docs.map(doc => ({
-                      ...doc.data(),
-                      id: doc.id,
-                      synced: 1,
-                      // Firestore timestamp to ms if needed
-                      updatedAt: (doc.data().updatedAt as any)?.toMillis?.() || Date.now()
-                  })) as JournalEntry[]
-
-                  // Save all to local Dexie
-                  await dexieDb.journal_entries.bulkPut(remoteEntries)
-                  localEntries = remoteEntries
-              }
-          } catch (error) {
-              console.error('Error fetching from Firestore:', error)
-          }
+      // Then start/restart real-time sync if online
+      if (auth.currentUser) {
+          startRealtimeSync()
       }
-
-      entries.value = localEntries
-      loading.value = false
   }
 
   const resetEntry = () => {
@@ -140,7 +149,7 @@ export const useJournalStore = defineStore('journal', () => {
     entries.value = entries.value.filter(e => e.id !== id)
 
     // Delete from Firestore
-    if (online.value && auth.currentUser) {
+    if (auth.currentUser) {
         try {
             const entryRef = doc(firestore, 'users', auth.currentUser.uid, 'journal_entries', id)
             await deleteDoc(entryRef)
@@ -150,20 +159,28 @@ export const useJournalStore = defineStore('journal', () => {
     }
   }
 
-  // Auto-sync watcher: when coming back online, sync pending entries
+  const clearSync = () => {
+    if (unsubscribe) {
+      unsubscribe()
+      unsubscribe = null
+    }
+    entries.value = []
+  }
+
+  // Auto-sync watcher: push local-only changes when coming online
   watch(online, async (isOnline) => {
     if (isOnline && auth.currentUser) {
       const pending = await dexieDb.journal_entries.where('synced').equals(0).toArray()
       for (const entry of pending) {
         await syncToFirestore(entry)
       }
+      // Also ensure sync is running
+      startRealtimeSync()
     }
   })
 
   // Computed for Streak (placeholder logic)
-  const streak = computed(() => {
-    return 0
-  })
+  const streak = computed(() => 0)
 
   const isEditing = computed(() => !!currentEntry.value.id)
 
@@ -183,6 +200,7 @@ export const useJournalStore = defineStore('journal', () => {
     isEditing,
     resetEntry,
     editEntry,
-    deleteEntry
+    deleteEntry,
+    clearSync
   }
 })

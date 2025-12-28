@@ -15,18 +15,18 @@ export const useSettingsStore = defineStore('settings', () => {
   const loading = ref(false)
   let unsubscribe: (() => void) | null = null
 
-  const setBiometricLock = async (val: boolean): Promise<boolean> => {
+  const setBiometricLock = async (val: boolean): Promise<{ success: boolean; error?: string }> => {
     if (val) {
       // If enabling, try to register platform credentials
       const { register } = useBiometricLock()
-      const success = await register()
-      if (!success) return false
+      const result = await register()
+      if (!result.success) return result
     }
 
     biometricLock.value = val
     localStorage.setItem('aura-history-lock', String(val))
     await saveSettings()
-    return true
+    return { success: true }
   }
 
   const setLocale = (lang: string) => {

@@ -10,39 +10,52 @@ export function useBiometricLock() {
     }
   }
 
-  const register = async (): Promise<boolean> => {
-    if (!isAvailable.value) return false
+  const register = async (): Promise<{ success: boolean; error?: string }> => {
+    if (!isAvailable.value) return { success: false, error: 'Hardware not available' }
+
+    // WebAuthn requires HTTPS or localhost
+    if (!globalThis.isSecureContext) {
+      return { success: false, error: 'Biometrics require HTTPS (Secure Context).' }
+    }
 
     try {
       const challenge = new Uint8Array(32)
       globalThis.crypto.getRandomValues(challenge)
+
+      const userId = new Uint8Array(16)
+      globalThis.crypto.getRandomValues(userId)
 
       const credential = await navigator.credentials.create({
         publicKey: {
           challenge,
           rp: {
             name: "Aura Journal",
+            // Use current hostname but handle potential port issues or subdomains by keeping it simple
             id: window.location.hostname
           },
           user: {
-            id: Uint8Array.from("USER_ID", c => c.charCodeAt(0)),
+            id: userId,
             name: "user@aura.app",
             displayName: "Aura User"
           },
-          pubKeyCredParams: [{ alg: -7, type: "public-key" }],
+          pubKeyCredParams: [
+            { alg: -7, type: "public-key" }, // ES256
+            { alg: -257, type: "public-key" } // RS256 (Common on Android)
+          ],
           authenticatorSelection: {
-            authenticatorAttachment: "platform", // Forces built-in sensor (Fingerprint/Face)
-            userVerification: "required"
+            authenticatorAttachment: "platform",
+            userVerification: "required",
+            requireResidentKey: false
           },
           timeout: 60000,
           attestation: "none"
         }
       })
 
-      return !!credential
-    } catch (e) {
+      return { success: !!credential }
+    } catch (e: any) {
       console.error('Biometric registration failed', e)
-      return false
+      return { success: false, error: e.message || 'Unknown registration error' }
     }
   }
 

@@ -106,9 +106,10 @@ const availableLocales = ['en', 'sv']
 
 const handleBiometricToggle = async () => {
     const newState = !settingsStore.biometricLock
-    const success = await settingsStore.setBiometricLock(newState)
-    if (!success && newState) {
-        alert('Biometric registration failed. Please ensure your device supports biometric authentication (Fingerprint, Face ID, etc).')
+    const result = await settingsStore.setBiometricLock(newState)
+
+    if (!result.success && newState) {
+        alert(result.error || 'Biometric registration failed. Please ensure your device supports biometric authentication.')
     }
 }
 

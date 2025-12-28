@@ -34,8 +34,7 @@ export const useJournalStore = defineStore('journal', () => {
     try {
       const entryRef = doc(firestore, 'users', auth.currentUser.uid, 'journal_entries', entry.id!)
 
-      const firestoreData = { ...entry } as any
-      delete firestoreData.synced
+      const { synced: _, ...firestoreData } = entry as any
 
       await setDoc(entryRef, {
         ...firestoreData,

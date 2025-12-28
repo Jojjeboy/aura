@@ -31,7 +31,7 @@ export function useBiometricLock() {
           rp: {
             name: "Aura Journal",
             // Use current hostname but handle potential port issues or subdomains by keeping it simple
-            id: window.location.hostname
+            id: globalThis.location.hostname
           },
           user: {
             id: userId,
@@ -53,9 +53,10 @@ export function useBiometricLock() {
       })
 
       return { success: !!credential }
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error('Biometric registration failed', e)
-      return { success: false, error: e.message || 'Unknown registration error' }
+      const errorMessage = e instanceof Error ? e.message : 'Unknown registration error'
+      return { success: false, error: errorMessage }
     }
   }
 

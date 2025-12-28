@@ -5,16 +5,19 @@ import { useI18n } from 'vue-i18n'
 import FooterNav from '@/components/ui/FooterNav.vue'
 import AuraHeader from '@/components/ui/AuraHeader.vue'
 import ReloadPrompt from '@/components/ui/ReloadPrompt.vue'
+import AppToast from '@/components/ui/AppToast.vue'
 
 import { useAuthStore } from '@/stores/auth'
 import { useSettingsStore } from '@/stores/settings'
 import { useNotifications } from '@/composables/useNotifications'
+import { useToast } from '@/composables/useToast'
 
 const route = useRoute()
 const authStore = useAuthStore()
 const settingsStore = useSettingsStore()
 const { t, locale } = useI18n()
 const { init } = useNotifications()
+const { toasts, remove: removeToast } = useToast()
 
 const updateTitle = () => {
   const appName = t('app_name')
@@ -49,6 +52,17 @@ onMounted(() => {
 
 <template>
   <ReloadPrompt />
+
+  <!-- Toast Container -->
+  <div class="fixed top-20 right-4 z-50 flex flex-col items-end space-y-2">
+    <AppToast
+      v-for="toast in toasts"
+      :key="toast.id"
+      :toast="toast"
+      @close="removeToast(toast.id)"
+    />
+  </div>
+
   <AuraHeader v-if="route.name && route.name !== 'login'" />
   <RouterView />
   <FooterNav v-if="route.name && route.name !== 'login'" />

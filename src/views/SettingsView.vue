@@ -88,8 +88,9 @@
           </div>
 
           <div v-if="settingsStore.reminderEnabled" class="space-y-2">
-            <label class="text-sm font-medium text-aura-text dark:text-aura-text-dark">{{ $t('reminder_time') }}</label>
+            <label for="reminder-time" class="text-sm font-medium text-aura-text dark:text-aura-text-dark">{{ $t('reminder_time') }}</label>
             <input
+              id="reminder-time"
               v-model="settingsStore.reminderTime"
               @change="handleTimeChange"
               type="time"
@@ -180,6 +181,7 @@ import { useSettingsStore } from '@/stores/settings'
 import { auth } from '@/firebase'
 import { signOut } from 'firebase/auth'
 import { useNotifications } from '@/composables/useNotifications'
+import { useToast } from '@/composables/useToast'
 
 import PinPad from '@/components/ui/PinPad.vue'
 import { useRegisterSW } from 'virtual:pwa-register/vue'
@@ -194,6 +196,7 @@ const handleForceUpdate = async () => {
 const router = useRouter()
 const settingsStore = useSettingsStore()
 const { notificationPermission, requestPermission, scheduleReminder } = useNotifications()
+const { success, error, info } = useToast()
 
 const user = ref(auth.currentUser)
 const availableLocales = ['en', 'sv']
@@ -222,7 +225,7 @@ const handlePinSubmit = async (pin: string) => {
         if (pin === tempPin.value) {
             await settingsStore.setPin(pin)
             showPinPad.value = false
-            alert('PIN set successfully!') // Could be a toast
+            success('PIN set successfully!')
         } else {
             pinError.value = 'PINs do not match. Try again.'
             // Reset to set mode?
@@ -238,6 +241,7 @@ const handlePinSubmit = async (pin: string) => {
 const handleRemovePin = async () => {
     if (confirm('Are you sure you want to remove the App Lock?')) {
         await settingsStore.removePin()
+        success('App Lock removed!')
     }
 }
 
@@ -249,10 +253,14 @@ const toggleReminder = async () => {
         const granted = await requestPermission()
         if (granted) {
             scheduleReminder()
+            success('Daily reminder enabled!')
         } else {
             settingsStore.reminderEnabled = false
             await settingsStore.saveSettings()
+            error('Notification permission denied')
         }
+    } else {
+        info('Daily reminder disabled')
     }
 }
 

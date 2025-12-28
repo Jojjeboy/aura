@@ -9,7 +9,7 @@ export function useNotifications() {
 
   // Request notification permission
   const requestPermission = async (): Promise<boolean> => {
-    if (!('Notification' in window)) {
+    if (!('Notification' in globalThis)) {
       console.warn('This browser does not support notifications')
       return false
     }
@@ -54,7 +54,10 @@ export function useNotifications() {
   const scheduleReminder = () => {
     if (!settingsStore.reminderEnabled) return
 
-    const [hours, minutes] = settingsStore.reminderTime.split(':').map(Number)
+    const parts = settingsStore.reminderTime.split(':').map(Number)
+    const hours = parts[0] ?? 20
+    const minutes = parts[1] ?? 0
+
     const now = new Date()
     const scheduledTime = new Date()
     scheduledTime.setHours(hours, minutes, 0, 0)

@@ -26,22 +26,36 @@
               </div>
             </div>
 
-            <!-- Biometric Lock -->
+            <!-- App Lock (PIN) -->
             <div class="pt-4 border-t border-slate-100 dark:border-slate-800">
               <div class="flex justify-between items-start">
                 <div class="flex flex-col">
-                  <span class="text-aura-text dark:text-aura-text-dark font-medium">{{ $t('biometric_lock') }}</span>
-                  <span class="text-xs text-aura-muted max-w-[200px]">{{ $t('biometric_lock_desc') }}</span>
+                  <span class="text-aura-text dark:text-aura-text-dark font-medium">{{ $t('app_lock') }}</span>
+                  <span class="text-xs text-aura-muted max-w-[200px]">{{ $t('app_lock_desc') }}</span>
                 </div>
+
+                <div v-if="settingsStore.pinHash" class="flex items-center gap-2">
+                   <button
+                     @click="openPinPad('set')"
+                     class="text-xs font-bold text-aura-accent hover:underline"
+                   >
+                     {{ $t('change_pin') }}
+                   </button>
+                   <div class="h-4 w-[1px] bg-slate-200 dark:bg-slate-700"></div>
+                   <button
+                     @click="handleRemovePin"
+                     class="text-xs font-bold text-red-500 hover:opacity-70"
+                   >
+                     {{ $t('turn_off_lock') }}
+                   </button>
+                </div>
+
                 <button
-                  @click="handleBiometricToggle"
-                  class="w-12 h-6 rounded-full transition-colors relative shrink-0"
-                  :class="settingsStore.biometricLock ? 'bg-aura-accent' : 'bg-slate-200 dark:bg-slate-700'"
+                  v-else
+                  @click="openPinPad('set')"
+                  class="bg-slate-200 dark:bg-slate-700 text-aura-text dark:text-aura-text-dark px-3 py-1 rounded-full text-xs font-bold hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors"
                 >
-                  <div
-                    class="absolute top-1 w-4 h-4 rounded-full bg-white shadow-sm transition-transform duration-200"
-                    :class="settingsStore.biometricLock ? 'left-7' : 'left-1'"
-                  ></div>
+                  {{ $t('set_pin') }}
                 </button>
               </div>
             </div>
@@ -58,6 +72,13 @@
             >
                <span class="text-aura-text dark:text-aura-text-dark font-medium">{{ $t('settings.my_notes') }}</span>
                <span class="text-aura-muted">→</span>
+            </button>
+            <button
+               @click="handleForceUpdate"
+               class="w-full flex justify-between items-center p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-3xl transition-colors"
+            >
+               <span class="text-aura-text dark:text-aura-text-dark font-medium">{{ $t('check_updates') }}</span>
+               <span class="text-xs text-aura-muted">v2.0.0</span>
             </button>
          </div>
       </section>
@@ -88,6 +109,20 @@
       </section>
 
     </div>
+
+    <!-- PIN Modal Overlay -->
+    <div v-if="showPinPad" class="fixed inset-0 z-50 bg-white/95 dark:bg-aura-bg-dark/95 backdrop-blur-sm flex items-center justify-center">
+        <button @click="showPinPad = false" class="absolute top-6 right-6 p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-aura-text dark:text-aura-text-dark" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+        <PinPad
+          :mode="pinMode"
+          :error="pinError"
+          @submit="handlePinSubmit"
+        />
+    </div>
   </div>
 </template>
 
@@ -98,18 +133,61 @@ import { useSettingsStore } from '@/stores/settings'
 import { auth } from '@/firebase'
 import { signOut } from 'firebase/auth'
 
+import PinPad from '@/components/ui/PinPad.vue'
+import { useRegisterSW } from 'virtual:pwa-register/vue'
+
+const { updateServiceWorker } = useRegisterSW()
+
+const handleForceUpdate = async () => {
+    await updateServiceWorker(true)
+}
+
 const router = useRouter()
 const settingsStore = useSettingsStore()
 
 const user = ref(auth.currentUser)
 const availableLocales = ['en', 'sv']
 
-const handleBiometricToggle = async () => {
-    const newState = !settingsStore.biometricLock
-    const result = await settingsStore.setBiometricLock(newState)
+const showPinPad = ref(false)
+const pinMode = ref<'set' | 'confirm' | 'unlock'>('set')
+const pinError = ref('')
+const tempPin = ref('') // Used to store first entry during setup
 
-    if (!result.success && newState) {
-        alert(result.error || 'Biometric registration failed. Please ensure your device supports biometric authentication.')
+const openPinPad = (mode: 'set' | 'confirm') => {
+    pinMode.value = mode
+    tempPin.value = ''
+    pinError.value = ''
+    showPinPad.value = true
+}
+
+const handlePinSubmit = async (pin: string) => {
+    pinError.value = ''
+
+    if (pinMode.value === 'set') {
+        // First step of setting PIN
+        tempPin.value = pin
+        pinMode.value = 'confirm'
+    } else if (pinMode.value === 'confirm') {
+        // Verification step
+        if (pin === tempPin.value) {
+            await settingsStore.setPin(pin)
+            showPinPad.value = false
+            alert('PIN set successfully!') // Could be a toast
+        } else {
+            pinError.value = 'PINs do not match. Try again.'
+            // Reset to set mode?
+            setTimeout(() => {
+                pinMode.value = 'set'
+                tempPin.value = ''
+                pinError.value = ''
+            }, 1000)
+        }
+    }
+}
+
+const handleRemovePin = async () => {
+    if (confirm('Are you sure you want to remove the App Lock?')) {
+        await settingsStore.removePin()
     }
 }
 

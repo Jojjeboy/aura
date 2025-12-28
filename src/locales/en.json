@@ -65,5 +65,20 @@
   "pwa_update_available": "New Update Available",
   "pwa_update_desc": "A new version of Aura is available. Update now to get the latest features and improvements.",
   "pwa_update_button": "Update Now",
-  "pwa_close": "Not Now"
+  "pwa_close": "Not Now",
+  "enter_pin": "Enter PIN",
+  "set_pin": "Set PIN",
+  "confirm_pin": "Confirm PIN",
+  "create_pin_desc": "Create a 4-digit PIN to secure your journal.",
+  "confirm_pin_desc": "Re-enter your PIN to confirm.",
+  "unlock_desc": "Enter your PIN to access history.",
+  "forgot_pin": "Forgot PIN?",
+  "pin_mismatch": "PINs do not match. Try again.",
+  "wrong_pin": "Incorrect PIN",
+  "pin_setup_success": "PIN set successfully!",
+  "app_lock": "App Lock",
+  "app_lock_desc": "Secure your history with a PIN code.",
+  "change_pin": "Change PIN",
+  "turn_off_lock": "Turn Off Lock",
+  "check_updates": "Check for Updates"
 }

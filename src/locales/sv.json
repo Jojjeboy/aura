@@ -65,5 +65,20 @@
   "pwa_update_available": "Ny uppdatering tillgänglig",
   "pwa_update_desc": "En ny version av Aura finns tillgänglig. Uppdatera nu för att få de senaste funktionerna och förbättringarna.",
   "pwa_update_button": "Uppdatera Nu",
-  "pwa_close": "Inte nu"
+  "pwa_close": "Inte nu",
+  "enter_pin": "Ange PIN",
+  "set_pin": "Ställ in PIN",
+  "confirm_pin": "Bekräfta PIN",
+  "create_pin_desc": "Skapa en 4-siffrig PIN för att skydda din dagbok.",
+  "confirm_pin_desc": "Ange din PIN igen för att bekräfta.",
+  "unlock_desc": "Ange din PIN för att se historik.",
+  "forgot_pin": "Glömt PIN?",
+  "pin_mismatch": "PIN-koderna matchar inte. Försök igen.",
+  "wrong_pin": "Fel PIN",
+  "pin_setup_success": "PIN inställd!",
+  "app_lock": "App-lås",
+  "app_lock_desc": "Skydda din historik med en PIN-kod.",
+  "change_pin": "Ändra PIN",
+  "turn_off_lock": "Stäng av lås",
+  "check_updates": "Sök efter uppdateringar"
 }

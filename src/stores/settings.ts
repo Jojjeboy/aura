@@ -4,29 +4,43 @@ import { db, auth } from '@/firebase'
 import { doc, getDoc, setDoc, onSnapshot, serverTimestamp } from 'firebase/firestore'
 import { useDark, useToggle } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
-import { useBiometricLock } from '@/composables/useBiometricLock'
+// import { useBiometricLock } from '@/composables/useBiometricLock' // Removed
 
 export const useSettingsStore = defineStore('settings', () => {
   const isDark = useDark()
   const toggleDark = useToggle(isDark)
   const { locale } = useI18n()
-  const biometricLock = ref(localStorage.getItem('aura-history-lock') === 'true')
+  const pinHash = ref<string | null>(localStorage.getItem('aura-pin-hash'))
 
   const loading = ref(false)
   let unsubscribe: (() => void) | null = null
 
-  const setBiometricLock = async (val: boolean): Promise<{ success: boolean; error?: string }> => {
-    if (val) {
-      // If enabling, try to register platform credentials
-      const { register } = useBiometricLock()
-      const result = await register()
-      if (!result.success) return result
-    }
+  // Utility: Hash PIN using SHA-256
+  const hashPin = async (pin: string): Promise<string> => {
+    const encoder = new TextEncoder()
+    const data = encoder.encode(pin)
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+    const hashArray = Array.from(new Uint8Array(hashBuffer))
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+  }
 
-    biometricLock.value = val
-    localStorage.setItem('aura-history-lock', String(val))
+  const setPin = async (pin: string) => {
+    const hash = await hashPin(pin)
+    pinHash.value = hash
+    localStorage.setItem('aura-pin-hash', hash)
     await saveSettings()
-    return { success: true }
+  }
+
+  const removePin = async () => {
+    pinHash.value = null
+    localStorage.removeItem('aura-pin-hash')
+    await saveSettings()
+  }
+
+  const verifyPin = async (inputPin: string): Promise<boolean> => {
+    if (!pinHash.value) return true // No lock means accessible
+    const inputHash = await hashPin(inputPin)
+    return inputHash === pinHash.value
   }
 
   const setLocale = (lang: string) => {
@@ -42,7 +56,7 @@ export const useSettingsStore = defineStore('settings', () => {
       await setDoc(userRef, {
         isDark: isDark.value,
         locale: locale.value,
-        biometricLock: biometricLock.value,
+        pinHash: pinHash.value,
         updatedAt: serverTimestamp()
       }, { merge: true })
     } catch (error) {
@@ -62,9 +76,13 @@ export const useSettingsStore = defineStore('settings', () => {
         const data = docSnap.data()
         if (data.isDark !== undefined) isDark.value = data.isDark
         if (data.locale) locale.value = data.locale
-        if (data.biometricLock !== undefined) {
-          biometricLock.value = data.biometricLock
-          localStorage.setItem('aura-history-lock', String(data.biometricLock))
+        if (data.pinHash !== undefined) {
+          pinHash.value = data.pinHash
+          if (data.pinHash) {
+             localStorage.setItem('aura-pin-hash', data.pinHash)
+          } else {
+             localStorage.removeItem('aura-pin-hash')
+          }
         }
       }
     } catch (error) {
@@ -81,9 +99,13 @@ export const useSettingsStore = defineStore('settings', () => {
         const data = doc.data()
         if (data.isDark !== undefined) isDark.value = data.isDark
         if (data.locale) locale.value = data.locale
-        if (data.biometricLock !== undefined) {
-          biometricLock.value = data.biometricLock
-          localStorage.setItem('aura-history-lock', String(data.biometricLock))
+        if (data.pinHash !== undefined) {
+           pinHash.value = data.pinHash
+           if (data.pinHash) {
+              localStorage.setItem('aura-pin-hash', data.pinHash)
+           } else {
+              localStorage.removeItem('aura-pin-hash')
+           }
         }
       }
     })
@@ -105,9 +127,11 @@ export const useSettingsStore = defineStore('settings', () => {
     isDark,
     toggleDark,
     locale,
-    biometricLock,
+    pinHash,
     loading,
-    setBiometricLock,
+    setPin,
+    removePin,
+    verifyPin,
     setLocale,
     loadSettings,
     saveSettings,

@@ -3,20 +3,13 @@
     <h1 class="text-2xl font-bold text-aura-text dark:text-aura-text-dark mb-6">{{ $t('nav_history') }}</h1>
 
     <!-- Lock State -->
-    <div v-if="settingsStore.biometricLock && !isAuthenticated" class="flex flex-col items-center justify-center py-32 space-y-6">
-      <div class="bg-aura-accent/10 p-8 rounded-full">
-        <span class="text-5xl">🔒</span>
-      </div>
-      <div class="text-center space-y-2">
-        <h2 class="text-xl font-bold text-aura-text dark:text-aura-text-dark">{{ $t('history_locked') }}</h2>
-        <p class="text-aura-muted max-w-xs mx-auto">{{ $t('history_locked_desc') }}</p>
-      </div>
-      <button
-        @click="unlock"
-        class="bg-aura-accent text-white px-10 py-3 rounded-full font-bold shadow-glow transform hover:scale-105 transition-all"
-      >
-        {{ $t('unlock_history') }}
-      </button>
+    <div v-if="settingsStore.pinHash && !isAuthenticated" class="flex flex-col items-center justify-center py-10">
+      <PinPad
+        mode="unlock"
+        :error="error"
+        @submit="handleUnlock"
+        @forgot="handleForgot"
+      />
     </div>
 
     <div v-else>
@@ -65,7 +58,8 @@ import { useJournalStore } from '@/stores/journal'
 import { storeToRefs } from 'pinia'
 import { onMounted, ref } from 'vue'
 import { useSettingsStore } from '@/stores/settings'
-import { useBiometricLock } from '@/composables/useBiometricLock'
+import PinPad from '@/components/ui/PinPad.vue'
+import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 import type { JournalEntry } from '@/db'
 
@@ -73,14 +67,34 @@ const store = useJournalStore()
 const router = useRouter()
 const { entries, loading } = storeToRefs(store)
 const settingsStore = useSettingsStore()
+const authStore = useAuthStore()
 
 const isAuthenticated = ref(false)
-const { authenticate } = useBiometricLock()
+const error = ref('')
 
-const unlock = async () => {
-  const success = await authenticate()
-  if (success) {
+const handleUnlock = async (pin: string) => {
+  const isValid = await settingsStore.verifyPin(pin)
+  if (isValid) {
     isAuthenticated.value = true
+    error.value = ''
+  } else {
+    // Shake effect managed by error prop existing generally or we can just show text
+    error.value = 'Incorrect PIN'
+    setTimeout(() => error.value = '', 2000)
+  }
+}
+
+const handleForgot = async () => {
+  if (confirm('Authenticate with Google to reset your PIN?')) {
+    const success = await authStore.reauthenticate()
+    if (success) {
+       // Reset PIN
+       await settingsStore.removePin()
+       alert('PIN removed. You can set a new one in Settings.')
+       isAuthenticated.value = true
+    } else {
+       alert('Authentication failed.')
+    }
   }
 }
 

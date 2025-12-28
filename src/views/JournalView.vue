@@ -9,8 +9,10 @@
       <!-- Already Logged State (Only show if NOT currently editing/creating a specific date) -->
       <div v-if="hasLoggedToday && !isUnlocked && !store.isEditing && isTargetingToday" class="flex flex-col items-center justify-center py-20 animate-in fade-in duration-500">
          <div class="bg-aura-accent/10 p-6 rounded-full mb-6">
-            <span class="text-4xl">✨</span>
-         </div>
+             <svg class="w-10 h-10 text-aura-accent" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2v4m0 12v4M2 12h4m12 0h4M4.2 4.2l2.9 2.9m9.8 9.8 2.9 2.9M4.2 19.8l2.9-2.9m9.8-9.8 2.9-2.9"/>
+             </svg>
+          </div>
          <h2 class="text-2xl font-bold text-aura-text dark:text-aura-text-dark mb-2 text-center">{{ $t('caught_up') }}</h2>
          <p class="text-aura-muted text-center max-w-sm mb-8 px-6">
             {{ $t('caught_up_sub') }}
@@ -19,7 +21,9 @@
            @click="unlockEntry"
            class="bg-white dark:bg-aura-card-dark text-aura-text dark:text-aura-text-dark px-8 py-3 rounded-[2rem] font-semibold shadow-soft hover:shadow-glow transition-all flex items-center gap-2"
          >
-           <span>🔒</span>
+            <svg class="w-5 h-5 text-aura-accent" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14v3m-3-6V7a3 3 0 1 1 6 0v4m-8 0h10a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1Z"/>
+            </svg>
            <span>{{ $t('view_edit_entry') }}</span>
          </button>
       </div>

@@ -135,18 +135,22 @@
           <!-- Footer Actions -->
           <div class="flex justify-end mt-4 gap-1">
             <button
-              @click="handleDelete(entry)"
+              @click="confirmDelete(entry)"
               class="w-8 h-8 flex items-center justify-center text-red-400 hover:bg-red-500/5 rounded-full transition-all"
               :title="$t('delete_entry')"
             >
-              <span>🗑</span>
+              <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"/>
+              </svg>
             </button>
             <button
               @click="handleEdit(entry)"
               class="w-8 h-8 flex items-center justify-center text-aura-accent hover:bg-aura-accent/5 rounded-full transition-all"
               :title="$t('edit_entry')"
             >
-              <span>✎</span>
+              <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.3 4.8 2.9 2.9M7 7H4a1 1 0 0 0-1 1v10c0 .6.4 1 1 1h11c.6 0 1-.4 1-1v-4.5m2.4-10a2 2 0 0 1 0 3l-6.8 6.8L8 14l.7-3.6 6.9-6.8a2 2 0 0 1 2.8 0Z"/>
+              </svg>
             </button>
           </div>
         </div>
@@ -158,23 +162,23 @@
         <div class="flex items-center justify-between mb-4 bg-white dark:bg-aura-card-dark rounded-card shadow-soft p-4">
           <button
             @click="prevMonth"
-            class="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
+            class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-aura-muted"
             :title="$t('prev_month')"
           >
-            <svg class="w-5 h-5 text-aura-text dark:text-aura-text-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 19-7-7 7-7"/>
             </svg>
           </button>
-          <h2 class="text-lg font-bold text-aura-text dark:text-aura-text-dark">
+          <h2 class="text-sm font-bold text-aura-text dark:text-aura-text-dark min-w-[120px] text-center capitalize">
             {{ currentMonthName }}
           </h2>
           <button
             @click="nextMonth"
-            class="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
+            class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-aura-muted"
             :title="$t('next_month')"
           >
-            <svg class="w-5 h-5 text-aura-text dark:text-aura-text-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/>
             </svg>
           </button>
         </div>
@@ -279,6 +283,28 @@
         </div>
       </div>
     </div>
+
+    <!-- Modals -->
+    <AppModal
+      :show="showDeleteModal"
+      :title="$t('delete_entry')"
+      :message="$t('delete_confirm')"
+      :confirm-text="$t('delete_entry')"
+      cancel-text="Cancel"
+      type="danger"
+      @confirm="handleDelete"
+      @cancel="showDeleteModal = false"
+    />
+
+    <AppModal
+      :show="showResetModal"
+      :title="$t('change_pin')"
+      message="Authenticate with Google to reset your PIN?"
+      confirm-text="Authenticate"
+      cancel-text="Cancel"
+      @confirm="handleForgotConfirm"
+      @cancel="showResetModal = false"
+    />
   </div>
 </template>
 
@@ -288,11 +314,12 @@ import { storeToRefs } from 'pinia'
 import { onMounted, ref, computed } from 'vue'
 import { useSettingsStore } from '@/stores/settings'
 import PinPad from '@/components/ui/PinPad.vue'
-import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 import type { JournalEntry } from '@/db'
+import { useAuthStore } from '@/stores/auth'
 import { useToast } from '@/composables/useToast'
 import { useI18n } from 'vue-i18n'
+import AppModal from '@/components/ui/AppModal.vue'
 
 const store = useJournalStore()
 const router = useRouter()
@@ -306,6 +333,9 @@ const error = ref('')
 const activeTab = ref<'log' | 'calendar'>('log')
 const selectedDate = ref<Date | null>(null)
 const selectedEntry = ref<JournalEntry | null>(null)
+const showDeleteModal = ref(false)
+const showResetModal = ref(false)
+const entryToDelete = ref<JournalEntry | null>(null)
 
 // Calendar Logic
 const currentDate = ref(new Date())
@@ -394,17 +424,19 @@ const handleUnlock = async (pin: string) => {
   }
 }
 
-const handleForgot = async () => {
-  if (confirm('Authenticate with Google to reset your PIN?')) {
-    const isSuccess = await authStore.reauthenticate()
-    if (isSuccess) {
-       // Reset PIN
-       await settingsStore.removePin()
-       success('App Lock removed!')
-       authStore.isHistoryUnlocked = true
-    } else {
-       toastError('Authentication failed.')
-    }
+const handleForgot = () => {
+  showResetModal.value = true
+}
+
+const handleForgotConfirm = async () => {
+  showResetModal.value = false
+  const isSuccess = await authStore.reauthenticate()
+  if (isSuccess) {
+     await settingsStore.removePin()
+     success('App Lock removed!')
+     authStore.isHistoryUnlocked = true
+  } else {
+     toastError('Authentication failed.')
   }
 }
 
@@ -413,12 +445,17 @@ const handleEdit = (entry: JournalEntry) => {
   router.push('/')
 }
 
-const handleDelete = async (entry: JournalEntry) => {
-  if (!entry.id) return
-  if (confirm(t('delete_confirm'))) {
-    await store.deleteEntry(entry.id)
-    success(t('entry_deleted'))
-  }
+const confirmDelete = (entry: JournalEntry) => {
+  entryToDelete.value = entry
+  showDeleteModal.value = true
+}
+
+const handleDelete = async () => {
+  if (!entryToDelete.value?.id) return
+  await store.deleteEntry(entryToDelete.value.id)
+  success(t('entry_deleted'))
+  showDeleteModal.value = false
+  entryToDelete.value = null
 }
 
 onMounted(() => {

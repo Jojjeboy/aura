@@ -109,10 +109,12 @@
          <div class="bg-white dark:bg-aura-card-dark rounded-card shadow-soft p-1 space-y-1">
             <button
               @click="router.push('/notes')"
-              class="w-full flex justify-between items-center p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-3xl transition-colors"
+              class="w-full flex justify-between items-center p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-3xl transition-colors group"
             >
                <span class="text-aura-text dark:text-aura-text-dark font-medium">{{ $t('settings.my_notes') }}</span>
-               <span class="text-aura-muted">→</span>
+               <svg class="w-5 h-5 text-aura-muted group-hover:translate-x-1 transition-transform" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 12H5m14 0-4 4m4-4-4-4"/>
+               </svg>
             </button>
             <button
                @click="handleForceUpdate"
@@ -123,10 +125,12 @@
             </button>
             <button
                @click="router.push('/changelog')"
-               class="w-full flex justify-between items-center p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-3xl transition-colors"
+               class="w-full flex justify-between items-center p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-3xl transition-colors group"
             >
                <span class="text-aura-text dark:text-aura-text-dark font-medium">{{ $t('changelog') }}</span>
-               <span class="text-aura-muted">→</span>
+               <svg class="w-5 h-5 text-aura-muted group-hover:translate-x-1 transition-transform" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 12H5m14 0-4 4m4-4-4-4"/>
+               </svg>
             </button>
          </div>
       </section>
@@ -160,17 +164,29 @@
 
     <!-- PIN Modal Overlay -->
     <div v-if="showPinPad" class="fixed inset-0 z-50 bg-white/95 dark:bg-aura-bg-dark/95 backdrop-blur-sm flex items-center justify-center">
-        <button @click="showPinPad = false" class="absolute top-6 right-6 p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-aura-text dark:text-aura-text-dark" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+         <button @click="showPinPad = false" class="absolute top-6 right-6 p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors">
+            <svg class="w-6 h-6 text-aura-text dark:text-aura-text-dark" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.9 6M6 6l11.9 12"/>
             </svg>
-        </button>
+         </button>
         <PinPad
           :mode="pinMode"
           :error="pinError"
           @submit="handlePinSubmit"
         />
     </div>
+
+    <!-- Modals -->
+    <AppModal
+      :show="showRemovePinModal"
+      :title="$t('turn_off_lock')"
+      message="Are you sure you want to remove the App Lock? This will disable PIN protection for your history."
+      confirm-text="Remove Lock"
+      cancel-text="Cancel"
+      type="danger"
+      @confirm="confirmRemovePin"
+      @cancel="showRemovePinModal = false"
+    />
   </div>
 </template>
 
@@ -182,6 +198,7 @@ import { auth } from '@/firebase'
 import { signOut } from 'firebase/auth'
 import { useNotifications } from '@/composables/useNotifications'
 import { useToast } from '@/composables/useToast'
+import AppModal from '@/components/ui/AppModal.vue'
 
 import PinPad from '@/components/ui/PinPad.vue'
 import { useRegisterSW } from 'virtual:pwa-register/vue'
@@ -205,6 +222,7 @@ const showPinPad = ref(false)
 const pinMode = ref<'set' | 'confirm' | 'unlock'>('set')
 const pinError = ref('')
 const tempPin = ref('') // Used to store first entry during setup
+const showRemovePinModal = ref(false)
 
 const openPinPad = (mode: 'set' | 'confirm') => {
     pinMode.value = mode
@@ -238,11 +256,14 @@ const handlePinSubmit = async (pin: string) => {
     }
 }
 
-const handleRemovePin = async () => {
-    if (confirm('Are you sure you want to remove the App Lock?')) {
-        await settingsStore.removePin()
-        success('App Lock removed!')
-    }
+const handleRemovePin = () => {
+    showRemovePinModal.value = true
+}
+
+const confirmRemovePin = async () => {
+    showRemovePinModal.value = false
+    await settingsStore.removePin()
+    success('App Lock removed!')
 }
 
 
@@ -253,10 +274,15 @@ const toggleReminder = async () => {
         return
     }
 
-    // If trying to enable, request permission first
-    if (!settingsStore.reminderEnabled) {
+    if (settingsStore.reminderEnabled) {
+        // Disabling the reminder
+        settingsStore.reminderEnabled = false
+        await settingsStore.saveSettings()
+        info('Daily reminder disabled')
+    } else {
+        // If trying to enable, request permission first
         // Check current permission state
-        if (globalThis.Notification.permission === 'denied') {
+        if (globalThis.Notification && globalThis.Notification.permission === 'denied') {
             error('Notifications blocked. Please enable them in your browser settings.')
             return
         }
@@ -271,11 +297,6 @@ const toggleReminder = async () => {
         } else {
             error('Notification permission denied')
         }
-    } else {
-        // Disabling the reminder
-        settingsStore.reminderEnabled = false
-        await settingsStore.saveSettings()
-        info('Daily reminder disabled')
     }
 }
 

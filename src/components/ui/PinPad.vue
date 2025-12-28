@@ -2,8 +2,8 @@
   <div class="flex flex-col items-center justify-center p-6 space-y-8 animate-in fade-in zoom-in-95 duration-300">
     <div class="text-center space-y-2">
       <div v-if="mode === 'unlock'" class="bg-aura-accent/10 p-4 rounded-full inline-flex mb-2">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-aura-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+        <svg class="w-8 h-8 text-aura-accent" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14v3m-3-6V7a3 3 0 1 1 6 0v4m-8 0h10a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1Z"/>
         </svg>
       </div>
       <h2 class="text-2xl font-bold text-aura-text dark:text-aura-text-dark">
@@ -44,8 +44,8 @@
         @click="del"
         class="h-16 w-16 rounded-full text-aura-text dark:text-aura-text-dark hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors active:scale-95 flex items-center justify-center text-sm font-medium uppercase tracking-wider"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M3 12l6.414 6.414a2 2 0 001.414.586H19a2 2 0 002-2V7a2 2 0 00-2-2h-8.172a2 2 0 00-1.414.586L3 12z" />
+        <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 7v10a2 2 0 0 1-2 2h-8.2a2 2 0 0 1-1.4-.6L3 12l6.4-6.4a2 2 0 0 1 1.4-.6H19a2 2 0 0 1 2 2Z"/>
         </svg>
       </button>
     </div>

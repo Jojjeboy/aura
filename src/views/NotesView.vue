@@ -2,13 +2,20 @@
   <div class="pb-24 space-y-6 min-h-screen bg-aura-bg dark:bg-aura-bg-dark transition-colors duration-300">
     <div class="px-6 py-4 flex justify-between items-center bg-aura-bg/80 dark:bg-aura-bg-dark/80 backdrop-blur-md">
       <div class="flex items-center gap-3">
-         <button @click="router.back()" class="text-aura-text dark:text-aura-text-dark text-lg font-medium">← Back</button>
+         <button @click="router.back()" class="flex items-center gap-2 text-aura-text dark:text-aura-text-dark text-lg font-medium group transition-colors">
+            <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12l4-4m-4 4 4 4"/>
+            </svg>
+            <span>Back</span>
+         </button>
       </div>
       <button
         @click="openCreate"
         class="w-10 h-10 rounded-full bg-aura-accent text-white flex items-center justify-center shadow-glow hover:scale-105 transition-transform"
       >
-        <span class="text-xl font-bold">+</span>
+        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
+        </svg>
       </button>
     </div>
 
@@ -17,7 +24,11 @@
       <div v-if="showCreate" class="bg-white dark:bg-aura-card-dark rounded-card shadow-soft p-6 space-y-4 animate-in slide-in-from-top-4 fade-in duration-300">
         <div class="flex justify-between items-center mb-2">
            <h3 class="text-sm font-semibold text-aura-muted uppercase">{{ editingId ? 'Edit Note' : 'New Note' }}</h3>
-           <button @click="closeForm" class="text-aura-muted hover:text-aura-text dark:hover:text-aura-text-dark">✕</button>
+           <button @click="closeForm" class="text-aura-muted hover:text-aura-text dark:hover:text-aura-text-dark transition-colors">
+              <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.9 6M6 6l11.9 12"/>
+              </svg>
+           </button>
         </div>
         <input
           v-model="noteTitle"
@@ -58,17 +69,31 @@
             <div class="mt-4 text-xs text-aura-muted">{{ new Date(note.date).toLocaleDateString() }}</div>
           </div>
 
-          <!-- Delete Button (visible on hover/focus) -->
+          <!-- Delete Button -->
           <button
-            @click.stop="deleteNote(note.id)"
+            @click.stop="confirmDelete(note.id)"
             class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-700 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all opacity-0 group-hover:opacity-100"
             title="Delete Note"
           >
-            🗑️
+            <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"/>
+            </svg>
           </button>
         </div>
       </div>
     </div>
+
+    <!-- Modals -->
+    <AppModal
+      :show="showDeleteModal"
+      title="Delete Note"
+      message="Are you sure you want to delete this note? This action cannot be undone."
+      confirm-text="Delete"
+      cancel-text="Cancel"
+      type="danger"
+      @confirm="handleDelete"
+      @cancel="showDeleteModal = false"
+    />
   </div>
 </template>
 
@@ -77,6 +102,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useNotesStore } from '@/stores/notes'
 import { useToast } from '@/composables/useToast'
+import AppModal from '@/components/ui/AppModal.vue'
 
 const router = useRouter()
 const store = useNotesStore()
@@ -87,6 +113,8 @@ const showCreate = ref(false)
 const editingId = ref<string | null>(null)
 const noteTitle = ref('')
 const noteContent = ref('')
+const showDeleteModal = ref(false)
+const noteIdToDelete = ref<string | null>(null)
 
 onMounted(() => {
   store.loadNotes()
@@ -126,10 +154,17 @@ const saveNote = async () => {
   closeForm()
 }
 
-const deleteNote = async (id: string) => {
-  if (confirm('Are you sure you want to delete this note?')) {
-    await store.deleteNote(id)
+const confirmDelete = (id: string) => {
+  noteIdToDelete.value = id
+  showDeleteModal.value = true
+}
+
+const handleDelete = async () => {
+  if (noteIdToDelete.value) {
+    await store.deleteNote(noteIdToDelete.value)
     success('Note deleted')
+    showDeleteModal.value = false
+    noteIdToDelete.value = null
   }
 }
 

@@ -1,5 +1,23 @@
 [
   {
+    "hash": "5dad350",
+    "author": "Jojjeboy",
+    "date": "Sun Dec 28 17:12:53 2025 +0100",
+    "message": "Remove vue-devtools plugin"
+  },
+  {
+    "hash": "7e92559",
+    "author": "Jojjeboy",
+    "date": "Sun Dec 28 17:11:35 2025 +0100",
+    "message": "Add unit tests for HistoryView, toast notifications, and user reminders. Update README with new features."
+  },
+  {
+    "hash": "78542bd",
+    "author": "Jojjeboy",
+    "date": "Sun Dec 28 16:54:06 2025 +0100",
+    "message": "Bump version to 3.8.0 and implement Tabbed History with Interactive Calendar and app-wide Toast integration"
+  },
+  {
     "hash": "d05c548",
     "author": "Jojjeboy",
     "date": "Sun Dec 28 16:27:36 2025 +0100",

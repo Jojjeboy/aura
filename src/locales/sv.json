@@ -1,0 +1,61 @@
+{
+  "app_name": "Aura",
+  "app_sub_title": "Mikro journal",
+  "greeting": "God Morgon,",
+  "greeting_sub": "Skapa din Aura idag.",
+  "streak": "{count} Dagars Streak",
+  "grateful_prompt": "Jag är tacksam för...",
+  "grateful_placeholder": "Jag är tacksam för...",
+  "how_feeling": "Hur mår du idag?",
+  "save_entry": "Spara Inlägg",
+  "scales": {
+    "sleep": "Sömnkvalitet",
+    "food": "Kost",
+    "movement": "Rörelse"
+  },
+  "nav_today": "Logga Idag",
+  "nav_history": "Tidigare",
+  "nav_settings": "Inställningar",
+  "mode_light": "Ljust läge",
+  "mode_dark": "Mörkt läge",
+  "login_tagline": "Mikrojournalföring Omdefinierad",
+  "login_google": "Logga in med Google",
+  "login_secure": "Krypterat & Säkert",
+  "history_locked": "Historik Låst",
+  "history_locked_desc": "Autentisering krävs för att se din historik.",
+  "unlock_history": "Lås upp historik",
+  "auth_failed": "Autentisering misslyckades. Försök igen.",
+  "biometric_lock": "Biometriskt lås",
+  "biometric_lock_desc": "Kräv biometrisk autentisering för att se historik.",
+  "settings": {
+    "preferences": "Inställningar",
+    "features": "Funktioner",
+    "account": "Konto",
+    "my_notes": "Mina anteckningar",
+    "logout": "Logga ut"
+  },
+  "emotions": {
+    "Joy": "Glädje",
+    "Interest": "Intresse",
+    "Surprise": "Förvåning",
+    "Anger": "Ilska",
+    "Disgust": "Avsky",
+    "Fear": "Rädsla",
+    "Shame": "Skam",
+    "Sadness": "Sorg",
+    "Guilt": "Skuld"
+  },
+  "page_titles": {
+    "login": "Logga in",
+    "journal": "Logga idag",
+    "history": "Historik",
+    "settings": "Inställningar",
+    "notes": "Anteckningar",
+    "loading": "Laddar..."
+  },
+  "caught_up": "Allt klart!",
+  "caught_up_sub": "Du har redan loggat din tacksamhet och ditt humör för idag. Bra jobbat med att vårda din aura!",
+  "view_edit_entry": "Visa eller ändra inlägg",
+  "language": "Språk",
+  "system_language": "Systemspråk"
+}

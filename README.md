@@ -1,4 +1,23 @@
-# .
+# Aura - Premium Micro-journal PWA
+
+A minimalist, offline-first micro-journaling application built with Vue 3, Tailwind CSS, and Firebase.
+
+## Features
+
+- **Soft UI Design**: Airy, card-based interface with smooth animations.
+- **Offline First**: Uses IndexedDB (Dexie) for local storage and syncs to Firestore when online.
+- **Biometric Security**: Optional WebAuthn locking for history.
+- **Gamification**: Streak counter and mood tracking.
+
+## Setup
+
+1. `npm install`
+2. Configure `.env` with Firebase credentials.
+3. `npm run dev`
+
+## PWA Installation
+
+- **Samsung S23 / Android**: Open in Chrome -> Tap "Install App" or "Add to Home Screen".
 
 This template should help get you started developing with Vue 3 in Vite.
 
@@ -9,7 +28,7 @@ This template should help get you started developing with Vue 3 in Vite.
 ## Recommended Browser Setup
 
 - Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd) 
+  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
   - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
 - Firefox:
   - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)

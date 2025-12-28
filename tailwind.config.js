@@ -18,7 +18,7 @@ export default {
       },
       borderRadius: {
         '4xl': '2.0rem',
-        card: '2.5rem',
+        card: '1.875rem',
       },
       boxShadow: {
         soft: '0 10px 40px -10px rgba(0, 0, 0, 0.05)',

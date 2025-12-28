@@ -1,12 +1,12 @@
 <template>
   <div class="fixed bottom-0 left-0 right-0 bg-white dark:bg-aura-bg-dark border-t border-slate-200 dark:border-slate-800 pb-safe shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-    <div class="flex justify-around items-center p-2">
+    <div class="flex justify-around items-center py-3 px-2">
       <button
         @click="router.push('/journal')"
         class="flex flex-col items-center gap-1 p-2 rounded-xl transition-all w-full"
         :class="route.path === '/journal' ? 'text-aura-accent' : 'text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300'"
       >
-        <span class="text-xs font-medium">{{ $t('nav_today') }}</span>
+        <span class="text-xs font-bold">{{ $t('nav_today') }}</span>
       </button>
 
       <div class="w-px h-8 bg-slate-200 dark:bg-slate-700"></div>
@@ -16,7 +16,7 @@
         class="flex flex-col items-center gap-1 p-2 rounded-xl transition-all w-full"
         :class="route.path === '/history' ? 'text-aura-accent' : 'text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300'"
       >
-        <span class="text-xs font-medium">{{ $t('nav_history') }}</span>
+        <span class="text-xs font-bold">{{ $t('nav_history') }}</span>
       </button>
 
       <div class="w-px h-8 bg-slate-200 dark:bg-slate-700"></div>
@@ -26,7 +26,7 @@
         class="flex flex-col items-center gap-1 p-2 rounded-xl transition-all w-full"
         :class="route.path === '/settings' ? 'text-aura-accent' : 'text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300'"
       >
-        <span class="text-xs font-medium">{{ $t('nav_settings') }}</span>
+        <span class="text-xs font-bold">{{ $t('nav_settings') }}</span>
       </button>
     </div>
   </div>

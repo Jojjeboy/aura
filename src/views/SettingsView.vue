@@ -78,7 +78,7 @@
                class="w-full flex justify-between items-center p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-3xl transition-colors"
             >
                <span class="text-aura-text dark:text-aura-text-dark font-medium">{{ $t('check_updates') }}</span>
-               <span class="text-xs text-aura-muted">v2.0.0</span>
+               <span class="text-xs text-aura-muted">v{{ appVersion }}</span>
             </button>
          </div>
       </section>
@@ -137,6 +137,7 @@ import PinPad from '@/components/ui/PinPad.vue'
 import { useRegisterSW } from 'virtual:pwa-register/vue'
 
 const { updateServiceWorker } = useRegisterSW()
+const appVersion = import.meta.env.APP_VERSION
 
 const handleForceUpdate = async () => {
     await updateServiceWorker(true)

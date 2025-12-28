@@ -29,6 +29,9 @@ export default defineConfig({
       },
     }),
   ],
+  define: {
+    'import.meta.env.APP_VERSION': JSON.stringify(process.env.npm_package_version)
+  },
   base: '/aura/',
   resolve: {
     alias: {

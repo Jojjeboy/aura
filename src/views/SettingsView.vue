@@ -34,7 +34,7 @@
                   <span class="text-xs text-aura-muted max-w-[200px]">{{ $t('biometric_lock_desc') }}</span>
                 </div>
                 <button
-                  @click="settingsStore.setBiometricLock(!settingsStore.biometricLock)"
+                  @click="handleBiometricToggle"
                   class="w-12 h-6 rounded-full transition-colors relative shrink-0"
                   :class="settingsStore.biometricLock ? 'bg-aura-accent' : 'bg-slate-200 dark:bg-slate-700'"
                 >
@@ -103,6 +103,14 @@ const settingsStore = useSettingsStore()
 
 const user = ref(auth.currentUser)
 const availableLocales = ['en', 'sv']
+
+const handleBiometricToggle = async () => {
+    const newState = !settingsStore.biometricLock
+    const success = await settingsStore.setBiometricLock(newState)
+    if (!success && newState) {
+        alert('Biometric registration failed. Please ensure your device supports biometric authentication (Fingerprint, Face ID, etc).')
+    }
+}
 
 const logout = async () => {
   try {

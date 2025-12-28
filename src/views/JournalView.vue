@@ -93,7 +93,7 @@ const unlockEntry = async () => {
         isUnlocked.value = true
         // Load the existing entry into the editing state
         if (store.todayEntry) {
-            store.currentEntry = structuredClone(store.todayEntry)
+            store.currentEntry = JSON.parse(JSON.stringify(store.todayEntry))
         }
     } else {
         alert(t('auth_failed'))

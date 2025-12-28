@@ -4,6 +4,7 @@ import { db, auth } from '@/firebase'
 import { doc, getDoc, setDoc, onSnapshot, serverTimestamp } from 'firebase/firestore'
 import { useDark, useToggle } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
+import { useBiometricLock } from '@/composables/useBiometricLock'
 
 export const useSettingsStore = defineStore('settings', () => {
   const isDark = useDark()
@@ -14,10 +15,18 @@ export const useSettingsStore = defineStore('settings', () => {
   const loading = ref(false)
   let unsubscribe: (() => void) | null = null
 
-  const setBiometricLock = (val: boolean) => {
+  const setBiometricLock = async (val: boolean): Promise<boolean> => {
+    if (val) {
+      // If enabling, try to register platform credentials
+      const { register } = useBiometricLock()
+      const success = await register()
+      if (!success) return false
+    }
+
     biometricLock.value = val
     localStorage.setItem('aura-history-lock', String(val))
-    saveSettings()
+    await saveSettings()
+    return true
   }
 
   const setLocale = (lang: string) => {

@@ -112,7 +112,7 @@ export const useJournalStore = defineStore('journal', () => {
   }
 
   const editEntry = (entry: JournalEntry) => {
-    currentEntry.value = structuredClone(entry)
+    currentEntry.value = JSON.parse(JSON.stringify(entry))
   }
 
   // Computed for Streak (placeholder logic)

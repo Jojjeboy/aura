@@ -20,62 +20,10 @@
     </div>
 
     <div class="px-6 space-y-6">
-      <!-- Create/Edit Form -->
-      <div v-if="showCreate" class="bg-white dark:bg-aura-card-dark rounded-card shadow-soft p-6 space-y-4 animate-in slide-in-from-top-4 fade-in duration-300">
-        <div class="flex justify-between items-center mb-2">
-           <h3 class="text-sm font-semibold text-aura-muted uppercase">{{ editingId ? $t('edit_todo') : $t('add_todo') }}</h3>
-           <button @click="closeForm" class="text-aura-muted hover:text-aura-text dark:hover:text-aura-text-dark transition-colors">
-              <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.9 6M6 6l11.9 12"/>
-              </svg>
-           </button>
-        </div>
-        <input
-          v-model="todoTitle"
-          type="text"
-          :placeholder="$t('todo_title')"
-          class="w-full bg-transparent text-lg font-bold text-aura-text dark:text-aura-text-dark outline-none placeholder-aura-muted"
-        />
-        <textarea
-          v-model="todoContent"
-          :placeholder="$t('todo_placeholder')"
-          class="w-full bg-transparent text-aura-text dark:text-aura-text-dark outline-none resize-none h-32 placeholder-aura-muted"
-        ></textarea>
-
-        <!-- Priority Selection -->
-        <div class="space-y-2">
-          <p class="text-[10px] uppercase tracking-wider text-aura-muted font-bold">Priority</p>
-          <div class="flex gap-2">
-            <button
-              v-for="p in ['Low', 'Medium', 'High']"
-              :key="p"
-              @click="todoPriority = p as 'Low' | 'Medium' | 'High'"
-              class="px-4 py-1.5 rounded-full text-xs font-bold transition-all border"
-              :class="{
-                'bg-slate-100 border-slate-200 text-slate-600 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400': todoPriority === p && p === 'Low',
-                'bg-indigo-100 border-indigo-200 text-indigo-600 dark:bg-indigo-900/30 dark:border-indigo-800 dark:text-indigo-400': todoPriority === p && p === 'Medium',
-                'bg-rose-100 border-rose-200 text-rose-600 dark:bg-rose-900/30 dark:border-rose-800 dark:text-rose-400': todoPriority === p && p === 'High',
-                'bg-transparent border-slate-100 dark:border-slate-800 text-aura-muted hover:bg-slate-50 dark:hover:bg-slate-800/50': todoPriority !== p
-              }"
-            >
-              {{ p }}
-            </button>
-          </div>
-        </div>
-
-        <div class="flex justify-end gap-2 pt-2">
-           <button
-             @click="saveTodo"
-             class="px-6 py-2 bg-aura-accent text-white rounded-full font-medium shadow-glow hover:shadow-lg transition-all"
-             :disabled="!todoTitle && !todoContent"
-           >{{ editingId ? 'Update' : 'Save' }}</button>
-        </div>
-      </div>
-
       <!-- Todos List -->
       <div v-if="store.loading" class="text-center text-aura-muted py-8 max-w-sm mx-auto">Loading tasks...</div>
 
-      <div v-else-if="store.todos.length === 0 && !showCreate" class="text-center text-aura-muted py-12">
+      <div v-else-if="store.todos.length === 0 && !showForm" class="text-center text-aura-muted py-12">
         <p>No tasks yet. Tap + to create one.</p>
       </div>
 
@@ -86,7 +34,7 @@
           class="bg-white dark:bg-aura-card-dark rounded-card p-6 shadow-soft hover:shadow-md transition-all group relative border-l-4"
           :class="[
             todo.completed ? 'opacity-60 border-transparent grayscale-[0.5]' : {
-              'border-slate-200 dark:border-slate-700': todo.priority === 'Low',
+              'border-slate-200 dark:border-slate-600': todo.priority === 'Low',
               'border-indigo-400/50 dark:border-indigo-800/50': todo.priority === 'Medium',
               'border-rose-400/50 dark:border-rose-800/50': todo.priority === 'High'
             }
@@ -106,8 +54,8 @@
               </svg>
             </button>
 
-            <div @click="openEdit(todo)" class="cursor-pointer flex-1 min-w-0">
-              <div class="flex justify-between items-start mb-2 pr-8">
+            <div class="flex-1 min-w-0">
+              <div class="flex justify-between items-start mb-2 pr-12">
                 <h3
                   class="font-bold text-aura-text dark:text-aura-text-dark transition-all"
                   :class="{ 'line-through opacity-70': todo.completed }"
@@ -118,7 +66,7 @@
                   v-if="!todo.completed"
                   class="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-sm border"
                   :class="{
-                    'bg-slate-50 text-slate-500 border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700': todo.priority === 'Low',
+                    'bg-slate-50 text-slate-500 border-slate-200 dark:bg-slate-700 dark:text-slate-300 dark:border-slate-600': todo.priority === 'Low',
                     'bg-indigo-50 text-indigo-600 border-indigo-200 dark:bg-indigo-900/40 dark:text-indigo-400 dark:border-indigo-800/50': todo.priority === 'Medium',
                     'bg-rose-50 text-rose-600 border-rose-200 dark:bg-rose-900/40 dark:text-rose-400 dark:border-rose-800/50': todo.priority === 'High'
                   }"
@@ -132,22 +80,109 @@
               >
                 {{ todo.content }}
               </p>
-              <div class="mt-4 text-[10px] text-aura-muted uppercase font-bold tracking-tight">
-                {{ new Date(todo.date).toLocaleDateString() }}
+              <div class="mt-4 flex justify-between items-end">
+                <div class="text-[10px] text-aura-muted uppercase font-bold tracking-tight">
+                  {{ new Date(todo.date).toLocaleDateString() }}
+                </div>
+
+                <div class="flex gap-2">
+                  <!-- Edit Button -->
+                  <button
+                    @click="openEdit(todo)"
+                    class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-aura-accent hover:bg-aura-accent/10 transition-all opacity-0 group-hover:opacity-100 shadow-sm"
+                    title="Edit Task"
+                  >
+                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.3 4.8 2.9 2.9M7 7H4a1 1 0 0 0-1 1v10c0 .6.4 1 1 1h11c.6 0 1-.4 1-1v-4.5m2.4-10a2 2 0 0 1 0 3l-6.8 6.8L8 14l.7-3.6 6.9-6.8a2 2 0 0 1 2.8 0Z"/>
+                    </svg>
+                  </button>
+
+                  <!-- Delete Button -->
+                  <button
+                    @click.stop="confirmDelete(todo.id)"
+                    class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all opacity-0 group-hover:opacity-100 shadow-sm"
+                    :title="$t('delete_todo')"
+                  >
+                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create/Edit Modal -->
+    <div v-if="showForm" class="fixed inset-0 z-[60] flex items-center justify-center p-4">
+      <div @click="closeForm" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"></div>
+
+      <div class="relative bg-white dark:bg-aura-card-dark rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden animate-in zoom-in-95 duration-200">
+        <div class="p-6 space-y-6">
+          <div class="flex justify-between items-center">
+             <h3 class="text-lg font-bold text-aura-text dark:text-aura-text-dark">{{ editingId ? $t('edit_todo') : $t('add_todo') }}</h3>
+             <button @click="closeForm" class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-aura-muted transition-colors">
+                <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.9 6M6 6l11.9 12"/>
+                </svg>
+             </button>
+          </div>
+
+          <div class="space-y-4">
+            <div class="space-y-2">
+              <label class="text-[10px] uppercase tracking-wider text-aura-muted font-bold ml-1">{{ $t('todo_title') }}</label>
+              <input
+                v-model="todoTitle"
+                type="text"
+                :placeholder="$t('todo_placeholder')"
+                class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 px-4 py-3 rounded-2xl text-lg font-bold text-aura-text dark:text-aura-text-dark outline-none focus:ring-2 focus:ring-aura-accent/50 transition-all placeholder-aura-muted"
+              />
+            </div>
+
+            <div class="space-y-2">
+              <label class="text-[10px] uppercase tracking-wider text-aura-muted font-bold ml-1">{{ $t('todo_content') }}</label>
+              <textarea
+                v-model="todoContent"
+                placeholder="..."
+                class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 px-4 py-3 rounded-2xl text-aura-text dark:text-aura-text-dark outline-none resize-none h-40 focus:ring-2 focus:ring-aura-accent/50 transition-all placeholder-aura-muted"
+              ></textarea>
+            </div>
+
+            <!-- Priority Selection -->
+            <div class="space-y-2">
+              <label class="text-[10px] uppercase tracking-wider text-aura-muted font-bold ml-1">Priority</label>
+              <div class="flex gap-2">
+                <button
+                  v-for="p in ['Low', 'Medium', 'High']"
+                  :key="p"
+                  @click="todoPriority = p as 'Low' | 'Medium' | 'High'"
+                  class="flex-1 py-3 rounded-2xl text-xs font-bold transition-all border-2"
+                  :class="{
+                    'bg-slate-100 border-slate-300 text-slate-700 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-300': todoPriority === p && p === 'Low',
+                    'bg-indigo-100 border-indigo-300 text-indigo-700 dark:bg-indigo-900/50 dark:border-indigo-800 dark:text-indigo-300': todoPriority === p && p === 'Medium',
+                    'bg-rose-100 border-rose-300 text-rose-700 dark:bg-rose-900/50 dark:border-rose-800 dark:text-rose-300': todoPriority === p && p === 'High',
+                    'bg-transparent border-slate-100 dark:border-slate-800 text-aura-muted hover:border-slate-200 dark:hover:border-slate-700': todoPriority !== p
+                  }"
+                >
+                  {{ p }}
+                </button>
               </div>
             </div>
           </div>
 
-          <!-- Delete Button -->
-          <button
-            @click.stop="confirmDelete(todo.id)"
-            class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-700 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all opacity-0 group-hover:opacity-100"
-            :title="$t('delete_todo')"
-          >
-            <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"/>
-            </svg>
-          </button>
+          <div class="flex gap-3 pt-2">
+             <button
+               @click="closeForm"
+               class="flex-1 py-4 bg-slate-100 dark:bg-slate-800 text-aura-text dark:text-aura-text-dark rounded-2xl font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-all"
+             >Cancel</button>
+             <button
+               @click="saveTodo"
+               class="flex-[2] py-4 bg-aura-accent text-white rounded-2xl font-bold shadow-glow hover:shadow-lg disabled:opacity-50 disabled:shadow-none transition-all"
+               :disabled="!todoTitle || !todoContent"
+             >{{ editingId ? 'Update Task' : 'Create Task' }}</button>
+          </div>
         </div>
       </div>
     </div>
@@ -177,7 +212,7 @@ import type { Todo } from '@/db'
 const router = useRouter()
 const store = useTodoStore()
 const { success } = useToast()
-const showCreate = ref(false)
+const showForm = ref(false)
 
 // Form State
 const editingId = ref<string | null>(null)
@@ -202,7 +237,7 @@ const openCreate = () => {
   todoContent.value = ''
   todoPriority.value = 'Low'
   todoCompleted.value = false
-  showCreate.value = true
+  showForm.value = true
 }
 
 const openEdit = (todo: Todo) => {
@@ -211,11 +246,11 @@ const openEdit = (todo: Todo) => {
   todoContent.value = todo.content
   todoPriority.value = todo.priority || 'Low'
   todoCompleted.value = todo.completed || false
-  showCreate.value = true
+  showForm.value = true
 }
 
 const saveTodo = async () => {
-  if (!todoTitle.value && !todoContent.value) return
+  if (!todoTitle.value || !todoContent.value) return
 
   if (editingId.value) {
     await store.updateTodo(editingId.value, todoTitle.value, todoContent.value, todoPriority.value, todoCompleted.value)
@@ -243,7 +278,7 @@ const handleDelete = async () => {
 }
 
 const closeForm = () => {
-  showCreate.value = false
+  showForm.value = false
   editingId.value = null
   todoTitle.value = ''
   todoContent.value = ''

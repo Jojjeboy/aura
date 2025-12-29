@@ -111,5 +111,11 @@
   "entry_updated": "Entry updated successfully!",
   "entry_deleted": "Entry deleted successfully!",
   "delete_entry": "Delete Entry",
-  "delete_confirm": "Are you sure you want to delete this log? This action cannot be undone."
+  "delete_confirm": "Are you sure you want to delete this log? This action cannot be undone.",
+  "stats_tab": "Stats",
+  "stats_feelings_title": "Top Feelings",
+  "stats_averages_title": "Health Trends",
+  "stats_entries_recorded": "entries",
+  "stats_locked_title": "Unlock Insights",
+  "stats_locked_desc": "Log {count} more entries to unlock your emotional patterns and health trends. Consistency is key!"
 }

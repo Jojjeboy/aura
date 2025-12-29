@@ -111,5 +111,11 @@
   "entry_updated": "Inlägget har uppdaterats!",
   "entry_deleted": "Inlägget har raderats!",
   "delete_entry": "Ta bort inlägg",
-  "delete_confirm": "Är du säker på att du vill ta bort detta inlägg? Detta går inte att ångra."
+  "delete_confirm": "Är du säker på att du vill ta bort detta inlägg? Detta går inte att ångra.",
+  "stats_tab": "Statistik",
+  "stats_feelings_title": "Toppkänslor",
+  "stats_averages_title": "Hälsotrender",
+  "stats_entries_recorded": "anteckningar",
+  "stats_locked_title": "Lås upp insikter",
+  "stats_locked_desc": "Gör {count} inlägg till för att låsa upp dina känslomönster och hälsotrender. Kontinuitet är nyckeln!"
 }

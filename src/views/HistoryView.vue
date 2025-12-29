@@ -33,6 +33,15 @@
         >
           {{ $t('calendar_tab') }}
         </button>
+        <button
+          @click="activeTab = 'stats'"
+          class="flex-1 py-2.5 px-4 rounded-lg font-bold text-sm transition-all"
+          :class="activeTab === 'stats'
+            ? 'bg-aura-accent text-white shadow-md'
+            : 'bg-white dark:bg-aura-card-dark text-aura-text dark:text-aura-text-dark hover:bg-slate-50 dark:hover:bg-slate-700'"
+        >
+          {{ $t('stats_tab') }}
+        </button>
       </div>
 
       <div v-if="loading" class="text-center py-10 text-aura-muted">{{ $t('loading') }}</div>
@@ -209,18 +218,111 @@
                 dayObj.day
                   ? dayObj.isFuture
                     ? 'bg-slate-50/50 dark:bg-slate-800/20 text-aura-muted/40 cursor-not-allowed'
-                    : 'bg-slate-50 dark:bg-slate-800/50 text-aura-text dark:text-aura-text-dark hover:bg-aura-accent/10 dark:hover:bg-aura-accent/20 cursor-pointer'
+                    : dayObj.isToday
+                      ? 'bg-aura-accent text-white shadow-md transform scale-110 z-20 font-black'
+                      : 'bg-slate-50 dark:bg-slate-800/50 text-aura-text dark:text-aura-text-dark hover:bg-aura-accent/10 dark:hover:bg-aura-accent/20 cursor-pointer'
                   : 'cursor-default',
               ]"
             >
-              <span v-if="dayObj.day" class="text-sm font-medium z-10">{{ dayObj.day }}</span>
+              <span v-if="dayObj.day" class="text-sm z-10">{{ dayObj.day }}</span>
               <div
                 v-if="dayObj.hasEntry"
-                class="absolute inset-0 rounded-lg border-2 border-aura-accent pointer-events-none"
+                class="absolute inset-0 rounded-lg border-2 pointer-events-none"
+                :class="dayObj.isToday ? 'border-white/40' : 'border-aura-accent'"
               ></div>
             </button>
           </div>
         </div>
+      </div>
+
+      <!-- Stats Tab -->
+      <div v-else-if="activeTab === 'stats'" class="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
+        <!-- Locked State / Motivation -->
+        <div v-if="entries.length < 10" class="bg-white dark:bg-aura-card-dark rounded-card p-10 shadow-soft text-center space-y-6 border-2 border-dashed border-aura-accent/20">
+          <div class="w-20 h-20 bg-aura-accent/10 rounded-full flex items-center justify-center mx-auto text-aura-accent animate-pulse">
+            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+          </div>
+          <div class="space-y-2">
+            <h3 class="text-xl font-black text-aura-text dark:text-aura-text-dark">{{ $t('stats_locked_title') }}</h3>
+            <p class="text-sm text-aura-muted max-w-xs mx-auto leading-relaxed">
+              {{ $t('stats_locked_desc', { count: 10 - entries.length }) }}
+            </p>
+          </div>
+          <div class="flex justify-center gap-2">
+            <div v-for="i in 10" :key="i" class="w-2 h-2 rounded-full transition-colors duration-500" :class="i <= entries.length ? 'bg-aura-accent' : 'bg-slate-100 dark:bg-white/5'"></div>
+          </div>
+        </div>
+
+        <!-- Records Counter -->
+        <template v-else>
+          <div class="bg-white dark:bg-aura-card-dark rounded-card p-6 shadow-soft flex items-center justify-between border-l-4 border-aura-accent">
+            <div>
+              <p class="text-[0.6rem] uppercase tracking-wider text-aura-muted font-bold mb-1">Consistency</p>
+              <h3 class="text-2xl font-black text-aura-text dark:text-aura-text-dark">
+                {{ entries.length }} <span class="text-xs font-medium text-aura-muted uppercase">{{ $t('stats_entries_recorded') }}</span>
+              </h3>
+            </div>
+            <div class="w-12 h-12 rounded-full bg-aura-accent/10 flex items-center justify-center text-aura-accent">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Top Feelings -->
+            <div class="bg-white dark:bg-aura-card-dark rounded-card p-6 shadow-soft space-y-4">
+              <h4 class="text-sm font-bold text-aura-text dark:text-aura-text-dark flex items-center gap-2">
+                <span>🎭</span> {{ $t('stats_feelings_title') }}
+              </h4>
+              <div class="space-y-3">
+                <div v-for="stat in feelingStats" :key="stat.name" class="space-y-1">
+                  <div class="flex justify-between text-xs font-bold">
+                    <span class="text-aura-text dark:text-aura-text-dark">{{ $t(`emotions.${stat.name}`) }}</span>
+                    <span class="text-aura-muted">{{ stat.count }}</span>
+                  </div>
+                  <div class="h-1.5 w-full bg-slate-100 dark:bg-white/5 rounded-full overflow-hidden">
+                    <div
+                      class="h-full bg-aura-accent rounded-full transition-all duration-1000"
+                      :style="{ width: `${stat.percentage}%` }"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Average Scores -->
+            <div class="bg-white dark:bg-aura-card-dark rounded-card p-6 shadow-soft space-y-4">
+              <h4 class="text-sm font-bold text-aura-text dark:text-aura-text-dark flex items-center gap-2">
+                <span>📈</span> {{ $t('stats_averages_title') }}
+              </h4>
+              <div class="space-y-6 pt-2">
+                <div v-for="metric in ['sleep', 'food', 'movement'] as const" :key="metric" class="flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="text-xl">{{ metric === 'sleep' ? '🌙' : metric === 'food' ? '🍏' : '🏃' }}</span>
+                    <span class="text-xs font-bold text-aura-muted uppercase tracking-wider">{{ $t(`scales.${metric}`) }}</span>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <div class="flex gap-0.5">
+                      <div
+                        v-for="i in 5"
+                        :key="i"
+                        class="w-2 h-2 rounded-full"
+                        :class="i > Math.round(averageHealth[metric]) ? 'bg-slate-100 dark:bg-white/5' : ''"
+                        :style="i <= Math.round(averageHealth[metric]) ? getMetricStyle(metric, i) : {}"
+                      ></div>
+                    </div>
+                    <span class="text-lg font-black text-aura-text dark:text-aura-text-dark min-w-[1.5rem] text-right">
+                      {{ averageHealth[metric].toFixed(1) }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </template>
       </div>
     </div>
 
@@ -335,8 +437,47 @@ const { success, error: toastError } = useToast()
 const { t } = useI18n()
 
 const error = ref('')
-const activeTab = ref<'log' | 'calendar'>('log')
+const activeTab = ref<'log' | 'calendar' | 'stats'>('log')
 const selectedDate = ref<Date | null>(null)
+
+// Statistics Calculations
+const feelingStats = computed(() => {
+  if (entries.value.length === 0) return []
+
+  const counts: Record<string, number> = {}
+  entries.value.forEach(entry => {
+    entry.moods.forEach(mood => {
+      counts[mood] = (counts[mood] || 0) + 1
+    })
+  })
+
+  const total = entries.value.length
+  return Object.entries(counts)
+    .map(([name, count]) => ({
+      name,
+      count,
+      percentage: Math.round((count / total) * 100)
+    }))
+    .sort((a, b) => b.count - a.count)
+})
+
+const averageHealth = computed(() => {
+  const totals = { sleep: 0, food: 0, movement: 0 }
+  if (entries.value.length === 0) return totals
+
+  entries.value.forEach(entry => {
+    totals.sleep += entry.health?.sleep || 0
+    totals.food += entry.health?.food || 0
+    totals.movement += entry.health?.movement || 0
+  })
+
+  const count = entries.value.length
+  return {
+    sleep: totals.sleep / count,
+    food: totals.food / count,
+    movement: totals.movement / count
+  }
+})
 const selectedEntry = ref<JournalEntry | null>(null)
 const showDeleteModal = ref(false)
 const showResetModal = ref(false)
@@ -374,7 +515,7 @@ const calendarDays = computed(() => {
   const padding = startDay === 0 ? 6 : startDay - 1
 
   for (let i = 0; i < padding; i++) {
-    days.push({ day: null, date: null, hasEntry: false, isFuture: false })
+    days.push({ day: null, date: null, hasEntry: false, isFuture: false, isToday: false })
   }
 
   for (let i = 1; i <= lastDay.getDate(); i++) {
@@ -383,7 +524,8 @@ const calendarDays = computed(() => {
     const dateStr = date.toDateString()
     const hasEntry = entries.value.some(e => new Date(e.date).toDateString() === dateStr)
     const isFuture = date > today
-    days.push({ day: i, date, hasEntry, isFuture })
+    const isToday = date.toDateString() === today.toDateString()
+    days.push({ day: i, date, hasEntry, isFuture, isToday })
   }
 
   return days

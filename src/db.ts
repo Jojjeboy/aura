@@ -14,26 +14,35 @@ export interface JournalEntry {
   updatedAt: number // timestamp
 }
 
-export interface Note {
+export interface Todo {
   id: string
   title: string
   content: string
   date: string
+  priority: 'Low' | 'Medium' | 'High'
+  completed: boolean
   synced: number
   updatedAt: number
 }
 
 const db = new Dexie('AuraDB') as Dexie & {
   journal_entries: EntityTable<JournalEntry, 'id'>,
-  notes: EntityTable<Note, 'id'>
+  todos: EntityTable<Todo, 'id'>
 }
 
 // Schema definition
-db.version(3).stores({
+db.version(5).stores({
   journal_entries: 'id, date, synced, updatedAt',
-  notes: 'id, date, synced, updatedAt'
-}).upgrade(() => {
-  // migration
+  todos: 'id, date, priority, completed, synced, updatedAt'
+}).upgrade(tx => {
+  // Transfer notes to todos if they exist
+  return tx.table('notes').toArray().then(async notes => {
+    const todos = notes.map(n => ({
+      ...n,
+      completed: false
+    }))
+    await tx.table('todos').bulkAdd(todos)
+  })
 })
 
 export { db }

@@ -108,10 +108,10 @@
          <h2 class="text-sm font-semibold text-aura-muted uppercase tracking-wider">{{ $t('settings.features') }}</h2>
          <div class="bg-white dark:bg-aura-card-dark rounded-card shadow-soft p-1 space-y-1">
             <button
-              @click="router.push('/notes')"
+              @click="router.push('/todo')"
               class="w-full flex justify-between items-center p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-3xl transition-colors group"
             >
-               <span class="text-aura-text dark:text-aura-text-dark font-medium">{{ $t('settings.my_notes') }}</span>
+               <span class="text-aura-text dark:text-aura-text-dark font-medium">{{ $t('settings.todo_list') }}</span>
                <svg class="w-5 h-5 text-aura-muted group-hover:translate-x-1 transition-transform" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 12H5m14 0-4 4m4-4-4-4"/>
                </svg>

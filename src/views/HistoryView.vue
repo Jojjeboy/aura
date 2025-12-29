@@ -95,7 +95,8 @@
                     v-for="i in 5"
                     :key="i"
                     class="w-1.5 h-1.5 rounded-full"
-                    :class="i <= (entry.health?.sleep || 0) ? 'bg-sky-400 shadow-[0_0_5px_rgba(56,189,248,0.5)]' : 'bg-slate-200 dark:bg-slate-700'"
+                    :class="i > (entry.health?.sleep || 0) ? 'bg-slate-200 dark:bg-slate-700' : ''"
+                    :style="i <= (entry.health?.sleep || 0) ? getMetricStyle('sleep', i) : {}"
                   ></div>
                 </div>
               </div>
@@ -110,7 +111,8 @@
                     v-for="i in 5"
                     :key="i"
                     class="w-1.5 h-1.5 rounded-full"
-                    :class="i <= (entry.health?.food || 0) ? 'bg-green-400 shadow-[0_0_5px_rgba(74,222,128,0.5)]' : 'bg-slate-200 dark:bg-slate-700'"
+                    :class="i > (entry.health?.food || 0) ? 'bg-slate-200 dark:bg-slate-700' : ''"
+                    :style="i <= (entry.health?.food || 0) ? getMetricStyle('food', i) : {}"
                   ></div>
                 </div>
               </div>
@@ -125,7 +127,8 @@
                     v-for="i in 5"
                     :key="i"
                     class="w-1.5 h-1.5 rounded-full"
-                    :class="i <= (entry.health?.movement || 0) ? 'bg-orange-400 shadow-[0_0_5px_rgba(251,146,60,0.5)]' : 'bg-slate-200 dark:bg-slate-700'"
+                    :class="i > (entry.health?.movement || 0) ? 'bg-slate-200 dark:bg-slate-700' : ''"
+                    :style="i <= (entry.health?.movement || 0) ? getMetricStyle('movement', i) : {}"
                   ></div>
                 </div>
               </div>
@@ -174,7 +177,9 @@
           </h2>
           <button
             @click="nextMonth"
-            class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-aura-muted"
+            :disabled="isCurrentMonth"
+            class="p-2 rounded-full transition-colors text-aura-muted disabled:opacity-30 disabled:cursor-not-allowed"
+            :class="{ 'hover:bg-slate-100 dark:hover:bg-slate-800': !isCurrentMonth }"
             :title="$t('next_month')"
           >
             <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -340,6 +345,12 @@ const entryToDelete = ref<JournalEntry | null>(null)
 // Calendar Logic
 const currentDate = ref(new Date())
 
+const isCurrentMonth = computed(() => {
+  const now = new Date()
+  return currentDate.value.getMonth() === now.getMonth() &&
+         currentDate.value.getFullYear() === now.getFullYear()
+})
+
 const currentMonthName = computed(() => {
   return currentDate.value.toLocaleDateString('default', { month: 'long', year: 'numeric' })
 })
@@ -456,6 +467,27 @@ const handleDelete = async () => {
   success(t('entry_deleted'))
   showDeleteModal.value = false
   entryToDelete.value = null
+}
+
+const getMetricStyle = (type: 'sleep' | 'food' | 'movement', val: number) => {
+  // Config for colors
+  const config = {
+    sleep: { h: 199, s: 89, l: 48 },    // Sky-400
+    food: { h: 142, s: 69, l: 58 },     // Green-400
+    movement: { h: 25, s: 95, l: 53 }  // Orange-400
+  }
+
+  const { h, s, l } = config[type]
+  // L reduction: 5% per step, total 20% at val 5
+  // S increase: 15% more at val 5
+  const lightness = l - ((val - 1) * (l * 0.2 / 4))
+  const saturation = Math.min(100, s + ((val - 1) * (15 / 4)))
+
+  return {
+    backgroundColor: `hsl(${h}, ${saturation}%, ${lightness}%)`,
+    shadowColor: `hsla(${h}, ${saturation}%, ${lightness}%, 0.5)`,
+    boxShadow: `0 0 5px hsla(${h}, ${saturation}%, ${lightness}%, 0.5)`
+  }
 }
 
 onMounted(() => {

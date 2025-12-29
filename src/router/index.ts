@@ -3,7 +3,7 @@ import { useAuthStore } from '@/stores/auth'
 import JournalView from '../views/JournalView.vue'
 import HistoryView from '../views/HistoryView.vue'
 import SettingsView from '../views/SettingsView.vue'
-import NotesView from '../views/NotesView.vue'
+import TodoView from '../views/TodoView.vue'
 import LoginView from '../views/LoginView.vue'
 
 const router = createRouter({
@@ -38,9 +38,9 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
-      path: '/notes',
-      name: 'notes',
-      component: NotesView,
+      path: '/todo',
+      name: 'todo',
+      component: TodoView,
       meta: { requiresAuth: true }
     },
     {

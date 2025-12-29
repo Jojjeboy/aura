@@ -29,7 +29,8 @@
               :key="val"
               @click="setHealth(scale.key, val)"
               class="w-full h-10 rounded-xl transition-all duration-200"
-              :class="getScaleClass(scale.key, val)"
+              :class="val > (store.currentEntry.health?.[scale.key] || 0) ? 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700' : ''"
+              :style="getScaleStyle(scale.key, val)"
            ></button>
         </div>
       </div>
@@ -86,11 +87,19 @@ const setHealth = (key: 'sleep' | 'food' | 'movement', val: number) => {
     }
 }
 
-const getScaleClass = (key: 'sleep' | 'food' | 'movement', val: number) => {
+const getScaleStyle = (key: 'sleep' | 'food' | 'movement', val: number) => {
   const current = store.currentEntry.health?.[key] || 0
   if (val <= current) {
-    return 'bg-aura-accent shadow-[0_0_10px_rgba(66,184,131,0.3)]'
+    // Base HSL for aura-accent is 153, 47%, 49%
+    // 5 is 20% darker than 1: L range 49% -> 39.2%
+    // 5 is 15% more saturated than 1: S range 47% -> 62%
+    const lightness = 49 - ((val - 1) * 2.45)
+    const saturation = 47 + ((val - 1) * 3.75)
+    return {
+      backgroundColor: `hsl(153, ${saturation}%, ${lightness}%)`,
+      boxShadow: `0 0 10px hsla(153, ${saturation}%, ${lightness}%, 0.3)`
+    }
   }
-  return 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700'
+  return {}
 }
 </script>

@@ -1,8 +1,9 @@
 <template>
   <div class="min-h-screen bg-aura-bg dark:bg-aura-bg-dark pb-24 transition-colors duration-300">
-    <!-- Greeting Section -->
     <section class="px-6 py-4 transition-colors duration-300">
-        <h1 class="text-2xl font-bold text-aura-text dark:text-aura-text-dark transition-colors duration-300">{{ $t('greeting') }}</h1>
+        <h1 class="text-2xl font-bold text-aura-text dark:text-aura-text-dark transition-colors duration-300">
+          {{ dynamicGreeting }}, {{ firstName }}
+        </h1>
         <p class="text-aura-muted text-sm transition-colors duration-300">{{ $t('greeting_sub') }}</p>
     </section>
 
@@ -73,8 +74,10 @@ import { computed, ref, onMounted } from 'vue'
 import { useBiometricLock } from '@/composables/useBiometricLock'
 import { useI18n } from 'vue-i18n'
 import { useToast } from '@/composables/useToast'
+import { useAuthStore } from '@/stores/auth'
 
 const store = useJournalStore()
+const authStore = useAuthStore()
 const router = useRouter()
 const { t } = useI18n()
 const { authenticate } = useBiometricLock()
@@ -110,6 +113,20 @@ const isTargetingToday = computed(() => {
   if (!store.currentEntry.date) return true
   const today = new Date().toLocaleDateString()
   return new Date(store.currentEntry.date).toLocaleDateString() === today
+})
+
+const firstName = computed(() => {
+  return authStore.user?.displayName?.split(' ')[0] || ''
+})
+
+const dynamicGreeting = computed(() => {
+  const hour = new Date().getHours()
+
+  if (hour >= 4 && hour < 12) return t('greeting_morning') || 'Good morning'
+  if (hour >= 12 && hour < 13) return t('greeting_day') || 'Good day'
+  if (hour >= 13 && hour < 18) return t('greeting_afternoon') || 'Good afternoon'
+  if (hour >= 18 && hour < 23) return t('greeting_evening') || 'Good evening'
+  return t('greeting_night') || 'Good night'
 })
 
 // If user navigates away and back, reset lock state for security

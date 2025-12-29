@@ -51,17 +51,28 @@
         <div
           v-for="entry in entries"
           :key="entry.id"
-          class="bg-white dark:bg-aura-card-dark rounded-card shadow-soft p-5 border border-transparent hover:border-aura-accent/20 transition-all duration-300"
+          class="bg-white dark:bg-aura-card-dark rounded-card shadow-soft border border-transparent hover:border-aura-accent/20 transition-all duration-300 overflow-hidden"
         >
-          <!-- Header: Date and Moods -->
-          <div class="flex justify-between items-start mb-4">
-            <div class="flex flex-col">
-              <span class="text-[0.65rem] uppercase tracking-wider text-aura-muted font-bold mb-0.5">
-                {{ new Date(entry.date).toLocaleDateString(undefined, { weekday: 'long' }) }}
-              </span>
-              <span class="text-sm font-bold text-aura-text dark:text-aura-text-dark">
-                {{ new Date(entry.date).toLocaleDateString() }}
-              </span>
+          <!-- Header: Date and Moods (Always Visible, Clickable to Toggle) -->
+          <div
+            @click="entry.id && toggleEntry(entry.id)"
+            class="p-5 flex justify-between items-start cursor-pointer hover:bg-slate-50/50 dark:hover:bg-aura-accent/5 transition-colors"
+          >
+            <div class="flex items-start gap-4">
+              <!-- Chevron Indicator -->
+              <div class="mt-1 transition-transform duration-300" :class="{ 'rotate-180': entry.id && expandedEntries.has(entry.id) }">
+                <svg class="w-4 h-4 text-aura-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+              <div class="flex flex-col">
+                <span class="text-[0.65rem] uppercase tracking-wider text-aura-muted font-bold mb-0.5">
+                  {{ new Date(entry.date).toLocaleDateString(undefined, { weekday: 'long' }) }}
+                </span>
+                <span class="text-sm font-bold text-aura-text dark:text-aura-text-dark">
+                  {{ new Date(entry.date).toLocaleDateString() }}
+                </span>
+              </div>
             </div>
             <div class="flex flex-wrap gap-1 justify-end max-w-[50%]">
               <span
@@ -75,95 +86,97 @@
             </div>
           </div>
 
-          <!-- Content: Gratitude & Health -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 py-4 border-y border-slate-50 dark:border-slate-800/30">
-            <!-- Gratitude Section -->
-            <div class="space-y-1.5">
-              <h4 class="text-[0.6rem] uppercase tracking-wider text-aura-muted font-black mb-1 flex items-center gap-1">
-                <span>✨</span>
-                <span>{{ $t('grateful_prompt') }}</span>
-              </h4>
-              <div class="space-y-1">
-                <p v-for="(g, i) in entry.gratitude.filter(item => item.trim() !== '')" :key="i" class="text-sm text-aura-text dark:text-aura-text-dark leading-relaxed break-words">
-                  <span class="text-aura-accent opacity-50">•</span> {{ g }}
-                </p>
+          <!-- Content: Gratitude, Health & Actions (Collapsible) -->
+          <div v-if="entry.id && expandedEntries.has(entry.id)" class="px-5 pb-5 animate-in fade-in slide-in-from-top-2 duration-300">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 py-4 border-y border-slate-50 dark:border-slate-800/30">
+              <!-- Gratitude Section -->
+              <div class="space-y-1.5">
+                <h4 class="text-[0.6rem] uppercase tracking-wider text-aura-muted font-black mb-1 flex items-center gap-1">
+                  <span>✨</span>
+                  <span>{{ $t('grateful_prompt') }}</span>
+                </h4>
+                <div class="space-y-1">
+                  <p v-for="(g, i) in entry.gratitude.filter(item => item.trim() !== '')" :key="i" class="text-sm text-aura-text dark:text-aura-text-dark leading-relaxed break-words">
+                    <span class="text-aura-accent opacity-50">•</span> {{ g }}
+                  </p>
+                </div>
+              </div>
+
+              <!-- Health Metrics Section -->
+              <div class="bg-slate-50/50 dark:bg-slate-800/30 rounded-2xl p-4 space-y-3">
+                <h4 class="text-[0.6rem] uppercase tracking-wider text-aura-muted font-black mb-1">{{ $t('scales.health') || 'Daily Metrics' }}</h4>
+
+                <div class="flex items-center justify-between group">
+                  <div class="flex items-center gap-2">
+                    <span class="text-lg filter grayscale group-hover:grayscale-0 transition-all duration-300">🌙</span>
+                    <span class="text-xs font-semibold text-aura-text dark:text-aura-text-dark">{{ $t('scales.sleep') }}</span>
+                  </div>
+                  <div class="flex gap-0.5">
+                    <div
+                      v-for="i in 5"
+                      :key="i"
+                      class="w-1.5 h-1.5 rounded-full"
+                      :class="i > (entry.health?.sleep || 0) ? 'bg-slate-200 dark:bg-slate-700' : ''"
+                      :style="i <= (entry.health?.sleep || 0) ? getMetricStyle('sleep', i) : {}"
+                    ></div>
+                  </div>
+                </div>
+
+                <div class="flex items-center justify-between group">
+                  <div class="flex items-center gap-2">
+                    <span class="text-lg filter grayscale group-hover:grayscale-0 transition-all duration-300">🍏</span>
+                    <span class="text-xs font-semibold text-aura-text dark:text-aura-text-dark">{{ $t('scales.food') }}</span>
+                  </div>
+                  <div class="flex gap-0.5">
+                    <div
+                      v-for="i in 5"
+                      :key="i"
+                      class="w-1.5 h-1.5 rounded-full"
+                      :class="i > (entry.health?.food || 0) ? 'bg-slate-200 dark:bg-slate-700' : ''"
+                      :style="i <= (entry.health?.food || 0) ? getMetricStyle('food', i) : {}"
+                    ></div>
+                  </div>
+                </div>
+
+                <div class="flex items-center justify-between group">
+                  <div class="flex items-center gap-2">
+                    <span class="text-lg filter grayscale group-hover:grayscale-0 transition-all duration-300">🏃</span>
+                    <span class="text-xs font-semibold text-aura-text dark:text-aura-text-dark">{{ $t('scales.movement') }}</span>
+                  </div>
+                  <div class="flex gap-0.5">
+                    <div
+                      v-for="i in 5"
+                      :key="i"
+                      class="w-1.5 h-1.5 rounded-full"
+                      :class="i > (entry.health?.movement || 0) ? 'bg-slate-200 dark:bg-slate-700' : ''"
+                      :style="i <= (entry.health?.movement || 0) ? getMetricStyle('movement', i) : {}"
+                    ></div>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <!-- Health Metrics Section -->
-            <div class="bg-slate-50/50 dark:bg-slate-800/30 rounded-2xl p-4 space-y-3">
-              <h4 class="text-[0.6rem] uppercase tracking-wider text-aura-muted font-black mb-1">{{ $t('scales.health') || 'Daily Metrics' }}</h4>
-
-              <div class="flex items-center justify-between group">
-                <div class="flex items-center gap-2">
-                  <span class="text-lg filter grayscale group-hover:grayscale-0 transition-all duration-300">🌙</span>
-                  <span class="text-xs font-semibold text-aura-text dark:text-aura-text-dark">{{ $t('scales.sleep') }}</span>
-                </div>
-                <div class="flex gap-0.5">
-                  <div
-                    v-for="i in 5"
-                    :key="i"
-                    class="w-1.5 h-1.5 rounded-full"
-                    :class="i > (entry.health?.sleep || 0) ? 'bg-slate-200 dark:bg-slate-700' : ''"
-                    :style="i <= (entry.health?.sleep || 0) ? getMetricStyle('sleep', i) : {}"
-                  ></div>
-                </div>
-              </div>
-
-              <div class="flex items-center justify-between group">
-                <div class="flex items-center gap-2">
-                  <span class="text-lg filter grayscale group-hover:grayscale-0 transition-all duration-300">🍏</span>
-                  <span class="text-xs font-semibold text-aura-text dark:text-aura-text-dark">{{ $t('scales.food') }}</span>
-                </div>
-                <div class="flex gap-0.5">
-                  <div
-                    v-for="i in 5"
-                    :key="i"
-                    class="w-1.5 h-1.5 rounded-full"
-                    :class="i > (entry.health?.food || 0) ? 'bg-slate-200 dark:bg-slate-700' : ''"
-                    :style="i <= (entry.health?.food || 0) ? getMetricStyle('food', i) : {}"
-                  ></div>
-                </div>
-              </div>
-
-              <div class="flex items-center justify-between group">
-                <div class="flex items-center gap-2">
-                  <span class="text-lg filter grayscale group-hover:grayscale-0 transition-all duration-300">🏃</span>
-                  <span class="text-xs font-semibold text-aura-text dark:text-aura-text-dark">{{ $t('scales.movement') }}</span>
-                </div>
-                <div class="flex gap-0.5">
-                  <div
-                    v-for="i in 5"
-                    :key="i"
-                    class="w-1.5 h-1.5 rounded-full"
-                    :class="i > (entry.health?.movement || 0) ? 'bg-slate-200 dark:bg-slate-700' : ''"
-                    :style="i <= (entry.health?.movement || 0) ? getMetricStyle('movement', i) : {}"
-                  ></div>
-                </div>
-              </div>
+            <!-- Footer Actions -->
+            <div class="flex justify-end mt-4 gap-1">
+              <button
+                @click="confirmDelete(entry)"
+                class="w-8 h-8 flex items-center justify-center text-red-400 hover:bg-red-500/5 rounded-full transition-all"
+                :title="$t('delete_entry')"
+              >
+                <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"/>
+                </svg>
+              </button>
+              <button
+                @click="handleEdit(entry)"
+                class="w-8 h-8 flex items-center justify-center text-aura-accent hover:bg-aura-accent/5 rounded-full transition-all"
+                :title="$t('edit_entry')"
+              >
+                <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.3 4.8 2.9 2.9M7 7H4a1 1 0 0 0-1 1v10c0 .6.4 1 1 1h11c.6 0 1-.4 1-1v-4.5m2.4-10a2 2 0 0 1 0 3l-6.8 6.8L8 14l.7-3.6 6.9-6.8a2 2 0 0 1 2.8 0Z"/>
+                </svg>
+              </button>
             </div>
-          </div>
-
-          <!-- Footer Actions -->
-          <div class="flex justify-end mt-4 gap-1">
-            <button
-              @click="confirmDelete(entry)"
-              class="w-8 h-8 flex items-center justify-center text-red-400 hover:bg-red-500/5 rounded-full transition-all"
-              :title="$t('delete_entry')"
-            >
-              <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"/>
-              </svg>
-            </button>
-            <button
-              @click="handleEdit(entry)"
-              class="w-8 h-8 flex items-center justify-center text-aura-accent hover:bg-aura-accent/5 rounded-full transition-all"
-              :title="$t('edit_entry')"
-            >
-              <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.3 4.8 2.9 2.9M7 7H4a1 1 0 0 0-1 1v10c0 .6.4 1 1 1h11c.6 0 1-.4 1-1v-4.5m2.4-10a2 2 0 0 1 0 3l-6.8 6.8L8 14l.7-3.6 6.9-6.8a2 2 0 0 1 2.8 0Z"/>
-              </svg>
-            </button>
           </div>
         </div>
       </div>
@@ -482,6 +495,16 @@ const selectedEntry = ref<JournalEntry | null>(null)
 const showDeleteModal = ref(false)
 const showResetModal = ref(false)
 const entryToDelete = ref<JournalEntry | null>(null)
+
+// Expansion State
+const expandedEntries = ref(new Set<string>())
+const toggleEntry = (id: string) => {
+  if (expandedEntries.value.has(id)) {
+    expandedEntries.value.delete(id)
+  } else {
+    expandedEntries.value.add(id)
+  }
+}
 
 // Calendar Logic
 const currentDate = ref(new Date())

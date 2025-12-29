@@ -48,8 +48,32 @@
 
       <!-- Log Tab -->
       <div v-else-if="activeTab === 'log'" class="space-y-4">
+        <!-- Search Bar -->
+        <div class="relative group">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg class="h-4 w-4 text-aura-muted group-focus-within:text-aura-accent transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          <input
+            v-model="searchQuery"
+            type="text"
+            :placeholder="$t('search_placeholder')"
+            class="block w-full pl-10 pr-3 py-2.5 bg-white dark:bg-aura-card-dark border border-transparent focus:border-aura-accent/30 rounded-xl text-sm placeholder-aura-muted text-aura-text dark:text-aura-text-dark shadow-soft focus:ring-0 transition-all"
+          />
+          <button
+            v-if="searchQuery"
+            @click="searchQuery = ''"
+            class="absolute inset-y-0 right-0 pr-3 flex items-center text-aura-muted hover:text-aura-accent transition-colors"
+          >
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
         <div
-          v-for="entry in entries"
+          v-for="entry in filteredEntries"
           :key="entry.id"
           class="bg-white dark:bg-aura-card-dark rounded-card shadow-soft border border-transparent hover:border-aura-accent/20 transition-all duration-300 overflow-hidden"
         >
@@ -474,6 +498,28 @@ const feelingStats = computed(() => {
     .sort((a, b) => b.count - a.count)
 })
 
+const filteredEntries = computed(() => {
+  if (!searchQuery.value.trim()) return entries.value
+
+  const query = searchQuery.value.toLowerCase()
+  return entries.value.filter(entry => {
+    // Check gratitude
+    const hasGratitude = entry.gratitude.some(g => g.toLowerCase().includes(query))
+    if (hasGratitude) return true
+
+    // Check moods
+    const hasMood = entry.moods.some(m => t(`emotions.${m}`).toLowerCase().includes(query))
+    if (hasMood) return true
+
+    // Check date
+    const dateStr = new Date(entry.date).toLocaleDateString().toLowerCase()
+    const weekdayStr = new Date(entry.date).toLocaleDateString(undefined, { weekday: 'long' }).toLowerCase()
+    if (dateStr.includes(query) || weekdayStr.includes(query)) return true
+
+    return false
+  })
+})
+
 const averageHealth = computed(() => {
   const totals = { sleep: 0, food: 0, movement: 0 }
   if (entries.value.length === 0) return totals
@@ -495,6 +541,7 @@ const selectedEntry = ref<JournalEntry | null>(null)
 const showDeleteModal = ref(false)
 const showResetModal = ref(false)
 const entryToDelete = ref<JournalEntry | null>(null)
+const searchQuery = ref('')
 
 // Expansion State
 const expandedEntries = ref(new Set<string>())

@@ -117,5 +117,6 @@
   "stats_averages_title": "Hälsotrender",
   "stats_entries_recorded": "anteckningar",
   "stats_locked_title": "Lås upp insikter",
-  "stats_locked_desc": "Gör {count} inlägg till för att låsa upp dina känslomönster och hälsotrender. Kontinuitet är nyckeln!"
+  "stats_locked_desc": "Gör {count} inlägg till för att låsa upp dina känslomönster och hälsotrender. Kontinuitet är nyckeln!",
+  "search_placeholder": "Sök inlägg (känslor, tacksamhet, datum)..."
 }

@@ -5,7 +5,11 @@ A minimalist, offline-first micro-journaling application built with Vue 3, Tailw
 ## Features
 
 - **Soft UI Design**: Airy, card-based interface with smooth animations.
-- **Interactive History**: Tabbed view with chronological log and monthly calendar.
+- **Interactive History**: Three-tabbed view (Log, Calendar, Stats) for a complete overview.
+- **Real-time Search**: Quick filtering of history logs by content, mood, or date.
+- **Collapsible Logs**: Clean, scannable history with toggleable detail views.
+- **Journal Statistics**: Visualized health trends and emotional patterns (unlocked after 10 entries).
+- **Gratitude Inspiration**: Integrated library of 100+ localized suggestions to help you get started.
 - **Micro-Reflection**: Log moods, gratitude, and health metrics.
 - **Toast Notifications**: Modern, non-blocking feedback system.
 - **Offline First**: Uses IndexedDB (Dexie) for local storage and syncs to Firestore when online.
@@ -74,4 +78,3 @@ npm run test:unit
 ```sh
 npm run lint
 ```
-

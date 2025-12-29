@@ -118,5 +118,30 @@
   "stats_entries_recorded": "entries",
   "stats_locked_title": "Unlock Insights",
   "stats_locked_desc": "Log {count} more entries to unlock your emotional patterns and health trends. Consistency is key!",
-  "search_placeholder": "Search entries (moods, gratitude, date)..."
+  "search_placeholder": "Search entries (moods, gratitude, date)...",
+  "reveal_more": "Reveal more",
+  "close": "Close",
+  "gratitude_inspiration_title": "Need inspiration?",
+  "gratitude_examples": [
+    "Your children", "A sunny day", "A listening friend", "Good health", "A warm bed", 
+    "Fresh coffee", "A kind stranger", "Family traditions", "Clean water", "Deep breaths", 
+    "The smell of rain", "Financial security", "A good book", "Laughter", "Reliable transport", 
+    "Cozy blankets", "Memories", "Personal growth", "A hot shower", "Sunsets", 
+    "Freedom", "Education", "Music", "Support systems", "Delicious food", 
+    "Weekend mornings", "Comfortable shoes", "Forgiveness", "Pets", "Inner peace", 
+    "Nature walks", "Technology", "A safe home", "Compliments", "Quiet moments", 
+    "Modern medicine", "Holidays", "Beautiful flowers", "Meaningful work", "Hobbies", 
+    "Unexpected mail", "Fresh air", "The change of seasons", "Safety", "Shared meals", 
+    "Dreams", "Second chances", "A steady pulse", "Hugs", "Reliable friends", 
+    "Learning from mistakes", "Early mornings", "Long conversations", "Stargazing", "Mentors", 
+    "Good news", "Electricity", "Diversity", "Art", "Clean clothes", 
+    "Stability", "Exercise", "Travel", "Home-cooked meals", "Wi-Fi", 
+    "Small victories", "Sleep", "The ability to help others", "Ocean waves", "Podcasts", 
+    "Kindness", "Self-reflection", "A fast internet connection", "New opportunities", "Old photographs", 
+    "Resilience", "Public parks", "Soft grass", "A cool breeze", "Favorite outfits", 
+    "Surprises", "Productivity", "Freedom of speech", "Reliable coworkers", "Hot tea", 
+    "Cozy sweaters", "The feeling of sun on skin", "Fresh fruit", "Honest feedback", "Movie nights", 
+    "Strong muscles", "Growing plants", "A good night's sleep", "Traditions", "Solving a problem", 
+    "Hope", "Creative outlets", "Weekend trips", "Courage", "Being alive"
+  ]
 }

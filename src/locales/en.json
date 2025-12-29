@@ -143,5 +143,13 @@
     "Cozy sweaters", "The feeling of sun on skin", "Fresh fruit", "Honest feedback", "Movie nights", 
     "Strong muscles", "Growing plants", "A good night's sleep", "Traditions", "Solving a problem", 
     "Hope", "Creative outlets", "Weekend trips", "Courage", "Being alive"
-  ]
+  ],
+  "priorities": {
+    "Low": "Low",
+    "Medium": "Medium",
+    "High": "High"
+  },
+  "cancel": "Cancel",
+  "update_task": "Update Task",
+  "create_task": "Create Task"
 }

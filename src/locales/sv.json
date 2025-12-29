@@ -143,5 +143,13 @@
     "Mysiga tröjor", "Känslan av sol på huden", "Färsk frukt", "Ärlig feedback", "Filmkvällar", 
     "Starka muskler", "Växande plantor", "En god natts sömn", "Traditioner", "Att lösa ett problem", 
     "Hopp", "Kreativa utlopp", "Helgresor", "Mod", "Att vara vid liv"
-  ]
+  ],
+  "priorities": {
+    "Low": "Låg",
+    "Medium": "Medel",
+    "High": "Hög"
+  },
+  "cancel": "Avbryt",
+  "update_task": "Uppdatera uppgift",
+  "create_task": "Skapa uppgift"
 }

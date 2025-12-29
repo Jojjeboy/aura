@@ -1,5 +1,131 @@
 [
   {
+    "hash": "c80749e",
+    "author": "Jojjeboy",
+    "date": "Mon Dec 29 08:22:54 2025 +0100",
+    "message": "docs: update README with new features and add comprehensive unit tests"
+  },
+  {
+    "hash": "e83868e",
+    "author": "Jojjeboy",
+    "date": "Mon Dec 29 08:08:10 2025 +0100",
+    "message": "feat: implement gratitude inspiration with 100+ localized suggestions"
+  },
+  {
+    "hash": "a1afe19",
+    "author": "Jojjeboy",
+    "date": "Mon Dec 29 08:02:58 2025 +0100",
+    "message": "feat: implement real-time search and filtering for history logs"
+  },
+  {
+    "hash": "30e8069",
+    "author": "Jojjeboy",
+    "date": "Mon Dec 29 07:58:35 2025 +0100",
+    "message": "feat: implement collapsible log entries for improved scannability"
+  },
+  {
+    "hash": "34209c6",
+    "author": "Jojjeboy",
+    "date": "Mon Dec 29 07:54:44 2025 +0100",
+    "message": "feat: implement journal statistics and highlight today in calendar"
+  },
+  {
+    "hash": "65d5fff",
+    "author": "Jojjeboy",
+    "date": "Mon Dec 29 07:45:03 2025 +0100",
+    "message": "feat: transform notes into todo list with firestore migration and ux improvements"
+  },
+  {
+    "hash": "a8af6cb",
+    "author": "Jojjeboy",
+    "date": "Mon Dec 29 07:36:44 2025 +0100",
+    "message": "Todos instead of Notes and other small fixes"
+  },
+  {
+    "hash": "a2db7aa",
+    "author": "Jojjeboy",
+    "date": "Sun Dec 28 21:20:11 2025 +0100",
+    "message": "mc"
+  },
+  {
+    "hash": "cd26e0b",
+    "author": "Jojjeboy",
+    "date": "Sun Dec 28 21:11:45 2025 +0100",
+    "message": "feat: implement real-time Firestore sync for journal entries"
+  },
+  {
+    "hash": "6175117",
+    "author": "Jojjeboy",
+    "date": "Sun Dec 28 21:05:34 2025 +0100",
+    "message": "fix: resolve DataCloneError by deep cloning journal entries before saving"
+  },
+  {
+    "hash": "5b7fc1c",
+    "author": "Jojjeboy",
+    "date": "Sun Dec 28 21:01:30 2025 +0100",
+    "message": "feat: implement Firestore sync for journal entries and standardize synced status"
+  },
+  {
+    "hash": "a811866",
+    "author": "Jojjeboy",
+    "date": "Sun Dec 28 20:52:19 2025 +0100",
+    "message": "feat: make header logo and title clickable and redirect to journal"
+  },
+  {
+    "hash": "77ca157",
+    "author": "Jojjeboy",
+    "date": "Sun Dec 28 20:51:09 2025 +0100",
+    "message": "feat: regenerate icons from logo.jpg, remove notes from footer, and refine UI"
+  },
+  {
+    "hash": "b23ab36",
+    "author": "Jojjeboy",
+    "date": "Sun Dec 28 20:34:06 2025 +0100",
+    "message": "Modern UI: Implement Tailwind UI modals and Flowbite icons throughout the app"
+  },
+  {
+    "hash": "eb0f124",
+    "author": "Jojjeboy",
+    "date": "Sun Dec 28 18:40:43 2025 +0100",
+    "message": "UI Refinement: remove header subtitle and use icons for history log actions"
+  },
+  {
+    "hash": "1c3ef14",
+    "author": "Jojjeboy",
+    "date": "Sun Dec 28 18:19:38 2025 +0100",
+    "message": "Implement journal entry deletion in HistoryView"
+  },
+  {
+    "hash": "a451d61",
+    "author": "Jojjeboy",
+    "date": "Sun Dec 28 17:47:38 2025 +0100",
+    "message": "Filter empty gratitude bullets in HistoryView log cards"
+  },
+  {
+    "hash": "12a1d1b",
+    "author": "Jojjeboy",
+    "date": "Sun Dec 28 17:46:20 2025 +0100",
+    "message": "Refine History Log design and display health metrics (Sleep, Nutrition, Activity) in entry cards"
+  },
+  {
+    "hash": "e03a9a0",
+    "author": "Jojjeboy",
+    "date": "Sun Dec 28 17:40:05 2025 +0100",
+    "message": "Persist HistoryView unlock state in authStore during local session navigation"
+  },
+  {
+    "hash": "9c8454f",
+    "author": "Jojjeboy",
+    "date": "Sun Dec 28 17:23:02 2025 +0100",
+    "message": "mc"
+  },
+  {
+    "hash": "f07707e",
+    "author": "Jojjeboy",
+    "date": "Sun Dec 28 17:22:05 2025 +0100",
+    "message": "Fix TypeScript 'possibly undefined' errors in toast.spec.ts"
+  },
+  {
     "hash": "5dad350",
     "author": "Jojjeboy",
     "date": "Sun Dec 28 17:12:53 2025 +0100",

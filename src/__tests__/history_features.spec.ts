@@ -23,7 +23,10 @@ const i18n = createI18n({
       stats_tab: 'Stats',
       search_placeholder: 'Search...',
       emotions: { Joy: 'Joy', Sad: 'Sad' },
-      grateful_prompt: 'Grateful'
+      grateful_prompt: 'Grateful',
+      delete_entry: 'Delete',
+      edit_entry: 'Edit',
+      delete_confirm: 'Are you sure?'
     }
   }
 })
@@ -40,14 +43,18 @@ describe('HistoryView Search and Collapse', () => {
         date: new Date('2025-01-01').toISOString(),
         moods: ['Joy'],
         gratitude: ['Coffee', 'Sun', 'Work'],
-        health: { sleep: 5, food: 5, movement: 5 }
+        health: { sleep: 5, food: 5, movement: 5 },
+        synced: 1,
+        updatedAt: Date.now()
       },
       {
         id: '2',
         date: new Date('2025-01-02').toISOString(),
         moods: ['Sad'],
         gratitude: ['Sleep', 'Quiet', 'Tea'],
-        health: { sleep: 3, food: 3, movement: 3 }
+        health: { sleep: 3, food: 3, movement: 3 },
+        synced: 1,
+        updatedAt: Date.now()
       }
     ]
   })

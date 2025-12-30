@@ -170,6 +170,7 @@ export function useNotifications() {
       const data: any = {
         reminderTime: settingsStore.reminderTime,
         reminderHourUTC: utcHour,
+        locale: settingsStore.locale,
         updatedAt: Date.now()
       }
 

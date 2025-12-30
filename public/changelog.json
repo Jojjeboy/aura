@@ -1,5 +1,59 @@
 [
   {
+    "hash": "f87c429",
+    "author": "Jojjeboy",
+    "date": "Tue Dec 30 20:55:59 2025 +0100",
+    "message": "Users can now set their own reminder times, and the system will respect them."
+  },
+  {
+    "hash": "ed8c8b6",
+    "author": "Jojjeboy",
+    "date": "Tue Dec 30 20:44:37 2025 +0100",
+    "message": "Patch bump"
+  },
+  {
+    "hash": "1951ab1",
+    "author": "Jojjeboy",
+    "date": "Tue Dec 30 20:41:26 2025 +0100",
+    "message": "fix: correct date range check in service worker"
+  },
+  {
+    "hash": "83ecc4d",
+    "author": "Jojjeboy",
+    "date": "Tue Dec 30 20:35:08 2025 +0100",
+    "message": "fix: resolve sw.ts typescript error"
+  },
+  {
+    "hash": "197cacc",
+    "author": "Jojjeboy",
+    "date": "Tue Dec 30 20:32:15 2025 +0100",
+    "message": ".gitignore"
+  },
+  {
+    "hash": "2431c32",
+    "author": "Jojjeboy",
+    "date": "Tue Dec 30 20:31:39 2025 +0100",
+    "message": "feat: enable background push notifications with daily scheduler"
+  },
+  {
+    "hash": "982e13e",
+    "author": "Jojjeboy",
+    "date": "Mon Dec 29 16:58:06 2025 +0100",
+    "message": "Bump"
+  },
+  {
+    "hash": "ca86b3f",
+    "author": "Jojjeboy",
+    "date": "Mon Dec 29 16:23:11 2025 +0100",
+    "message": "feat(todo): cleanup list UX, restrict expand to title, and localize strings"
+  },
+  {
+    "hash": "ae49955",
+    "author": "Jojjeboy",
+    "date": "Mon Dec 29 08:29:00 2025 +0100",
+    "message": "test: fix type errors and suppress i18n warnings in history tests"
+  },
+  {
     "hash": "c80749e",
     "author": "Jojjeboy",
     "date": "Mon Dec 29 08:22:54 2025 +0100",
@@ -244,23 +298,5 @@
     "author": "Jojjeboy",
     "date": "Sun Dec 28 10:30:11 2025 +0100",
     "message": "mc"
-  },
-  {
-    "hash": "3871a49",
-    "author": "Jojjeboy",
-    "date": "Sun Dec 28 10:12:12 2025 +0100",
-    "message": "Github workflows"
-  },
-  {
-    "hash": "b5108d7",
-    "author": "Jojjeboy",
-    "date": "Sun Dec 28 10:00:56 2025 +0100",
-    "message": ".env"
-  },
-  {
-    "hash": "f39aa9e",
-    "author": "Jojjeboy",
-    "date": "Sun Dec 28 09:58:44 2025 +0100",
-    "message": "Initial"
   }
 ]

@@ -149,7 +149,7 @@ const unlockEntry = async () => {
 
 const save = async () => {
     await store.saveEntry()
-    success(store.isEditing ? t('entry_updated') || 'Entry updated!' : t('entry_saved') || 'Entry saved!')
+    success(store.isEditing ? t('entry_updated_success') : t('entry_saved_success'))
     router.push('/history')
 }
 </script>

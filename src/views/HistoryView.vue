@@ -128,7 +128,7 @@
 
               <!-- Health Metrics Section -->
               <div class="bg-slate-50/50 dark:bg-slate-800/30 rounded-2xl p-4 space-y-3">
-                <h4 class="text-[0.6rem] uppercase tracking-wider text-aura-muted font-black mb-1">{{ $t('scales.health') || 'Daily Metrics' }}</h4>
+                <h4 class="text-[0.6rem] uppercase tracking-wider text-aura-muted font-black mb-1">{{ $t('scales.health') }}</h4>
 
                 <div class="flex items-center justify-between group">
                   <div class="flex items-center gap-2">
@@ -296,7 +296,7 @@
         <template v-else>
           <div class="bg-white dark:bg-aura-card-dark rounded-card p-6 shadow-soft flex items-center justify-between border-l-4 border-aura-accent">
             <div>
-              <p class="text-[0.6rem] uppercase tracking-wider text-aura-muted font-bold mb-1">Consistency</p>
+              <p class="text-[0.6rem] uppercase tracking-wider text-aura-muted font-bold mb-1">{{ $t('consistency') || 'Consistency' }}</p>
               <h3 class="text-2xl font-black text-aura-text dark:text-aura-text-dark">
                 {{ entries.length }} <span class="text-xs font-medium text-aura-muted uppercase">{{ $t('stats_entries_recorded') }}</span>
               </h3>
@@ -434,7 +434,7 @@
       :title="$t('delete_entry')"
       :message="$t('delete_confirm')"
       :confirm-text="$t('delete_entry')"
-      cancel-text="Cancel"
+      :cancel-text="$t('cancel')"
       type="danger"
       @confirm="handleDelete"
       @cancel="showDeleteModal = false"
@@ -443,9 +443,9 @@
     <AppModal
       :show="showResetModal"
       :title="$t('change_pin')"
-      message="Authenticate with Google to reset your PIN?"
-      confirm-text="Authenticate"
-      cancel-text="Cancel"
+      :message="$t('reset_pin_confirm_msg') || 'Authenticate with Google to reset your PIN?'"
+      :confirm-text="$t('authenticate') || 'Authenticate'"
+      :cancel-text="$t('cancel')"
       @confirm="handleForgotConfirm"
       @cancel="showResetModal = false"
     />
@@ -642,7 +642,7 @@ const handleUnlock = async (pin: string) => {
     error.value = ''
   } else {
     // Shake effect managed by error prop existing generally or we can just show text
-    error.value = 'Incorrect PIN'
+    error.value = t('wrong_pin')
     setTimeout(() => error.value = '', 2000)
   }
 }

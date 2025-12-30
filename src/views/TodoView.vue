@@ -21,10 +21,10 @@
 
     <div class="px-6 space-y-6">
       <!-- Todos List -->
-      <div v-if="store.loading" class="text-center text-aura-muted py-8 max-w-sm mx-auto">Loading tasks...</div>
+      <div v-if="store.loading" class="text-center text-aura-muted py-8 max-w-sm mx-auto">{{ $t('loading_tasks') }}</div>
 
       <div v-else-if="store.todos.length === 0 && !showForm" class="text-center text-aura-muted py-12">
-        <p>No tasks yet. Tap + to create one.</p>
+        <p>{{ $t('no_tasks') }}</p>
       </div>
 
       <div v-else class="grid gap-4">
@@ -65,7 +65,7 @@
                   class="font-bold text-aura-text dark:text-aura-text-dark transition-all text-base"
                   :class="{ 'line-through opacity-70': todo.completed }"
                 >
-                  {{ todo.title || 'Untitled' }}
+                  {{ todo.title || $t('todo_untitled') }}
                 </h3>
 
                 <span
@@ -103,7 +103,7 @@
                     <button
                       @click.stop="openEdit(todo)"
                       class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-aura-accent hover:bg-aura-accent/10 transition-all shadow-sm"
-                      title="Edit Task"
+                      :title="$t('edit_todo')"
                     >
                       <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.3 4.8 2.9 2.9M7 7H4a1 1 0 0 0-1 1v10c0 .6.4 1 1 1h11c.6 0 1-.4 1-1v-4.5m2.4-10a2 2 0 0 1 0 3l-6.8 6.8L8 14l.7-3.6 6.9-6.8a2 2 0 0 1 2.8 0Z"/>
@@ -166,7 +166,7 @@
 
             <!-- Priority Selection -->
             <div class="space-y-2">
-              <label class="text-[10px] uppercase tracking-wider text-aura-muted font-bold ml-1">Priority</label>
+              <label class="text-[10px] uppercase tracking-wider text-aura-muted font-bold ml-1">{{ $t('todo_priority') }}</label>
               <div class="flex gap-2">
                 <button
                   v-for="p in ['Low', 'Medium', 'High']"
@@ -221,11 +221,13 @@ import { useRouter } from 'vue-router'
 import { useTodoStore } from '@/stores/todo'
 import { useToast } from '@/composables/useToast'
 import AppModal from '@/components/ui/AppModal.vue'
+import { useI18n } from 'vue-i18n'
 import type { Todo } from '@/db'
 
 const router = useRouter()
 const store = useTodoStore()
 const { success } = useToast()
+const { t } = useI18n()
 const showForm = ref(false)
 
 // Form State
@@ -277,10 +279,10 @@ const saveTodo = async () => {
 
   if (editingId.value) {
     await store.updateTodo(editingId.value, todoTitle.value, todoContent.value, todoPriority.value, todoCompleted.value)
-    success('Task updated!')
+    success(t('task_updated_success'))
   } else {
     await store.addTodo(todoTitle.value, todoContent.value, todoPriority.value)
-    success('Task saved!')
+    success(t('task_saved_success'))
   }
 
   closeForm()
@@ -294,7 +296,7 @@ const confirmDelete = (id: string) => {
 const handleDelete = async () => {
   if (todoIdToDelete.value) {
     await store.deleteTodo(todoIdToDelete.value)
-    success('Task deleted')
+    success(t('task_deleted_success'))
     showDeleteModal.value = false
     todoIdToDelete.value = null
   }

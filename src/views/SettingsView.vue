@@ -88,27 +88,35 @@
           </div>
 
           <div v-if="settingsStore.reminderEnabled" class="space-y-2">
-            <label for="reminder-time" class="text-sm font-medium text-aura-text dark:text-aura-text-dark">{{ $t('reminder_time') }}</label>
-            <input
+            <label for="reminder-time" class="text-sm font-medium text-aura-text dark:text-aura-text-dark">{{ $t('reminder_time') }} {{ $t('reminder_time_approx') }}</label>
+            <select
               id="reminder-time"
               v-model="settingsStore.reminderTime"
               @change="handleTimeChange"
-              type="time"
-              class="w-full px-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-aura-text dark:text-aura-text-dark focus:outline-none focus:ring-2 focus:ring-aura-accent"
-            />
+              class="w-full px-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-aura-text dark:text-aura-text-dark focus:outline-none focus:ring-2 focus:ring-aura-accent appearance-none cursor-pointer"
+            >
+              <option
+                v-for="h in 24"
+                :key="h"
+                :value="String(h-1).padStart(2, '0') + ':00'"
+              >
+                {{ String(h-1).padStart(2, '0') }}:00
+              </option>
+            </select>
+            <p class="text-[10px] text-aura-muted italic">*{{ $t('reminder_top_of_hour') }}</p>
             <p v-if="notificationPermission !== 'granted'" class="text-xs text-amber-600 dark:text-amber-400">
               {{ $t('notification_permission_needed') }}
             </p>
             <div v-else-if="pushToken" class="flex flex-col gap-1">
               <p class="text-[10px] text-green-600 dark:text-green-400 font-medium flex items-center gap-1">
                 <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"></path></svg>
-                Background notifications active
+                {{ $t('notifications_active') }}
               </p>
               <button
                 @click="copyToken"
                 class="text-[9px] text-aura-muted hover:text-aura-accent transition-colors text-left"
               >
-                Copy Debug Token
+                {{ $t('copy_debug_token') }}
               </button>
             </div>
           </div>
@@ -192,9 +200,9 @@
     <AppModal
       :show="showRemovePinModal"
       :title="$t('turn_off_lock')"
-      message="Are you sure you want to remove the App Lock? This will disable PIN protection for your history."
-      confirm-text="Remove Lock"
-      cancel-text="Cancel"
+      :message="$t('remove_lock_confirm_msg')"
+      :confirm-text="$t('remove_lock_button')"
+      :cancel-text="$t('cancel')"
       type="danger"
       @confirm="confirmRemovePin"
       @cancel="showRemovePinModal = false"
@@ -211,6 +219,7 @@ import { signOut } from 'firebase/auth'
 import { useNotifications } from '@/composables/useNotifications'
 import { useToast } from '@/composables/useToast'
 import AppModal from '@/components/ui/AppModal.vue'
+import { useI18n } from 'vue-i18n'
 
 import PinPad from '@/components/ui/PinPad.vue'
 import { useRegisterSW } from 'virtual:pwa-register/vue'
@@ -226,13 +235,14 @@ const router = useRouter()
 const settingsStore = useSettingsStore()
 const { notificationPermission, requestPermission, subscribeToPush, scheduleReminder, saveNotificationPreferences } = useNotifications()
 const { success, error, info } = useToast()
+const { t } = useI18n()
 
 const pushToken = ref<string | null>(null)
 
 const copyToken = () => {
     if (pushToken.value) {
         navigator.clipboard.writeText(pushToken.value)
-        success('Token copied to clipboard!')
+        success(t('token_copied'))
     }
 }
 
@@ -264,9 +274,9 @@ const handlePinSubmit = async (pin: string) => {
         if (pin === tempPin.value) {
             await settingsStore.setPin(pin)
             showPinPad.value = false
-            success('PIN set successfully!')
+            success(t('pin_setup_success'))
         } else {
-            pinError.value = 'PINs do not match. Try again.'
+            pinError.value = t('pin_mismatch')
             // Reset to set mode?
             setTimeout(() => {
                 pinMode.value = 'set'
@@ -284,12 +294,12 @@ const handleRemovePin = () => {
 const confirmRemovePin = async () => {
     showRemovePinModal.value = false
     await settingsStore.removePin()
-    success('App Lock removed!')
+    success(t('app_lock_removed'))
 }
 const toggleReminder = async () => {
     // Check if browser supports notifications
     if (globalThis.Notification === undefined) {
-        error('Notifications are not supported in this browser.')
+        error(t('notifications_not_supported'))
         return
     }
 
@@ -298,12 +308,12 @@ const toggleReminder = async () => {
         settingsStore.reminderEnabled = false
         pushToken.value = null
         await settingsStore.saveSettings()
-        info('Daily reminder disabled')
+        info(t('reminder_disabled'))
     } else {
         // If trying to enable, request permission first
         // Check current permission state
         if (globalThis.Notification && globalThis.Notification.permission === 'denied') {
-            error('Notifications blocked. Please enable them in your browser settings.')
+            error(t('notifications_blocked'))
             return
         }
 
@@ -314,7 +324,7 @@ const toggleReminder = async () => {
             settingsStore.reminderEnabled = true
             await settingsStore.saveSettings()
             scheduleReminder()
-            success('Daily reminder enabled with background support!')
+            success(t('reminder_enabled_background'))
         } else {
             // Fallback: If push subscription failed but permission might still be granted
             const granted = await requestPermission()
@@ -327,9 +337,9 @@ const toggleReminder = async () => {
                // Update remote preferences if logged in and enabled
                saveNotificationPreferences()
 
-               success('Daily reminder enabled (foreground only)')
+               success(t('reminder_enabled_foreground'))
             } else {
-               error('Notification permission denied')
+               error(t('notification_permission_denied'))
             }
         }
     }

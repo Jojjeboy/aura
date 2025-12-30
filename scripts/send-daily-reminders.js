@@ -19,6 +19,18 @@ admin.initializeApp({
 const db = admin.firestore();
 const messaging = admin.messaging();
 
+// Localization mappings (Simplified for script)
+const locales = {
+  en: {
+    title: 'Aura - Time to reflect',
+    body: 'Don\'t forget to log your daily entry! 📝'
+  },
+  sv: {
+    title: 'Aura - Dags för reflektion',
+    body: 'Glöm inte att logga ditt dagliga inlägg! 📝'
+  }
+};
+
 async function sendReminders() {
   console.log('Starting daily reminder broadcast...');
 
@@ -32,11 +44,12 @@ async function sendReminders() {
       return;
     }
 
-    // 1.5. Filter by Time (Hourly Check)
     const currentHour = new Date().getUTCHours();
     console.log(`Current Server Hour (UTC): ${currentHour}`);
 
-    const tokens = [];
+    const batches = { en: [], sv: [] };
+    let totalScheduled = 0;
+
     usersSnapshot.forEach(doc => {
       const data = doc.data();
 
@@ -47,38 +60,44 @@ async function sendReminders() {
 
       // Check if it's time
       if (userHour === currentHour) {
-          tokens.push(data.fcmToken);
+          const userLocale = data.locale === 'sv' ? 'sv' : 'en'; // Default to en
+          batches[userLocale].push(data.fcmToken);
+          totalScheduled++;
       }
     });
 
-    if (tokens.length === 0) {
+    if (totalScheduled === 0) {
         console.log(`No users scheduled for hour ${currentHour}.`);
         return;
     }
 
-    console.log(`Found ${tokens.length} tokens.`);
+    console.log(`Found ${totalScheduled} users across locales.`);
 
-    // 2. Prepare the message
-    const message = {
-      notification: {
-        title: 'Aura - Time to reflect',
-        body: 'Don\'t forget to log your daily entry! 📝'
-      },
-      tokens: tokens // Multicast
-    };
+    // 2. Send localized batches
+    for (const [locale, tokens] of Object.entries(batches)) {
+        if (tokens.length === 0) continue;
 
-    // 3. Send Multicast
-    const response = await messaging.sendEachForMulticast(message);
+        console.log(`Sending ${tokens.length} messages for locale: ${locale}`);
 
-    console.log(`Successfully sent ${response.successCount} messages.`);
-    if (response.failureCount > 0) {
-        console.log(`Failed to send ${response.failureCount} messages.`);
-        response.responses.forEach((resp, idx) => {
-            if (!resp.success) {
-                console.error(`Token at index ${idx} failed:`, resp.error);
-                // Optional: remove invalid tokens from DB here
-            }
-        });
+        const message = {
+          notification: {
+            title: locales[locale].title,
+            body: locales[locale].body
+          },
+          tokens: tokens
+        };
+
+        const response = await messaging.sendEachForMulticast(message);
+        console.log(`[${locale}] Successfully sent ${response.successCount} messages.`);
+        if (response.failureCount > 0) {
+            console.log(`[${locale}] Failed to send ${response.failureCount} messages.`);
+            response.responses.forEach((resp, idx) => {
+                if (!resp.success) {
+                    console.error(`[${locale}] Token at index ${idx} failed:`, resp.error);
+                    // Optional: remove invalid tokens from DB here
+                }
+            });
+        }
     }
 
   } catch (error) {

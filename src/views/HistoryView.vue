@@ -178,6 +178,16 @@
                   </div>
                 </div>
               </div>
+              <!-- Thoughts Section -->
+              <div v-if="entry.thoughts" class="sm:col-span-2 mt-2 pt-4 border-t border-slate-50 dark:border-slate-800/30">
+                <h4 class="text-[0.6rem] uppercase tracking-wider text-aura-muted font-black mb-2 flex items-center gap-1">
+                  <span>💭</span>
+                  <span>{{ $t('thoughts_label') }}</span>
+                </h4>
+                <p class="text-sm text-aura-text dark:text-aura-text-dark leading-relaxed whitespace-pre-wrap">
+                  {{ entry.thoughts }}
+                </p>
+              </div>
             </div>
 
             <!-- Footer Actions -->
@@ -406,6 +416,12 @@
                 • {{ g }}
               </p>
             </div>
+          </div>
+          <div v-if="selectedEntry.thoughts" class="mb-4 pt-4 border-t border-slate-50 dark:border-slate-800/30">
+            <h4 class="text-xs font-bold text-aura-muted mb-2">{{ $t('thoughts_label') }}</h4>
+            <p class="text-sm text-aura-text dark:text-aura-text-dark leading-relaxed whitespace-pre-wrap">
+              {{ selectedEntry.thoughts }}
+            </p>
           </div>
           <button
             @click="handleEditFromModal(selectedEntry)"

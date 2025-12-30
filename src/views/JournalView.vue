@@ -52,6 +52,11 @@
           <MoodAccordion />
         </section>
 
+        <!-- Thoughts Section -->
+        <section>
+          <ThoughtsInput />
+        </section>
+
         <!-- Action -->
         <div class="flex justify-end pt-4 pb-24">
           <button
@@ -68,6 +73,7 @@
 <script setup lang="ts">
 import GratitudeInput from '@/components/journal/GratitudeInput.vue'
 import MoodAccordion from '@/components/journal/MoodAccordion.vue'
+import ThoughtsInput from '@/components/journal/ThoughtsInput.vue'
 import { useJournalStore } from '@/stores/journal'
 import { useRouter } from 'vue-router'
 import { computed, ref, onMounted } from 'vue'

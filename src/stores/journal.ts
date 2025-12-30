@@ -35,7 +35,7 @@ export const useJournalStore = defineStore('journal', () => {
       const entryRef = doc(firestore, 'users', auth.currentUser.uid, 'journal_entries', entry.id!)
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-      const { synced: _synced, ...firestoreData } = entry as any
+      const { synced: _, ...firestoreData } = entry as any
 
       await setDoc(entryRef, {
         ...firestoreData,
@@ -93,15 +93,16 @@ export const useJournalStore = defineStore('journal', () => {
 
     const id = currentEntry.value.id || uuidv4()
 
-    const rawEntry: JournalEntry = JSON.parse(JSON.stringify({
+    const rawEntry: JournalEntry = structuredClone({
         id,
         date: currentEntry.value.date || new Date().toISOString(),
         gratitude: currentEntry.value.gratitude,
         moods: currentEntry.value.moods,
+        thoughts: currentEntry.value.thoughts,
         health: currentEntry.value.health,
         synced: 0,
         updatedAt: Date.now()
-    }))
+    }) as JournalEntry
 
     // Save to Local indexedDB first (Offline-first)
     await dexieDb.journal_entries.put(rawEntry)
@@ -135,12 +136,13 @@ export const useJournalStore = defineStore('journal', () => {
     currentEntry.value = {
       gratitude: ['', '', ''],
       moods: [],
+      thoughts: '',
       health: { sleep: 3, food: 3, movement: 3 }
     }
   }
 
   const editEntry = (entry: JournalEntry) => {
-    currentEntry.value = JSON.parse(JSON.stringify(entry))
+    currentEntry.value = structuredClone(entry)
   }
 
   const deleteEntry = async (id: string) => {

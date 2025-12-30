@@ -5,6 +5,7 @@ export interface JournalEntry {
   date: string // ISO date string
   gratitude: string[]
   moods: string[] // 'Joy', 'Anger', etc.
+  thoughts?: string
   health: {
     sleep: number
     food: number

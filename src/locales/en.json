@@ -12,6 +12,8 @@
   "grateful_prompt": "I am grateful for...",
   "grateful_placeholder": "I am grateful for...",
   "mood_prompt": "What's your mood?",
+  "thoughts_label": "Daily Reflections (optional)",
+  "thoughts_placeholder": "What's on your mind?...",
   "save_entry": "Save Entry",
   "entry_saved_success": "Entry saved successfully!",
   "entry_updated_success": "Entry updated successfully!",

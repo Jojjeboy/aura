@@ -12,6 +12,8 @@
   "grateful_prompt": "Jag är tacksam för...",
   "grateful_placeholder": "Jag är tacksam för...",
   "mood_prompt": "Hur är ditt humör?",
+  "thoughts_label": "Dagliga reflektioner (valfritt)",
+  "thoughts_placeholder": "Vad har du på hjärtat?...",
   "save_entry": "Spara Inlägg",
   "entry_saved_success": "Inlägget sparades!",
   "entry_updated_success": "Inlägget uppdaterades!",

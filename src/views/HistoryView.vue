@@ -105,7 +105,7 @@
                 class="px-2.5 py-1 text-[0.65rem] font-bold rounded-full whitespace-nowrap"
                 :class="idx === 0 ? 'bg-aura-accent text-white' : 'bg-aura-accent/10 text-aura-accent'"
               >
-                {{ $t(`emotions.${mood}`) }}
+                {{ getMoodLabel(mood) }}
               </span>
             </div>
           </div>
@@ -317,7 +317,7 @@
               <div class="space-y-3">
                 <div v-for="stat in feelingStats" :key="stat.name" class="space-y-1">
                   <div class="flex justify-between text-xs font-bold">
-                    <span class="text-aura-text dark:text-aura-text-dark">{{ $t(`emotions.${stat.name}`) }}</span>
+                    <span class="text-aura-text dark:text-aura-text-dark">{{ getMoodLabel(stat.name) }}</span>
                     <span class="text-aura-muted">{{ stat.count }}</span>
                   </div>
                   <div class="h-1.5 w-full bg-slate-100 dark:bg-white/5 rounded-full overflow-hidden">
@@ -395,7 +395,7 @@
                 class="px-2 py-0.5 text-xs rounded-full"
                 :class="idx === 0 ? 'bg-aura-accent/10 text-aura-accent' : 'bg-aura-accent/5 text-aura-accent/70'"
               >
-                {{ $t(`emotions.${mood}`) }}
+                {{ getMoodLabel(mood) }}
               </span>
             </div>
           </div>
@@ -464,6 +464,7 @@ import { useAuthStore } from '@/stores/auth'
 import { useToast } from '@/composables/useToast'
 import { useI18n } from 'vue-i18n'
 import AppModal from '@/components/ui/AppModal.vue'
+import { AFFECTS } from '@/constants/affects'
 
 const store = useJournalStore()
 const router = useRouter()
@@ -472,6 +473,26 @@ const settingsStore = useSettingsStore()
 const authStore = useAuthStore()
 const { success, error: toastError } = useToast()
 const { t } = useI18n()
+
+// Helper function to translate mood/emotion labels
+const getMoodLabel = (moodId: string): string => {
+  // Check if it's a primary affect
+  const affect = AFFECTS.find(a => a.id === moodId)
+  if (affect) {
+    // It's a primary affect, return just the short name
+    const name = t(`affects.${moodId}.name`)
+    return ((name || '').split('–')[0] || '').trim()
+  }
+
+  // It's a related emotion, find which affect it belongs to
+  const parentAffect = AFFECTS.find(a => a.related.includes(moodId))
+  if (parentAffect) {
+    return t(`affects.${parentAffect.id}.related.${moodId}`)
+  }
+
+  // Fallback to the mood ID itself
+  return moodId
+}
 
 const error = ref('')
 const activeTab = ref<'log' | 'calendar' | 'stats'>('log')
@@ -508,7 +529,7 @@ const filteredEntries = computed(() => {
     if (hasGratitude) return true
 
     // Check moods
-    const hasMood = entry.moods.some(m => t(`emotions.${m}`).toLowerCase().includes(query))
+    const hasMood = entry.moods.some(m => getMoodLabel(m).toLowerCase().includes(query))
     if (hasMood) return true
 
     // Check date

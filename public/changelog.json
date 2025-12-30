@@ -1,5 +1,24 @@
 [
   {
+    "hash": "1e088a1",
+    "author": "Jojjeboy",
+    "date": "Tue Dec 30 22:15:10 2025 +0100",
+    "message": "feat: enhance changelog with file lists and GitHub links, fix lint errors, bump to 4.5.0",
+    "files": [
+      "package.json",
+      "public/changelog.json",
+      "scripts/generate-changelog.js",
+      "src/__tests__/affects.spec.ts",
+      "src/__tests__/integration_moods.spec.ts",
+      "src/__tests__/notifications.spec.ts",
+      "src/composables/useNotifications.ts",
+      "src/stores/journal.ts",
+      "src/views/ChangelogView.vue",
+      "vitest.config.ts",
+      "vitest.setup.ts"
+    ]
+  },
+  {
     "hash": "64b2a67",
     "author": "Jojjeboy",
     "date": "Tue Dec 30 21:49:18 2025 +0100",
@@ -602,19 +621,6 @@
       "src/locales/en.json",
       "src/locales/sv.json",
       "vite.config.ts"
-    ]
-  },
-  {
-    "hash": "94ef2ba",
-    "author": "Jojjeboy",
-    "date": "Sun Dec 28 13:52:52 2025 +0100",
-    "message": "Biometric",
-    "files": [
-      "src/composables/useBiometricLock.ts",
-      "src/stores/journal.ts",
-      "src/stores/settings.ts",
-      "src/views/JournalView.vue",
-      "src/views/SettingsView.vue"
     ]
   }
 ]

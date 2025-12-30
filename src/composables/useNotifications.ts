@@ -71,20 +71,8 @@ export function useNotifications() {
       if (token) {
         console.log('FCM Token received:', token)
 
-        // Save token to Firestore
-        const user = auth.currentUser
-        if (user) {
-            try {
-                const userRef = doc(db, 'users', user.uid)
-                await setDoc(userRef, {
-                    fcmToken: token,
-                    updatedAt: Date.now()
-                }, { merge: true })
-                console.log('Token saved to Firestore')
-            } catch (e) {
-                console.error('Error saving token to Firestore:', e)
-            }
-        }
+        // Save token and preferences to Firestore
+        await saveNotificationPreferences(token)
 
         return token
       } else {
@@ -166,6 +154,36 @@ export function useNotifications() {
     }
   }
 
+  // Save notification preferences to Firestore
+  const saveNotificationPreferences = async (token?: string) => {
+    const user = auth.currentUser
+    if (!user) return
+
+    const parts = settingsStore.reminderTime.split(':').map(Number)
+    const date = new Date()
+    date.setHours(parts[0] ?? 20, parts[1] ?? 0, 0, 0)
+
+    const utcHour = date.getUTCHours()
+
+    try {
+      const userRef = doc(db, 'users', user.uid)
+      const data: any = {
+        reminderTime: settingsStore.reminderTime,
+        reminderHourUTC: utcHour,
+        updatedAt: Date.now()
+      }
+
+      if (token) {
+        data.fcmToken = token
+      }
+
+      await setDoc(userRef, data, { merge: true })
+      console.log('Notification preferences saved:', data)
+    } catch (e) {
+      console.error('Error saving preferences:', e)
+    }
+  }
+
   return {
     notificationPermission,
     requestPermission,
@@ -173,6 +191,7 @@ export function useNotifications() {
     hasLoggedToday,
     showReminder,
     scheduleReminder,
-    init
+    init,
+    saveNotificationPreferences
   }
 }

@@ -32,16 +32,27 @@ async function sendReminders() {
       return;
     }
 
+    // 1.5. Filter by Time (Hourly Check)
+    const currentHour = new Date().getUTCHours();
+    console.log(`Current Server Hour (UTC): ${currentHour}`);
+
     const tokens = [];
     usersSnapshot.forEach(doc => {
       const data = doc.data();
-      if (data.fcmToken) {
-        tokens.push(data.fcmToken);
+
+      if (!data.fcmToken) return;
+
+      // Default to 20:00 UTC if no preference set
+      const userHour = data.reminderHourUTC !== undefined ? data.reminderHourUTC : 20;
+
+      // Check if it's time
+      if (userHour === currentHour) {
+          tokens.push(data.fcmToken);
       }
     });
 
     if (tokens.length === 0) {
-        console.log('No tokens found to send to.');
+        console.log(`No users scheduled for hour ${currentHour}.`);
         return;
     }
 

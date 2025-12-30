@@ -224,7 +224,7 @@ const handleForceUpdate = async () => {
 
 const router = useRouter()
 const settingsStore = useSettingsStore()
-const { notificationPermission, requestPermission, subscribeToPush, scheduleReminder } = useNotifications()
+const { notificationPermission, requestPermission, subscribeToPush, scheduleReminder, saveNotificationPreferences } = useNotifications()
 const { success, error, info } = useToast()
 
 const pushToken = ref<string | null>(null)
@@ -321,7 +321,12 @@ const toggleReminder = async () => {
             if (granted) {
                settingsStore.reminderEnabled = true
                await settingsStore.saveSettings()
+               // Re-schedule local notification
                scheduleReminder()
+
+               // Update remote preferences if logged in and enabled
+               saveNotificationPreferences()
+
                success('Daily reminder enabled (foreground only)')
             } else {
                error('Notification permission denied')
@@ -334,6 +339,8 @@ const handleTimeChange = async () => {
     await settingsStore.saveSettings()
     if (settingsStore.reminderEnabled) {
         scheduleReminder()
+        // Save new time to Firestore
+        saveNotificationPreferences()
     }
 }
 

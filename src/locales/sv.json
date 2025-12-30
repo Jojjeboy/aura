@@ -275,5 +275,21 @@
   "authenticate": "Autentisera",
   "update_task": "Uppdatera uppgift",
   "create_task": "Skapa uppgift",
-  "done": "Klar"
+  "done": "Klar",
+  "emotions": {
+    "Joy": "Glädje",
+    "Surprise": "Förvåning",
+    "Interest": "Intresse",
+    "Shame": "Skam",
+    "Fear": "Rädsla",
+    "Anger": "Vrede",
+    "Distress": "Sorg",
+    "Disgust": "Avsky",
+    "Contempt": "Förakt",
+    "Sadness": "Nedstämdhet",
+    "Happiness": "Lycka",
+    "Love": "Kärlek",
+    "Guilt": "Skuld",
+    "Anxiety": "Oro"
+  }
 }

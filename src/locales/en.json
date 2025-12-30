@@ -275,5 +275,21 @@
   "authenticate": "Authenticate",
   "update_task": "Update Task",
   "create_task": "Create Task",
-  "done": "Done"
+  "done": "Done",
+  "emotions": {
+    "Joy": "Joy",
+    "Surprise": "Surprise",
+    "Interest": "Interest",
+    "Shame": "Shame",
+    "Fear": "Fear",
+    "Anger": "Anger",
+    "Distress": "Distress",
+    "Disgust": "Disgust",
+    "Contempt": "Contempt",
+    "Sadness": "Sadness",
+    "Happiness": "Happiness",
+    "Love": "Love",
+    "Guilt": "Guilt",
+    "Anxiety": "Anxiety"
+  }
 }

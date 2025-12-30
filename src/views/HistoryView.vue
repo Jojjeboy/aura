@@ -472,7 +472,7 @@ const { entries, loading } = storeToRefs(store)
 const settingsStore = useSettingsStore()
 const authStore = useAuthStore()
 const { success, error: toastError } = useToast()
-const { t } = useI18n()
+const { t, te } = useI18n()
 
 // Helper function to translate mood/emotion labels
 const getMoodLabel = (moodId: string): string => {
@@ -488,6 +488,11 @@ const getMoodLabel = (moodId: string): string => {
   const parentAffect = AFFECTS.find(a => a.related.includes(moodId))
   if (parentAffect) {
     return t(`affects.${parentAffect.id}.related.${moodId}`)
+  }
+
+  // Fallback to legacy translations
+  if (te(`emotions.${moodId}`)) {
+    return t(`emotions.${moodId}`)
   }
 
   // Fallback to the mood ID itself

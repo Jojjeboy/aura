@@ -1,0 +1,30 @@
+name: Daily Reminder Push
+
+on:
+  schedule:
+    # Runs at 20:00 UTC every day (adjust as needed)
+    - cron: '0 20 * * *'
+  workflow_dispatch:
+
+jobs:
+  send-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create Service Account
+        run: |
+          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > scripts/service-account.json
+
+      - name: Send Reminders
+        run: node scripts/send-daily-reminders.js

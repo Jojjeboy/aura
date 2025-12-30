@@ -9,7 +9,10 @@ export default defineConfig({
   plugins: [
     vue(),
     VitePWA({
-      registerType: 'prompt',
+      strategies: 'injectManifest',
+      srcDir: 'src',
+      filename: 'sw.ts',
+      registerType: 'autoUpdate',
       includeAssets: ['logo.jpg', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
         name: 'Aura - Micro Journal',
@@ -29,6 +32,10 @@ export default defineConfig({
             purpose: 'any maskable'
           },
         ],
+      },
+      devOptions: {
+        enabled: true,
+        type: 'module',
       },
     }),
   ],

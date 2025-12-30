@@ -1,6 +1,9 @@
 import { ref } from 'vue'
 import { useJournalStore } from '@/stores/journal'
 import { useSettingsStore } from '@/stores/settings'
+import { messaging, db, auth } from '@/firebase'
+import { getToken } from 'firebase/messaging'
+import { doc, setDoc } from 'firebase/firestore'
 
 // Shared state for notification permission
 const notificationPermission = ref<NotificationPermission | 'not-supported'>(
@@ -39,6 +42,61 @@ export function useNotifications() {
     return false
   }
 
+  // Subscribe to Push Notifications (FCM)
+  const subscribeToPush = async (): Promise<string | null> => {
+    try {
+      const permission = await requestPermission()
+      if (!permission) return null
+
+      // Ensure we have a service worker registration
+      // In PWA, we should use the registration that handles the app
+      let registration = await navigator.serviceWorker.getRegistration()
+
+      if (!registration) {
+         console.warn('No active Service Worker found. Waiting for it...')
+         registration = await navigator.serviceWorker.ready
+      }
+
+      if (!registration) {
+          console.error('Service Worker registration failed or not available.')
+          return null
+      }
+
+      // Get FCM Token using the specific SW registration
+      const token = await getToken(messaging, {
+        vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY,
+        serviceWorkerRegistration: registration
+      })
+
+      if (token) {
+        console.log('FCM Token received:', token)
+
+        // Save token to Firestore
+        const user = auth.currentUser
+        if (user) {
+            try {
+                const userRef = doc(db, 'users', user.uid)
+                await setDoc(userRef, {
+                    fcmToken: token,
+                    updatedAt: Date.now()
+                }, { merge: true })
+                console.log('Token saved to Firestore')
+            } catch (e) {
+                console.error('Error saving token to Firestore:', e)
+            }
+        }
+
+        return token
+      } else {
+        console.warn('No registration token available. Request permission to generate one.')
+        return null
+      }
+    } catch (error) {
+      console.error('An error occurred while retrieving token:', error)
+      return null
+    }
+  }
+
   // Check if user has logged today
   const hasLoggedToday = (): boolean => {
     const today = new Date().toLocaleDateString()
@@ -47,13 +105,13 @@ export function useNotifications() {
     })
   }
 
-  // Show notification
+  // Show notification (Legacy/Foreground)
   const showReminder = () => {
     if (globalThis.Notification?.permission === 'granted' && !hasLoggedToday()) {
       const n = new globalThis.Notification('Aura - Time to reflect', {
-        body: 'Don\'t forget to log your daily entry! 📝',
-        icon: '/logo.jpg',
-        badge: '/logo.jpg',
+        body: "Don't forget to log your daily entry! 📝",
+        icon: '/aura/logo.jpg',
+        badge: '/aura/logo.jpg',
         tag: 'daily-reminder',
         requireInteraction: false
       })
@@ -99,6 +157,9 @@ export function useNotifications() {
       if (globalThis.Notification?.permission === 'granted') {
         notificationPermission.value = 'granted'
         scheduleReminder()
+
+        // Optionally subscribe to push if already granted to ensure token is fresh
+        // But we usually do this on settings toggle to avoid overhead
       } else if (globalThis.Notification !== undefined) {
         notificationPermission.value = globalThis.Notification.permission
       }
@@ -108,6 +169,7 @@ export function useNotifications() {
   return {
     notificationPermission,
     requestPermission,
+    subscribeToPush,
     hasLoggedToday,
     showReminder,
     scheduleReminder,

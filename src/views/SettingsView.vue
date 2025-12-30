@@ -99,6 +99,18 @@
             <p v-if="notificationPermission !== 'granted'" class="text-xs text-amber-600 dark:text-amber-400">
               {{ $t('notification_permission_needed') }}
             </p>
+            <div v-else-if="pushToken" class="flex flex-col gap-1">
+              <p class="text-[10px] text-green-600 dark:text-green-400 font-medium flex items-center gap-1">
+                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"></path></svg>
+                Background notifications active
+              </p>
+              <button
+                @click="copyToken"
+                class="text-[9px] text-aura-muted hover:text-aura-accent transition-colors text-left"
+              >
+                Copy Debug Token
+              </button>
+            </div>
           </div>
         </div>
       </section>
@@ -212,8 +224,17 @@ const handleForceUpdate = async () => {
 
 const router = useRouter()
 const settingsStore = useSettingsStore()
-const { notificationPermission, requestPermission, scheduleReminder } = useNotifications()
+const { notificationPermission, requestPermission, subscribeToPush, scheduleReminder } = useNotifications()
 const { success, error, info } = useToast()
+
+const pushToken = ref<string | null>(null)
+
+const copyToken = () => {
+    if (pushToken.value) {
+        navigator.clipboard.writeText(pushToken.value)
+        success('Token copied to clipboard!')
+    }
+}
 
 const user = ref(auth.currentUser)
 const availableLocales = ['en', 'sv']
@@ -265,8 +286,6 @@ const confirmRemovePin = async () => {
     await settingsStore.removePin()
     success('App Lock removed!')
 }
-
-
 const toggleReminder = async () => {
     // Check if browser supports notifications
     if (globalThis.Notification === undefined) {
@@ -277,6 +296,7 @@ const toggleReminder = async () => {
     if (settingsStore.reminderEnabled) {
         // Disabling the reminder
         settingsStore.reminderEnabled = false
+        pushToken.value = null
         await settingsStore.saveSettings()
         info('Daily reminder disabled')
     } else {
@@ -287,15 +307,25 @@ const toggleReminder = async () => {
             return
         }
 
-        // Request permission
-        const granted = await requestPermission()
-        if (granted) {
+        // Request permission and subscribe to Push
+        const token = await subscribeToPush()
+        if (token) {
+            pushToken.value = token
             settingsStore.reminderEnabled = true
             await settingsStore.saveSettings()
             scheduleReminder()
-            success('Daily reminder enabled!')
+            success('Daily reminder enabled with background support!')
         } else {
-            error('Notification permission denied')
+            // Fallback: If push subscription failed but permission might still be granted
+            const granted = await requestPermission()
+            if (granted) {
+               settingsStore.reminderEnabled = true
+               await settingsStore.saveSettings()
+               scheduleReminder()
+               success('Daily reminder enabled (foreground only)')
+            } else {
+               error('Notification permission denied')
+            }
         }
     }
 }

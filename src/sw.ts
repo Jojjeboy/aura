@@ -32,7 +32,7 @@ self.addEventListener('push', (event) => {
       }
 
       // 3. Otherwise, show notification
-      const data = event.data.json()
+      const data = event.data?.json() ?? {}
       const title = data.title || 'Aura - Time to reflect'
       const options = {
         body: data.body || 'Don\'t forget to log your daily entry! 📝',

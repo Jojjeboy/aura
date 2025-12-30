@@ -5,13 +5,16 @@
       <h3 class="font-semibold text-aura-text dark:text-aura-text-dark transition-colors">{{ $t('mood_prompt') }}</h3>
       <div class="flex flex-wrap gap-2">
         <button
-          v-for="emotion in emotions"
-          :key="emotion"
-          @click="toggleMood(emotion)"
-          class="px-4 py-2 rounded-full text-sm font-medium transition-all duration-300"
-          :class="getMoodClass(emotion)"
+          v-for="affect in affects"
+          :key="affect.id"
+          @click="openModal(affect.id)"
+          class="px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 border-2"
+          :class="getAffectClass(affect)"
         >
-           {{ $t(`emotions.${emotion}`) }}
+           {{ $t(`affects.${affect.id}.name`).split('–')[0].trim() }}
+           <span v-if="getActiveCount(affect) > 0" class="ml-1 text-[10px] bg-white/20 px-1.5 py-0.5 rounded-full">
+             {{ getActiveCount(affect) }}
+           </span>
         </button>
       </div>
     </div>
@@ -35,18 +38,26 @@
         </div>
       </div>
     </div>
+
+    <MoodDetailModal
+      :show="showModal"
+      :affect-id="selectedAffectId"
+      @close="showModal = false"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import { useJournalStore } from '@/stores/journal'
+import { AFFECTS, type Affect } from '@/constants/affects'
+import MoodDetailModal from './MoodDetailModal.vue'
 
 const store = useJournalStore()
+const affects = AFFECTS
 
-const emotions = [
-  'Joy', 'Interest', 'Surprise', 'Anger',
-  'Disgust', 'Fear', 'Shame', 'Sadness', 'Guilt'
-]
+const showModal = ref(false)
+const selectedAffectId = ref('')
 
 const scales = [
   { name: 'Sleep', label: 'Sleep Quality', key: 'sleep' },
@@ -54,31 +65,30 @@ const scales = [
   { name: 'Movement', label: 'Activity', key: 'movement' },
 ] as const
 
-const toggleMood = (mood: string) => {
-  if (!store.currentEntry.moods) store.currentEntry.moods = []
-
-  const index = store.currentEntry.moods.indexOf(mood)
-  if (index > -1) {
-    store.currentEntry.moods.splice(index, 1)
-  } else {
-    store.currentEntry.moods.push(mood)
-  }
+const openModal = (affectId: string) => {
+    selectedAffectId.value = affectId
+    showModal.value = true
 }
 
-const getMoodClass = (mood: string) => {
-  const moods = store.currentEntry.moods || []
-  const index = moods.indexOf(mood)
+const getActiveCount = (affect: Affect) => {
+    const currentMoods = store.currentEntry.moods || []
+    let count = 0
+    if (currentMoods.includes(affect.id)) count++
+    affect.related.forEach(related => {
+        if (currentMoods.includes(related)) count++
+    })
+    return count
+}
 
-  if (index === 0) {
-     // First selected -> Primary
-     return 'bg-aura-accent text-white shadow-glow'
-  } else if (index > 0) {
-     // Subsequent -> Muted
-     return 'bg-aura-accent/60 text-white'
+const getAffectClass = (affect: Affect) => {
+  const count = getActiveCount(affect)
+
+  if (count > 0) {
+     return 'bg-aura-accent border-aura-accent text-white shadow-glow'
   }
 
   // Unselected
-  return 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+  return 'bg-slate-100 dark:bg-slate-800 border-transparent text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
 }
 
 const setHealth = (key: 'sleep' | 'food' | 'movement', val: number) => {
@@ -90,9 +100,6 @@ const setHealth = (key: 'sleep' | 'food' | 'movement', val: number) => {
 const getScaleStyle = (key: 'sleep' | 'food' | 'movement', val: number) => {
   const current = store.currentEntry.health?.[key] || 0
   if (val <= current) {
-    // Base HSL for aura-accent is 153, 47%, 49%
-    // 5 is 20% darker than 1: L range 49% -> 39.2%
-    // 5 is 15% more saturated than 1: S range 47% -> 62%
     const lightness = 49 - ((val - 1) * 2.45)
     const saturation = 47 + ((val - 1) * 3.75)
     return {

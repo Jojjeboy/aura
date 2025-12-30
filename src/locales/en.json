@@ -60,16 +60,111 @@
     "todo_list": "Todo List",
     "logout": "Log Out"
   },
-  "emotions": {
-    "Joy": "Joy",
-    "Interest": "Interest",
-    "Surprise": "Surprise",
-    "Anger": "Anger",
-    "Disgust": "Disgust",
-    "Fear": "Fear",
-    "Shame": "Shame",
-    "Sadness": "Sadness",
-    "Guilt": "Guilt"
+  "affects": {
+    "interest_excitement": {
+      "name": "Interest – Excitement",
+      "description": "The primary drive for exploration, learning, and creativity.",
+      "related": {
+        "curiosity": "Curiosity",
+        "fascination": "Fascination",
+        "engagement": "Engagement",
+        "enthusiasm": "Enthusiasm",
+        "flow": "Flow",
+        "concentration": "Concentration"
+      }
+    },
+    "enjoyment_joy": {
+      "name": "Enjoyment – Joy",
+      "description": "Activated by social bonding, relief from tension, or success.",
+      "related": {
+        "happiness": "Happiness",
+        "gratitude": "Gratitude",
+        "relief": "Relief",
+        "euphoria": "Euphoria",
+        "pride": "Pride",
+        "contentment": "Contentment",
+        "love": "Love"
+      }
+    },
+    "surprise_startle": {
+      "name": "Surprise – Startle",
+      "description": "A resetting reflex that clears the neural pathways for new input.",
+      "related": {
+        "astonishment": "Astonishment",
+        "shock": "Shock",
+        "wonder": "Wonder",
+        "confusion": "Confusion",
+        "disorientation": "Disorientation"
+      }
+    },
+    "fear_terror": {
+      "name": "Fear – Terror",
+      "description": "The biological alarm system for perceived threats or danger.",
+      "related": {
+        "anxiety": "Anxiety",
+        "panic": "Panic",
+        "nervousness": "Nervousness",
+        "apprehension": "Apprehension",
+        "dread": "Dread",
+        "unease": "Unease"
+      }
+    },
+    "anger_rage": {
+      "name": "Anger – Rage",
+      "description": "Triggered by obstacles, injustice, or violation of boundaries.",
+      "related": {
+        "irritation": "Irritation",
+        "frustration": "Frustration",
+        "hatred": "Hatred",
+        "resentment": "Resentment",
+        "bitterness": "Bitterness",
+        "aggression": "Aggression"
+      }
+    },
+    "distress_anguish": {
+      "name": "Distress – Anguish",
+      "description": "A reaction to loss or sustained pain; a cry for help or comfort.",
+      "related": {
+        "sadness": "Sadness",
+        "grief": "Grief",
+        "hopelessness": "Hopelessness",
+        "melancholy": "Melancholy",
+        "helplessness": "Helplessness",
+        "sorrow": "Sorrow"
+      }
+    },
+    "shame_humiliation": {
+      "name": "Shame – Humiliation",
+      "description": "Occurs when an experience of interest or joy is interrupted or exposed.",
+      "related": {
+        "embarrassment": "Embarrassment",
+        "shyness": "Shyness",
+        "guilt": "Guilt",
+        "insecurity": "Insecurity",
+        "self_consciousness": "Self-consciousness"
+      }
+    },
+    "disgust": {
+      "name": "Disgust",
+      "description": "A defensive reaction to bad tastes or toxic substances; also moral disgust.",
+      "related": {
+        "aversion": "Aversion",
+        "revulsion": "Revulsion",
+        "loathing": "Loathing",
+        "repulsion": "Repulsion"
+      }
+    },
+    "dissmell": {
+      "name": "Dissmell",
+      "description": "A drive to keep toxic or offensive objects/people at a distance; often manifests as contempt.",
+      "related": {
+        "contempt": "Contempt",
+        "arrogance": "Arrogance",
+        "disdain": "Disdain",
+        "coldness": "Coldness",
+        "judgmentalism": "Judgmentalism"
+      }
+    }
   },
   "page_titles": {
     "login": "Login",
@@ -179,5 +274,6 @@
   "reset_pin_confirm_msg": "Authenticate with Google to reset your PIN?",
   "authenticate": "Authenticate",
   "update_task": "Update Task",
-  "create_task": "Create Task"
+  "create_task": "Create Task",
+  "done": "Done"
 }

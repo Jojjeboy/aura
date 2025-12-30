@@ -60,16 +60,111 @@
     "todo_list": "Att-göra-lista",
     "logout": "Logga ut"
   },
-  "emotions": {
-    "Joy": "Glädje",
-    "Interest": "Intresse",
-    "Surprise": "Förvåning",
-    "Anger": "Ilska",
-    "Disgust": "Avsky",
-    "Fear": "Rädsla",
-    "Shame": "Skam",
-    "Sadness": "Sorg",
-    "Guilt": "Skuld"
+  "affects": {
+    "interest_excitement": {
+      "name": "Intresse – Iver",
+      "description": "Drivkraft för utforskande och lärande.",
+      "related": {
+        "curiosity": "Nyfikenhet",
+        "fascination": "Fascination",
+        "engagement": "Engagemang",
+        "enthusiasm": "Entusiasm",
+        "flow": "Flow",
+        "concentration": "Koncentration"
+      }
+    },
+    "enjoyment_joy": {
+      "name": "Glädje – Njutning",
+      "description": "Aktiveras vid trygghet, framgång eller närhet.",
+      "related": {
+        "happiness": "Lycka",
+        "gratitude": "Tacksamhet",
+        "relief": "Lättnad",
+        "euphoria": "Eufori",
+        "pride": "Stolthet",
+        "contentment": "Förnöjsamhet",
+        "love": "Kärlek"
+      }
+    },
+    "surprise_startle": {
+      "name": "Förvåning – Överraskning",
+      "description": "En kortvarig reaktion som nollställer uppmärksamheten.",
+      "related": {
+        "astonishment": "Häpenhet",
+        "shock": "Chock",
+        "wonder": "Förundran",
+        "confusion": "Förvirring",
+        "disorientation": "Misstänksamhet"
+      }
+    },
+    "fear_terror": {
+      "name": "Rädsla – Skräck",
+      "description": "Biologiskt alarmsystem för hot och fara.",
+      "related": {
+        "anxiety": "Oro",
+        "panic": "Panik",
+        "nervousness": "Nervositet",
+        "apprehension": "Ängslan",
+        "dread": "Fasa",
+        "unease": "Obehag"
+      }
+    },
+    "anger_rage": {
+      "name": "Vrede – Raseri",
+      "description": "Uppstår vid hinder, orättvisa eller gränsöverskridanden.",
+      "related": {
+        "irritation": "Irritation",
+        "frustration": "Frustration",
+        "hatred": "Hat",
+        "resentment": "Hämndlystnad",
+        "bitterness": "Bitterhet",
+        "aggression": "Aggression"
+      }
+    },
+    "distress_anguish": {
+      "name": "Sorg – Förtvivlan",
+      "description": "Reaktion på förlust; signalerar behov av stöd.",
+      "related": {
+        "sadness": "Nedstämdhet",
+        "grief": "Saknad",
+        "hopelessness": "Hopplöshet",
+        "melancholy": "Melankoli",
+        "helplessness": "Hjälplöshet",
+        "sorrow": "Vemod"
+      }
+    },
+    "shame_humiliation": {
+      "name": "Skam – Förnedring",
+      "description": "Känsla av att vara blottad eller riskera social exkludering.",
+      "related": {
+        "embarrassment": "Pinsamhet",
+        "shyness": "Blygsel",
+        "guilt": "Skuld",
+        "insecurity": "Mindervärdeskomplex",
+        "self_consciousness": "Självmedvetenhet"
+      }
+    },
+    "disgust": {
+      "name": "Avsky",
+      "description": "Biologisk reaktion på skadliga ämnen eller moraliska övertramp.",
+      "related": {
+        "aversion": "Motvilja",
+        "revulsion": "Vämjelse",
+        "loathing": "Repulsion",
+        "repulsion": "Obehag"
+      }
+    },
+    "dissmell": {
+      "name": "Avsmak – Förakt",
+      "description": "Att hålla någon eller något på avstånd, ofta socialt.",
+      "related": {
+        "contempt": "Ringaktning",
+        "arrogance": "Arrogans",
+        "disdain": "Fördömande",
+        "coldness": "Kylighet",
+        "judgmentalism": "Överlägsenhet"
+      }
+    }
   },
   "page_titles": {
     "login": "Logga in",
@@ -179,5 +274,6 @@
   "reset_pin_confirm_msg": "Autentisera med Google för att återställa din PIN?",
   "authenticate": "Autentisera",
   "update_task": "Uppdatera uppgift",
-  "create_task": "Skapa uppgift"
+  "create_task": "Skapa uppgift",
+  "done": "Klar"
 }

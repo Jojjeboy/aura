@@ -20,10 +20,18 @@ self.addEventListener('push', (event) => {
     try {
       console.log('[SW] Push received')
       // 1. Check if user has logged today
-      const today = new Date().toLocaleDateString()
-      console.log('[SW] Checking for entry on date:', today)
-      const entries = await db.journal_entries.where('date').equals(today).toArray()
-      console.log('[SW] Found entries:', entries.length)
+      // DB stores ISO strings (e.g., 2024-12-30T10:00:00.000Z)
+      // We need to check if any entry starts with today's date in YYYY-MM-DD
+      const today = new Date().toISOString().split('T')[0]
+      const startOfDay = today + 'T00:00:00.000Z'
+      const endOfDay = today + 'T23:59:59.999Z'
+
+      console.log('[SW] Checking for entry between:', startOfDay, 'and', endOfDay)
+
+      const entries = await db.journal_entries
+        .where('date')
+        .between(startOfDay, endOfDay, true, true)
+        .toArray()
 
       // 2. If already logged, don't show notification
       if (entries.length > 0) {

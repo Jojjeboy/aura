@@ -34,7 +34,8 @@ export const useJournalStore = defineStore('journal', () => {
     try {
       const entryRef = doc(firestore, 'users', auth.currentUser.uid, 'journal_entries', entry.id!)
 
-      const { synced: _, ...firestoreData } = entry as any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+      const { synced: _synced, ...firestoreData } = entry as any
 
       await setDoc(entryRef, {
         ...firestoreData,

@@ -1,17 +1,9 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
-import { useJournalStore } from '@/stores/journal'
 import { AFFECTS } from '@/constants/affects'
 import { mount } from '@vue/test-utils'
 import MoodAccordion from '@/components/journal/MoodAccordion.vue'
 import MoodDetailModal from '@/components/journal/MoodDetailModal.vue'
-
-// Mock i18n
-const replaceI18n = {
-  global: {
-    t: (key: string) => key
-  }
-}
 
 describe('Affect Theory Implementation', () => {
     beforeEach(() => {

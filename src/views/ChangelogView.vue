@@ -23,18 +23,41 @@
         <div
           v-for="commit in commits"
           :key="commit.hash"
-          class="bg-white dark:bg-aura-card-dark rounded-card shadow-soft p-5 border-l-4 border-aura-accent/30 hover:border-aura-accent transition-all duration-300"
+          class="bg-white dark:bg-aura-card-dark rounded-md shadow-soft p-5 border-l-4 border-aura-accent/30 hover:border-aura-accent transition-all duration-300"
         >
           <div class="flex justify-between items-start mb-2">
-            <span class="text-xs font-mono bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-aura-muted">
+            <a
+              :href="`https://github.com/Jojjeboy/aura/commit/${commit.hash}`"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-xs font-mono bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-aura-accent hover:text-aura-text hover:underline transition-colors"
+            >
               {{ commit.hash }}
-            </span>
+            </a>
             <span class="text-xs text-aura-muted">{{ formatDate(commit.date) }}</span>
           </div>
-          <h3 class="text-aura-text dark:text-aura-text-dark font-medium leading-snug">
+          <h3 class="text-aura-text dark:text-aura-text-dark font-medium leading-snug mb-3">
             {{ commit.message }}
           </h3>
-          <p class="text-xs text-aura-muted mt-2 capitalize">
+
+          <!-- Changed Files -->
+          <div v-if="commit.files?.length" class="mb-3">
+             <div class="flex flex-col gap-1">
+                <span
+                   v-for="file in commit.files.slice(0, 5)"
+                   :key="file"
+                   class="text-[10px] px-1.5 py-0.5 text-aura-muted border-b border-slate-100 dark:border-slate-800 last:border-0"
+                >
+                   {{ file }}
+                </span>
+                <span v-if="commit.files.length > 5" class="text-[10px] text-aura-muted px-1.5 py-0.5 italic">
+                   +{{ commit.files.length - 5 }} more files...
+                </span>
+             </div>
+          </div>
+
+          <p class="text-xs text-aura-muted mt-2 capitalize flex items-center gap-1">
+             <span class="w-1.5 h-1.5 rounded-full bg-slate-300 dark:bg-slate-700"></span>
             {{ commit.author }}
           </p>
         </div>
@@ -52,6 +75,7 @@ interface Commit {
   author: string
   date: string
   message: string
+  files?: string[]
 }
 
 const router = useRouter()

@@ -1,302 +1,620 @@
 [
   {
+    "hash": "64b2a67",
+    "author": "Jojjeboy",
+    "date": "Tue Dec 30 21:49:18 2025 +0100",
+    "message": "fix: resolve TS2532 build errors in Mood components",
+    "files": [
+      "src/components/journal/MoodAccordion.vue",
+      "src/components/journal/MoodDetailModal.vue"
+    ]
+  },
+  {
+    "hash": "3956885",
+    "author": "Jojjeboy",
+    "date": "Tue Dec 30 21:45:11 2025 +0100",
+    "message": "feat: implement Affect Theory moods, fix i18n and bump version to 4.4.5",
+    "files": [
+      "package.json",
+      "src/__tests__/affects.spec.ts",
+      "src/__tests__/integration_moods.spec.ts",
+      "src/components/journal/MoodAccordion.vue",
+      "src/components/journal/MoodDetailModal.vue",
+      "src/constants/affects.ts",
+      "src/locales/en.json",
+      "src/locales/sv.json"
+    ]
+  },
+  {
+    "hash": "744ffdf",
+    "author": "Jojjeboy",
+    "date": "Tue Dec 30 21:15:59 2025 +0100",
+    "message": "Reminder hour and i18n",
+    "files": [
+      "package.json",
+      "public/changelog.json",
+      "scripts/send-daily-reminders.js",
+      "src/composables/useNotifications.ts",
+      "src/locales/en.json",
+      "src/locales/sv.json",
+      "src/views/HistoryView.vue",
+      "src/views/JournalView.vue",
+      "src/views/SettingsView.vue",
+      "src/views/TodoView.vue"
+    ]
+  },
+  {
     "hash": "f87c429",
     "author": "Jojjeboy",
     "date": "Tue Dec 30 20:55:59 2025 +0100",
-    "message": "Users can now set their own reminder times, and the system will respect them."
+    "message": "Users can now set their own reminder times, and the system will respect them.",
+    "files": [
+      ".github/workflows/daily-push.yml",
+      "package.json",
+      "scripts/send-daily-reminders.js",
+      "src/composables/useNotifications.ts",
+      "src/views/SettingsView.vue"
+    ]
   },
   {
     "hash": "ed8c8b6",
     "author": "Jojjeboy",
     "date": "Tue Dec 30 20:44:37 2025 +0100",
-    "message": "Patch bump"
+    "message": "Patch bump",
+    "files": [
+      "package.json"
+    ]
   },
   {
     "hash": "1951ab1",
     "author": "Jojjeboy",
     "date": "Tue Dec 30 20:41:26 2025 +0100",
-    "message": "fix: correct date range check in service worker"
+    "message": "fix: correct date range check in service worker",
+    "files": [
+      "src/sw.ts"
+    ]
   },
   {
     "hash": "83ecc4d",
     "author": "Jojjeboy",
     "date": "Tue Dec 30 20:35:08 2025 +0100",
-    "message": "fix: resolve sw.ts typescript error"
+    "message": "fix: resolve sw.ts typescript error",
+    "files": [
+      "src/sw.ts"
+    ]
   },
   {
     "hash": "197cacc",
     "author": "Jojjeboy",
     "date": "Tue Dec 30 20:32:15 2025 +0100",
-    "message": ".gitignore"
+    "message": ".gitignore",
+    "files": [
+      ".gitignore"
+    ]
   },
   {
     "hash": "2431c32",
     "author": "Jojjeboy",
     "date": "Tue Dec 30 20:31:39 2025 +0100",
-    "message": "feat: enable background push notifications with daily scheduler"
+    "message": "feat: enable background push notifications with daily scheduler",
+    "files": [
+      ".github/workflows/daily-push.yml",
+      "env.d.ts",
+      "package-lock.json",
+      "package.json",
+      "scripts/send-daily-reminders.js",
+      "scripts/test-push.js",
+      "src/composables/useNotifications.ts",
+      "src/firebase.ts",
+      "src/sw.ts",
+      "src/views/SettingsView.vue",
+      "vite.config.ts"
+    ]
   },
   {
     "hash": "982e13e",
     "author": "Jojjeboy",
     "date": "Mon Dec 29 16:58:06 2025 +0100",
-    "message": "Bump"
+    "message": "Bump",
+    "files": [
+      "package.json"
+    ]
   },
   {
     "hash": "ca86b3f",
     "author": "Jojjeboy",
     "date": "Mon Dec 29 16:23:11 2025 +0100",
-    "message": "feat(todo): cleanup list UX, restrict expand to title, and localize strings"
+    "message": "feat(todo): cleanup list UX, restrict expand to title, and localize strings",
+    "files": [
+      "src/__tests__/todo_ux.spec.ts",
+      "src/locales/en.json",
+      "src/locales/sv.json",
+      "src/views/TodoView.vue"
+    ]
   },
   {
     "hash": "ae49955",
     "author": "Jojjeboy",
     "date": "Mon Dec 29 08:29:00 2025 +0100",
-    "message": "test: fix type errors and suppress i18n warnings in history tests"
+    "message": "test: fix type errors and suppress i18n warnings in history tests",
+    "files": [
+      "public/changelog.json",
+      "src/__tests__/history_features.spec.ts"
+    ]
   },
   {
     "hash": "c80749e",
     "author": "Jojjeboy",
     "date": "Mon Dec 29 08:22:54 2025 +0100",
-    "message": "docs: update README with new features and add comprehensive unit tests"
+    "message": "docs: update README with new features and add comprehensive unit tests",
+    "files": [
+      "README.md",
+      "package.json",
+      "src/__tests__/gratitude_inspiration.spec.ts",
+      "src/__tests__/history_features.spec.ts"
+    ]
   },
   {
     "hash": "e83868e",
     "author": "Jojjeboy",
     "date": "Mon Dec 29 08:08:10 2025 +0100",
-    "message": "feat: implement gratitude inspiration with 100+ localized suggestions"
+    "message": "feat: implement gratitude inspiration with 100+ localized suggestions",
+    "files": [
+      "package.json",
+      "src/components/journal/GratitudeInput.vue",
+      "src/locales/en.json",
+      "src/locales/sv.json"
+    ]
   },
   {
     "hash": "a1afe19",
     "author": "Jojjeboy",
     "date": "Mon Dec 29 08:02:58 2025 +0100",
-    "message": "feat: implement real-time search and filtering for history logs"
+    "message": "feat: implement real-time search and filtering for history logs",
+    "files": [
+      "package.json",
+      "src/locales/en.json",
+      "src/locales/sv.json",
+      "src/views/HistoryView.vue"
+    ]
   },
   {
     "hash": "30e8069",
     "author": "Jojjeboy",
     "date": "Mon Dec 29 07:58:35 2025 +0100",
-    "message": "feat: implement collapsible log entries for improved scannability"
+    "message": "feat: implement collapsible log entries for improved scannability",
+    "files": [
+      "package.json",
+      "src/views/HistoryView.vue"
+    ]
   },
   {
     "hash": "34209c6",
     "author": "Jojjeboy",
     "date": "Mon Dec 29 07:54:44 2025 +0100",
-    "message": "feat: implement journal statistics and highlight today in calendar"
+    "message": "feat: implement journal statistics and highlight today in calendar",
+    "files": [
+      "package.json",
+      "src/locales/en.json",
+      "src/locales/sv.json",
+      "src/views/HistoryView.vue"
+    ]
   },
   {
     "hash": "65d5fff",
     "author": "Jojjeboy",
     "date": "Mon Dec 29 07:45:03 2025 +0100",
-    "message": "feat: transform notes into todo list with firestore migration and ux improvements"
+    "message": "feat: transform notes into todo list with firestore migration and ux improvements",
+    "files": [
+      "package.json",
+      "src/views/TodoView.vue"
+    ]
   },
   {
     "hash": "a8af6cb",
     "author": "Jojjeboy",
     "date": "Mon Dec 29 07:36:44 2025 +0100",
-    "message": "Todos instead of Notes and other small fixes"
+    "message": "Todos instead of Notes and other small fixes",
+    "files": [
+      "firestore.rules",
+      "package.json",
+      "src/components/journal/MoodAccordion.vue",
+      "src/db.ts",
+      "src/locales/en.json",
+      "src/locales/sv.json",
+      "src/router/index.ts",
+      "src/stores/notes.ts",
+      "src/stores/todo.ts",
+      "src/views/HistoryView.vue",
+      "src/views/JournalView.vue",
+      "src/views/NotesView.vue",
+      "src/views/SettingsView.vue",
+      "src/views/TodoView.vue"
+    ]
   },
   {
     "hash": "a2db7aa",
     "author": "Jojjeboy",
     "date": "Sun Dec 28 21:20:11 2025 +0100",
-    "message": "mc"
+    "message": "mc",
+    "files": [
+      "src/stores/journal.ts"
+    ]
   },
   {
     "hash": "cd26e0b",
     "author": "Jojjeboy",
     "date": "Sun Dec 28 21:11:45 2025 +0100",
-    "message": "feat: implement real-time Firestore sync for journal entries"
+    "message": "feat: implement real-time Firestore sync for journal entries",
+    "files": [
+      "src/stores/journal.ts"
+    ]
   },
   {
     "hash": "6175117",
     "author": "Jojjeboy",
     "date": "Sun Dec 28 21:05:34 2025 +0100",
-    "message": "fix: resolve DataCloneError by deep cloning journal entries before saving"
+    "message": "fix: resolve DataCloneError by deep cloning journal entries before saving",
+    "files": [
+      "src/stores/journal.ts"
+    ]
   },
   {
     "hash": "5b7fc1c",
     "author": "Jojjeboy",
     "date": "Sun Dec 28 21:01:30 2025 +0100",
-    "message": "feat: implement Firestore sync for journal entries and standardize synced status"
+    "message": "feat: implement Firestore sync for journal entries and standardize synced status",
+    "files": [
+      "src/db.ts",
+      "src/stores/journal.ts",
+      "src/stores/notes.ts"
+    ]
   },
   {
     "hash": "a811866",
     "author": "Jojjeboy",
     "date": "Sun Dec 28 20:52:19 2025 +0100",
-    "message": "feat: make header logo and title clickable and redirect to journal"
+    "message": "feat: make header logo and title clickable and redirect to journal",
+    "files": [
+      "src/components/ui/AuraHeader.vue"
+    ]
   },
   {
     "hash": "77ca157",
     "author": "Jojjeboy",
     "date": "Sun Dec 28 20:51:09 2025 +0100",
-    "message": "feat: regenerate icons from logo.jpg, remove notes from footer, and refine UI"
+    "message": "feat: regenerate icons from logo.jpg, remove notes from footer, and refine UI",
+    "files": [
+      "index.html",
+      "public/apple-touch-icon.png",
+      "public/favicon-16x16.png",
+      "public/favicon-32x32.png",
+      "public/favicon.ico",
+      "public/img/icons/android-chrome-192x192.png",
+      "public/img/icons/android-chrome-512x512.png",
+      "public/logo.png",
+      "scripts/generate_icons.py",
+      "src/components/ui/AuraHeader.vue",
+      "src/components/ui/FooterNav.vue",
+      "src/locales/en.json",
+      "src/locales/sv.json",
+      "vite.config.ts"
+    ]
   },
   {
     "hash": "b23ab36",
     "author": "Jojjeboy",
     "date": "Sun Dec 28 20:34:06 2025 +0100",
-    "message": "Modern UI: Implement Tailwind UI modals and Flowbite icons throughout the app"
+    "message": "Modern UI: Implement Tailwind UI modals and Flowbite icons throughout the app",
+    "files": [
+      "package-lock.json",
+      "package.json",
+      "public/logo.jpg",
+      "src/components/ui/AppModal.vue",
+      "src/components/ui/AuraHeader.vue",
+      "src/components/ui/FooterNav.vue",
+      "src/components/ui/PinPad.vue",
+      "src/views/HistoryView.vue",
+      "src/views/JournalView.vue",
+      "src/views/NotesView.vue",
+      "src/views/SettingsView.vue"
+    ]
   },
   {
     "hash": "eb0f124",
     "author": "Jojjeboy",
     "date": "Sun Dec 28 18:40:43 2025 +0100",
-    "message": "UI Refinement: remove header subtitle and use icons for history log actions"
+    "message": "UI Refinement: remove header subtitle and use icons for history log actions",
+    "files": [
+      "src/components/ui/AuraHeader.vue",
+      "src/views/HistoryView.vue"
+    ]
   },
   {
     "hash": "1c3ef14",
     "author": "Jojjeboy",
     "date": "Sun Dec 28 18:19:38 2025 +0100",
-    "message": "Implement journal entry deletion in HistoryView"
+    "message": "Implement journal entry deletion in HistoryView",
+    "files": [
+      "src/locales/en.json",
+      "src/locales/sv.json",
+      "src/stores/journal.ts",
+      "src/views/HistoryView.vue"
+    ]
   },
   {
     "hash": "a451d61",
     "author": "Jojjeboy",
     "date": "Sun Dec 28 17:47:38 2025 +0100",
-    "message": "Filter empty gratitude bullets in HistoryView log cards"
+    "message": "Filter empty gratitude bullets in HistoryView log cards",
+    "files": [
+      "src/views/HistoryView.vue"
+    ]
   },
   {
     "hash": "12a1d1b",
     "author": "Jojjeboy",
     "date": "Sun Dec 28 17:46:20 2025 +0100",
-    "message": "Refine History Log design and display health metrics (Sleep, Nutrition, Activity) in entry cards"
+    "message": "Refine History Log design and display health metrics (Sleep, Nutrition, Activity) in entry cards",
+    "files": [
+      "src/locales/en.json",
+      "src/locales/sv.json",
+      "src/views/HistoryView.vue"
+    ]
   },
   {
     "hash": "e03a9a0",
     "author": "Jojjeboy",
     "date": "Sun Dec 28 17:40:05 2025 +0100",
-    "message": "Persist HistoryView unlock state in authStore during local session navigation"
+    "message": "Persist HistoryView unlock state in authStore during local session navigation",
+    "files": [
+      "src/stores/auth.ts",
+      "src/views/HistoryView.vue"
+    ]
   },
   {
     "hash": "9c8454f",
     "author": "Jojjeboy",
     "date": "Sun Dec 28 17:23:02 2025 +0100",
-    "message": "mc"
+    "message": "mc",
+    "files": [
+      "public/changelog.json"
+    ]
   },
   {
     "hash": "f07707e",
     "author": "Jojjeboy",
     "date": "Sun Dec 28 17:22:05 2025 +0100",
-    "message": "Fix TypeScript 'possibly undefined' errors in toast.spec.ts"
+    "message": "Fix TypeScript 'possibly undefined' errors in toast.spec.ts",
+    "files": [
+      "src/__tests__/toast.spec.ts"
+    ]
   },
   {
     "hash": "5dad350",
     "author": "Jojjeboy",
     "date": "Sun Dec 28 17:12:53 2025 +0100",
-    "message": "Remove vue-devtools plugin"
+    "message": "Remove vue-devtools plugin",
+    "files": [
+      "package-lock.json",
+      "package.json",
+      "vite.config.ts"
+    ]
   },
   {
     "hash": "7e92559",
     "author": "Jojjeboy",
     "date": "Sun Dec 28 17:11:35 2025 +0100",
-    "message": "Add unit tests for HistoryView, toast notifications, and user reminders. Update README with new features."
+    "message": "Add unit tests for HistoryView, toast notifications, and user reminders. Update README with new features.",
+    "files": [
+      "README.md",
+      "notifications_fail.txt",
+      "notifications_verbose.txt",
+      "src/__tests__/history.spec.ts",
+      "src/__tests__/notifications.spec.ts",
+      "src/__tests__/toast.spec.ts",
+      "test_output.txt"
+    ]
   },
   {
     "hash": "78542bd",
     "author": "Jojjeboy",
     "date": "Sun Dec 28 16:54:06 2025 +0100",
-    "message": "Bump version to 3.8.0 and implement Tabbed History with Interactive Calendar and app-wide Toast integration"
+    "message": "Bump version to 3.8.0 and implement Tabbed History with Interactive Calendar and app-wide Toast integration",
+    "files": [
+      "package.json",
+      "public/changelog.json",
+      "src/locales/en.json",
+      "src/locales/sv.json",
+      "src/views/HistoryView.vue",
+      "src/views/JournalView.vue",
+      "src/views/NotesView.vue"
+    ]
   },
   {
     "hash": "d05c548",
     "author": "Jojjeboy",
     "date": "Sun Dec 28 16:27:36 2025 +0100",
-    "message": "Notification fixes"
+    "message": "Notification fixes",
+    "files": [
+      "src/composables/useNotifications.ts",
+      "src/locales/en.json",
+      "src/locales/sv.json",
+      "src/views/HistoryView.vue",
+      "src/views/SettingsView.vue"
+    ]
   },
   {
     "hash": "ecadc8f",
     "author": "Jojjeboy",
     "date": "Sun Dec 28 16:16:49 2025 +0100",
-    "message": "Notification fixes"
+    "message": "Notification fixes",
+    "files": [
+      "public/changelog.json",
+      "src/components/ui/AuraHeader.vue",
+      "src/components/ui/FooterNav.vue",
+      "tailwind.config.js"
+    ]
   },
   {
     "hash": "2bbef48",
     "author": "Jojjeboy",
     "date": "Sun Dec 28 16:10:47 2025 +0100",
-    "message": "Notification"
+    "message": "Notification",
+    "files": [
+      "public/changelog.json",
+      "src/views/SettingsView.vue"
+    ]
   },
   {
     "hash": "d592a58",
     "author": "Jojjeboy",
     "date": "Sun Dec 28 15:59:03 2025 +0100",
-    "message": "Fixes"
+    "message": "Fixes",
+    "files": [
+      "index.html",
+      "package.json",
+      "public/changelog.json",
+      "src/App.vue",
+      "src/components/ui/AppToast.vue",
+      "src/composables/useBiometricLock.ts",
+      "src/composables/useNotifications.ts",
+      "src/composables/useToast.ts",
+      "src/views/SettingsView.vue"
+    ]
   },
   {
     "hash": "4c84f0c",
     "author": "Jojjeboy",
     "date": "Sun Dec 28 15:42:33 2025 +0100",
-    "message": "Daily reminders and new logo"
+    "message": "Daily reminders and new logo",
+    "files": [
+      "index.html",
+      "package.json",
+      "public/apple-touch-icon.png",
+      "public/changelog.json",
+      "public/logo.jpg",
+      "src/App.vue",
+      "src/components/ui/AuraHeader.vue",
+      "src/composables/useNotifications.ts",
+      "src/locales/en.json",
+      "src/locales/sv.json",
+      "src/stores/settings.ts",
+      "src/views/LoginView.vue",
+      "src/views/SettingsView.vue",
+      "vite.config.ts"
+    ]
   },
   {
     "hash": "2651a92",
     "author": "Jojjeboy",
     "date": "Sun Dec 28 15:06:05 2025 +0100",
-    "message": "mc"
+    "message": "mc",
+    "files": [
+      "public/changelog.json",
+      "src/stores/notes.ts"
+    ]
   },
   {
     "hash": "a49845e",
     "author": "Jojjeboy",
     "date": "Sun Dec 28 14:57:59 2025 +0100",
-    "message": "Notes saved"
+    "message": "Notes saved",
+    "files": [
+      "package.json",
+      "public/changelog.json",
+      "src/stores/journal.ts",
+      "src/views/NotesView.vue"
+    ]
   },
   {
     "hash": "de1a098",
     "author": "Jojjeboy",
     "date": "Sun Dec 28 14:32:01 2025 +0100",
-    "message": "Changelog"
+    "message": "Changelog",
+    "files": [
+      ".github/workflows/deploy.yml",
+      "package.json",
+      "public/changelog.json",
+      "scripts/generate-changelog.js",
+      "src/locales/en.json",
+      "src/locales/sv.json",
+      "src/router/index.ts",
+      "src/views/ChangelogView.vue",
+      "src/views/SettingsView.vue"
+    ]
   },
   {
     "hash": "47dd419",
     "author": "Jojjeboy",
     "date": "Sun Dec 28 14:27:36 2025 +0100",
-    "message": "Package.json"
+    "message": "Package.json",
+    "files": [
+      "package.json"
+    ]
   },
   {
     "hash": "bee7cc4",
     "author": "Jojjeboy",
     "date": "Sun Dec 28 14:24:21 2025 +0100",
-    "message": "3.0"
+    "message": "3.0",
+    "files": [
+      "package-lock.json",
+      "package.json",
+      "src/views/SettingsView.vue",
+      "vite.config.ts"
+    ]
   },
   {
     "hash": "c867c03",
     "author": "Jojjeboy",
     "date": "Sun Dec 28 14:21:18 2025 +0100",
-    "message": "Fixes"
+    "message": "Fixes",
+    "files": [
+      "src/components/ui/PinPad.vue",
+      "src/locales/en.json",
+      "src/locales/sv.json",
+      "src/stores/auth.ts",
+      "src/stores/settings.ts",
+      "src/views/HistoryView.vue",
+      "src/views/SettingsView.vue"
+    ]
   },
   {
     "hash": "ef9ed61",
     "author": "Jojjeboy",
     "date": "Sun Dec 28 14:00:36 2025 +0100",
-    "message": "Biometric 2"
+    "message": "Biometric 2",
+    "files": [
+      "src/composables/useBiometricLock.ts",
+      "src/stores/settings.ts",
+      "src/views/SettingsView.vue"
+    ]
   },
   {
     "hash": "3661fb5",
     "author": "Jojjeboy",
     "date": "Sun Dec 28 13:56:32 2025 +0100",
-    "message": "Update app modal"
+    "message": "Update app modal",
+    "files": [
+      "src/App.vue",
+      "src/components/ui/ReloadPrompt.vue",
+      "src/locales/en.json",
+      "src/locales/sv.json",
+      "vite.config.ts"
+    ]
   },
   {
     "hash": "94ef2ba",
     "author": "Jojjeboy",
     "date": "Sun Dec 28 13:52:52 2025 +0100",
-    "message": "Biometric"
-  },
-  {
-    "hash": "bc83d9c",
-    "author": "Jojjeboy",
-    "date": "Sun Dec 28 13:10:43 2025 +0100",
-    "message": "Moooore fix"
-  },
-  {
-    "hash": "d07bc1b",
-    "author": "Jojjeboy",
-    "date": "Sun Dec 28 12:59:50 2025 +0100",
-    "message": "Pretty much the basics of the app"
-  },
-  {
-    "hash": "b126ae8",
-    "author": "Jojjeboy",
-    "date": "Sun Dec 28 10:30:11 2025 +0100",
-    "message": "mc"
+    "message": "Biometric",
+    "files": [
+      "src/composables/useBiometricLock.ts",
+      "src/stores/journal.ts",
+      "src/stores/settings.ts",
+      "src/views/JournalView.vue",
+      "src/views/SettingsView.vue"
+    ]
   }
 ]

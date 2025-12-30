@@ -19,7 +19,6 @@ const mockNotification = {
 describe('useNotifications Composable', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
-    // @ts-ignore - Mocking global Notification
     globalThis.Notification = mockNotification as unknown as typeof Notification
     mockNotification.permission = 'default'
     mockNotification.requestPermission.mockReset()

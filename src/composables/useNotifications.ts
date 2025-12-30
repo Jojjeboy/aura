@@ -167,15 +167,12 @@ export function useNotifications() {
 
     try {
       const userRef = doc(db, 'users', user.uid)
-      const data: any = {
+      const data = {
         reminderTime: settingsStore.reminderTime,
         reminderHourUTC: utcHour,
         locale: settingsStore.locale,
-        updatedAt: Date.now()
-      }
-
-      if (token) {
-        data.fcmToken = token
+        updatedAt: Date.now(),
+        ...(token ? { fcmToken: token } : {})
       }
 
       await setDoc(userRef, data, { merge: true })

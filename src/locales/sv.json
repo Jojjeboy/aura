@@ -74,7 +74,7 @@
       }
     },
     "enjoyment_joy": {
-      "name": "Glädje – Njutning",
+      "name": "Välbehag – Glädje",
       "description": "Aktiveras vid trygghet, framgång eller närhet.",
       "related": {
         "happiness": "Lycka",
@@ -94,7 +94,7 @@
         "shock": "Chock",
         "wonder": "Förundran",
         "confusion": "Förvirring",
-        "disorientation": "Misstänksamhet"
+        "disorientation": "Desorientering"
       }
     },
     "fear_terror": {
@@ -150,8 +150,8 @@
       "related": {
         "aversion": "Motvilja",
         "revulsion": "Vämjelse",
-        "loathing": "Repulsion",
-        "repulsion": "Obehag"
+        "loathing": "Avsky",
+        "repulsion": "Repulsion"
       }
     },
     "dissmell": {

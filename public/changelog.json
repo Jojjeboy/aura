@@ -1,5 +1,16 @@
 [
   {
+    "hash": "6a4edec",
+    "author": "Jojjeboy",
+    "date": "Tue Dec 30 22:26:39 2025 +0100",
+    "message": "fix: emotion translation in HistoryView with affect-based system, bump to 4.5.1",
+    "files": [
+      "package.json",
+      "public/changelog.json",
+      "src/views/HistoryView.vue"
+    ]
+  },
+  {
     "hash": "1e088a1",
     "author": "Jojjeboy",
     "date": "Tue Dec 30 22:15:10 2025 +0100",
@@ -608,19 +619,6 @@
       "src/composables/useBiometricLock.ts",
       "src/stores/settings.ts",
       "src/views/SettingsView.vue"
-    ]
-  },
-  {
-    "hash": "3661fb5",
-    "author": "Jojjeboy",
-    "date": "Sun Dec 28 13:56:32 2025 +0100",
-    "message": "Update app modal",
-    "files": [
-      "src/App.vue",
-      "src/components/ui/ReloadPrompt.vue",
-      "src/locales/en.json",
-      "src/locales/sv.json",
-      "vite.config.ts"
     ]
   }
 ]

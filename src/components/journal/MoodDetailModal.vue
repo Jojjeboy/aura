@@ -80,7 +80,7 @@ const { t } = useI18n()
 
 const shortAffectName = computed(() => {
   const name = t(`affects.${props.affectId}.name`)
-  return (name || '').split('–')[0].trim()
+  return (String(name || '').split('–')[0] || '').trim()
 })
 
 const relatedEmotions = computed(() => {

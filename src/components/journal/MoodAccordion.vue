@@ -11,7 +11,7 @@
           class="px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 border-2"
           :class="getAffectClass(affect)"
         >
-           {{ $t(`affects.${affect.id}.name`).split('–')[0].trim() }}
+           {{ formatAffectName(affect.id) }}
            <span v-if="getActiveCount(affect) > 0" class="ml-1 text-[10px] bg-white/20 px-1.5 py-0.5 rounded-full">
              {{ getActiveCount(affect) }}
            </span>
@@ -52,9 +52,16 @@ import { ref } from 'vue'
 import { useJournalStore } from '@/stores/journal'
 import { AFFECTS, type Affect } from '@/constants/affects'
 import MoodDetailModal from './MoodDetailModal.vue'
+import { useI18n } from 'vue-i18n'
 
 const store = useJournalStore()
+const { t } = useI18n()
 const affects = AFFECTS
+
+const formatAffectName = (id: string) => {
+  const name = t(`affects.${id}.name`)
+  return ((name || '').split('–')[0] || '').trim()
+}
 
 const showModal = ref(false)
 const selectedAffectId = ref('')

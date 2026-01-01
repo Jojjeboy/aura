@@ -56,7 +56,6 @@
 
         <!-- Gratitude Section -->
         <section>
-          <h2 class="text-lg font-semibold text-aura-text dark:text-aura-text-dark mb-4 ml-2 transition-colors duration-300">{{ $t('grateful_prompt') }}</h2>
           <GratitudeInput />
         </section>
 

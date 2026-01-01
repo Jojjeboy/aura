@@ -44,7 +44,10 @@
         <div v-if="store.isEditing" class="bg-aura-accent/5 p-4 rounded-2xl flex justify-between items-center border border-aura-accent/10">
           <div class="flex flex-col">
             <span class="text-[0.6rem] uppercase tracking-wider text-aura-muted font-bold">{{ $t('editing_entry') }}</span>
-            <span class="text-sm font-bold text-aura-text dark:text-aura-text-dark">{{ store.currentEntry.date ? new Date(store.currentEntry.date).toLocaleDateString() : '' }}</span>
+            <span class="text-sm font-bold text-aura-text dark:text-aura-text-dark">
+              {{ store.currentEntry.date ? new Date(store.currentEntry.date).toLocaleDateString(undefined, { weekday: 'long' }) : '' }},
+              {{ store.currentEntry.date ? new Date(store.currentEntry.date).toLocaleDateString() : '' }}
+            </span>
           </div>
           <button @click="store.resetEntry()" class="text-xs font-bold text-red-500 hover:opacity-70 transition-opacity">
             {{ $t('cancel_edit') }}

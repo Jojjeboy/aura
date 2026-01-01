@@ -279,8 +279,13 @@
   "create_task": "Skapa uppgift",
   "done": "Klar",
   "mood_custom_label": "Något annat?",
+  "mood_custom_moods_desc": "Dina egna unika känslor och sinnestillstånd.",
   "mood_custom_placeholder": "Skriv en egen känsla...",
   "mood_custom_add": "Lägg till",
+  "settings_custom_moods": "Egna känslor",
+  "settings_custom_moods_desc": "Hantera dina egna känslor och sinnestillstånd.",
+  "edit": "Ändra",
+  "delete": "Ta bort",
   "emotions": {
     "Joy": "Glädje",
     "Surprise": "Förvåning",

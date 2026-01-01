@@ -44,6 +44,12 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
+      path: '/settings/custom-moods',
+      name: 'custom-moods',
+      component: () => import('../views/CustomMoodsSettingsView.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
       path: '/changelog',
       name: 'changelog',
       component: () => import('../views/ChangelogView.vue'),

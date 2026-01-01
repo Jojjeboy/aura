@@ -155,6 +155,28 @@
          </div>
       </section>
 
+      <!-- Custom Moods -->
+      <section class="space-y-4">
+         <h2 class="text-sm font-semibold text-aura-muted uppercase tracking-wider">{{ $t('settings_custom_moods') }}</h2>
+         <div class="bg-white dark:bg-aura-card-dark rounded-card shadow-soft p-1">
+            <button
+               @click="router.push('/settings/custom-moods')"
+               class="w-full flex items-center justify-between p-4 group hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors rounded-card"
+            >
+               <div class="flex items-center gap-3">
+                  <span class="text-xl">✨</span>
+                  <div class="flex flex-col items-start text-left">
+                     <span class="text-aura-text dark:text-aura-text-dark font-medium">{{ $t('settings_custom_moods') }}</span>
+                     <span class="text-xs text-aura-muted">{{ settingsStore.customMoods.length }} {{ $t('mood_labels_total') || 'items' }}</span>
+                  </div>
+               </div>
+               <svg class="w-5 h-5 text-aura-muted group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+               </svg>
+            </button>
+         </div>
+      </section>
+
       <!-- Account -->
        <section class="space-y-4">
          <h2 class="text-sm font-semibold text-aura-muted uppercase tracking-wider">{{ $t('settings.account') }}</h2>
@@ -254,6 +276,9 @@ const pinMode = ref<'set' | 'confirm' | 'unlock'>('set')
 const pinError = ref('')
 const tempPin = ref('') // Used to store first entry during setup
 const showRemovePinModal = ref(false)
+
+// Custom Mood Management
+// Moved to CustomMoodsSettingsView.vue
 
 const openPinPad = (mode: 'set' | 'confirm') => {
     pinMode.value = mode

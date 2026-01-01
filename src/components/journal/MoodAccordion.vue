@@ -50,6 +50,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useJournalStore } from '@/stores/journal'
+import { useSettingsStore } from '@/stores/settings'
 import { AFFECTS, type Affect } from '@/constants/affects'
 import MoodDetailModal from './MoodDetailModal.vue'
 import { useI18n } from 'vue-i18n'
@@ -79,11 +80,22 @@ const openModal = (affectId: string) => {
 
 const getActiveCount = (affect: Affect) => {
     const currentMoods = store.currentEntry.moods || []
+    const settingsStore = useSettingsStore()
     let count = 0
     if (currentMoods.includes(affect.id)) count++
     affect.related.forEach(related => {
         if (currentMoods.includes(related)) count++
     })
+
+    // Custom moods associated with this affect
+    const customForThisAffect = settingsStore.customMoods
+        .filter(cm => cm.affectId === affect.id)
+        .map(cm => cm.mood)
+
+    currentMoods.forEach(m => {
+        if (customForThisAffect.includes(m)) count++
+    })
+
     return count
 }
 

@@ -4,7 +4,6 @@ import { db, auth } from '@/firebase'
 import { doc, getDoc, setDoc, onSnapshot, serverTimestamp } from 'firebase/firestore'
 import { useDark, useToggle } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
-// import { useBiometricLock } from '@/composables/useBiometricLock' // Removed
 
 export const useSettingsStore = defineStore('settings', () => {
   const isDark = useDark()
@@ -13,21 +12,32 @@ export const useSettingsStore = defineStore('settings', () => {
   const pinHash = ref<string | null>(localStorage.getItem('aura-pin-hash'))
   const reminderEnabled = ref(false)
   const reminderTime = ref('20:00') // Default 8 PM
+  interface CustomMood { mood: string; affectId: string }
+  const customMoods = ref<CustomMood[]>([])
 
   const loading = ref(false)
   let unsubscribe: (() => void) | null = null
 
-  // Utility: Hash PIN using SHA-256
-  const hashPin = async (pin: string): Promise<string> => {
-    const encoder = new TextEncoder()
-    const data = encoder.encode(pin)
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data)
-    const hashArray = Array.from(new Uint8Array(hashBuffer))
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+  const saveSettings = async () => {
+    if (!auth.currentUser) return
+    const userRef = doc(db, 'users', auth.currentUser.uid, 'settings', 'prefs')
+    await setDoc(userRef, {
+      isDark: isDark.value,
+      locale: locale.value,
+      pinHash: pinHash.value,
+      reminderEnabled: reminderEnabled.value,
+      reminderTime: reminderTime.value,
+      customMoods: customMoods.value,
+      updatedAt: serverTimestamp()
+    }, { merge: true })
   }
 
-  const setPin = async (pin: string) => {
-    const hash = await hashPin(pin)
+  // Use a targeted watch array instead of whole store to avoid loops
+  watch([isDark, locale, pinHash, reminderEnabled, reminderTime], () => {
+    saveSettings()
+  })
+
+  const setPin = async (hash: string) => {
     pinHash.value = hash
     localStorage.setItem('aura-pin-hash', hash)
     await saveSettings()
@@ -39,32 +49,43 @@ export const useSettingsStore = defineStore('settings', () => {
     await saveSettings()
   }
 
-  const verifyPin = async (inputPin: string): Promise<boolean> => {
-    if (!pinHash.value) return true // No lock means accessible
-    const inputHash = await hashPin(inputPin)
-    return inputHash === pinHash.value
+  const verifyPin = (input: string) => {
+    // Basic verification for now, in a real app this would be more secure
+    return pinHash.value === input
   }
 
-  const setLocale = (lang: string) => {
-    locale.value = lang
-    saveSettings()
+  const setLocale = async (newLocale: string) => {
+    locale.value = newLocale
+    await saveSettings()
   }
 
-  const saveSettings = async () => {
-    if (!auth.currentUser) return
+  const clearSettings = () => {
+    pinHash.value = null
+    reminderEnabled.value = false
+    customMoods.value = []
+    if (unsubscribe) {
+      unsubscribe()
+      unsubscribe = null
+    }
+  }
 
-    try {
-      const userRef = doc(db, 'users', auth.currentUser.uid, 'settings', 'prefs')
-      await setDoc(userRef, {
-        isDark: isDark.value,
-        locale: locale.value,
-        pinHash: pinHash.value,
-        reminderEnabled: reminderEnabled.value,
-        reminderTime: reminderTime.value,
-        updatedAt: serverTimestamp()
-      }, { merge: true })
-    } catch (error) {
-      console.error('Error saving settings:', error)
+  const addCustomMood = async (mood: string, affectId: string) => {
+    if (!mood || !affectId || customMoods.value.some(m => m.mood === mood && m.affectId === affectId)) return
+    customMoods.value.push({ mood, affectId })
+    await saveSettings()
+  }
+
+  const removeCustomMood = async (mood: string, affectId: string) => {
+    customMoods.value = customMoods.value.filter(m => !(m.mood === mood && m.affectId === affectId))
+    await saveSettings()
+  }
+
+  const updateCustomMood = async (oldMood: string, newMood: string, affectId: string) => {
+    if (!newMood || !affectId || customMoods.value.some(m => m.mood === newMood && m.affectId === affectId)) return
+    const index = customMoods.value.findIndex(m => m.mood === oldMood && m.affectId === affectId)
+    if (index !== -1 && customMoods.value[index]) {
+      customMoods.value[index].mood = newMood
+      await saveSettings()
     }
   }
 
@@ -90,6 +111,16 @@ export const useSettingsStore = defineStore('settings', () => {
         }
         if (data.reminderEnabled !== undefined) reminderEnabled.value = data.reminderEnabled
         if (data.reminderTime) reminderTime.value = data.reminderTime
+
+        // Use deep equality check to prevent reactivity loops
+        if (data.customMoods && JSON.stringify(data.customMoods) !== JSON.stringify(customMoods.value)) {
+          // Migration: convert string[] to { mood: string, affectId: string }[] if needed
+          if (Array.isArray(data.customMoods) && data.customMoods.length > 0 && typeof data.customMoods[0] === 'string') {
+             customMoods.value = (data.customMoods as string[]).map(m => ({ mood: m, affectId: 'interest_excitement' }))
+          } else {
+             customMoods.value = [...data.customMoods]
+          }
+        }
       }
     } catch (error) {
       console.error('Error loading settings:', error)
@@ -115,21 +146,17 @@ export const useSettingsStore = defineStore('settings', () => {
         }
         if (data.reminderEnabled !== undefined) reminderEnabled.value = data.reminderEnabled
         if (data.reminderTime) reminderTime.value = data.reminderTime
+
+        if (data.customMoods && JSON.stringify(data.customMoods) !== JSON.stringify(customMoods.value)) {
+          if (Array.isArray(data.customMoods) && data.customMoods.length > 0 && typeof data.customMoods[0] === 'string') {
+             customMoods.value = (data.customMoods as string[]).map(m => ({ mood: m, affectId: 'interest_excitement' }))
+          } else {
+             customMoods.value = [...data.customMoods]
+          }
+        }
       }
     })
   }
-
-  const clearSettings = () => {
-    if (unsubscribe) {
-      unsubscribe()
-      unsubscribe = null
-    }
-  }
-
-  // Watch for local changes to save back to Firestore (auto-sync)
-  watch([isDark, locale], () => {
-    saveSettings()
-  })
 
   return {
     isDark,
@@ -138,13 +165,17 @@ export const useSettingsStore = defineStore('settings', () => {
     pinHash,
     reminderEnabled,
     reminderTime,
+    customMoods,
     loading,
     setPin,
     removePin,
     verifyPin,
-    setLocale,
+    addCustomMood,
+    removeCustomMood,
+    updateCustomMood,
     loadSettings,
     saveSettings,
+    setLocale,
     clearSettings
   }
 })

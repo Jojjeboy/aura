@@ -50,6 +50,19 @@
              >
                 {{ $t(`affects.${affectId}.related.${emotion}`) }}
              </button>
+
+             <!-- Persistent Custom Moods -->
+             <button
+                v-for="mood in persistentCustomMoods"
+                :key="mood"
+                @click="toggleMood(mood)"
+                class="px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 border"
+                :class="isSelected(mood)
+                    ? 'bg-yellow-400/20 text-yellow-700 dark:text-yellow-300 border-yellow-400 shadow-sm'
+                    : 'bg-slate-50 dark:bg-slate-800/50 text-aura-muted border-yellow-200 hover:border-yellow-300'"
+             >
+                {{ mood }}
+             </button>
         </div>
 
         <!-- Custom Mood Section -->
@@ -108,6 +121,7 @@
 import { computed, ref } from 'vue'
 import { AFFECTS } from '@/constants/affects'
 import { useJournalStore } from '@/stores/journal'
+import { useSettingsStore } from '@/stores/settings'
 import { useI18n } from 'vue-i18n'
 
 const props = defineProps<{
@@ -117,6 +131,7 @@ const props = defineProps<{
 
 defineEmits(['close'])
 const store = useJournalStore()
+const settingsStore = useSettingsStore()
 const { t } = useI18n()
 
 const shortAffectName = computed(() => {
@@ -138,18 +153,33 @@ const isStandardMood = (moodId: string) => {
 }
 
 const customMoods = computed(() => {
-  return (store.currentEntry.moods || []).filter(m => !isStandardMood(m))
+  const allSelected = store.currentEntry.moods || []
+  // Only show "unmapped" custom moods in the bottom section if they are currently selected but not in settings for this affect
+  const persistentForThisAffect = settingsStore.customMoods
+    .filter(m => m.affectId === props.affectId)
+    .map(m => m.mood)
+
+  return allSelected.filter(m => !isStandardMood(m) && !persistentForThisAffect.includes(m))
+})
+
+const persistentCustomMoods = computed(() => {
+    return settingsStore.customMoods
+        .filter(m => m.affectId === props.affectId)
+        .map(m => m.mood)
 })
 
 const customMoodInput = ref('')
 
-const addCustomMood = () => {
+const addCustomMood = async () => {
     const mood = customMoodInput.value.trim()
     if (!mood) return
 
+    // Add to persistent settings with association
+    await settingsStore.addCustomMood(mood, props.affectId)
+
     if (!store.currentEntry.moods) store.currentEntry.moods = []
 
-    // Just add if not present
+    // Also select it for the current entry if not present
     if (!store.currentEntry.moods.includes(mood)) {
         store.currentEntry.moods.push(mood)
     }

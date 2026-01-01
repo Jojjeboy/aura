@@ -503,7 +503,7 @@ const { success, error: toastError } = useToast()
 const { t, te } = useI18n()
 
 const isCustomMood = (moodId: string) => {
-  return !AFFECTS.some(affect => affect.id === moodId || affect.related.includes(moodId))
+  return settingsStore.customMoods.some(m => m.mood === moodId)
 }
 
 // Helper function to translate mood/emotion labels

@@ -1,5 +1,20 @@
 [
   {
+    "hash": "a080d3f",
+    "author": "Jojjeboy",
+    "date": "Thu Jan 1 17:32:55 2026 +0100",
+    "message": "Custom mood functionality and styling.",
+    "files": [
+      "package.json",
+      "public/changelog.json",
+      "src/__tests__/journal.spec.ts",
+      "src/components/journal/MoodDetailModal.vue",
+      "src/locales/en.json",
+      "src/locales/sv.json",
+      "src/views/HistoryView.vue"
+    ]
+  },
+  {
     "hash": "d7a2a15",
     "author": "Jojjeboy",
     "date": "Thu Jan 1 17:11:34 2026 +0100",
@@ -583,16 +598,6 @@
       "src/components/ui/AuraHeader.vue",
       "src/components/ui/FooterNav.vue",
       "tailwind.config.js"
-    ]
-  },
-  {
-    "hash": "2bbef48",
-    "author": "Jojjeboy",
-    "date": "Sun Dec 28 16:10:47 2025 +0100",
-    "message": "Notification",
-    "files": [
-      "public/changelog.json",
-      "src/views/SettingsView.vue"
     ]
   }
 ]

@@ -76,7 +76,7 @@ import MoodAccordion from '@/components/journal/MoodAccordion.vue'
 import ThoughtsInput from '@/components/journal/ThoughtsInput.vue'
 import { useJournalStore } from '@/stores/journal'
 import { useRouter } from 'vue-router'
-import { computed, ref, onMounted } from 'vue'
+import { computed, ref, onMounted, toRaw } from 'vue'
 import { useBiometricLock } from '@/composables/useBiometricLock'
 import { useI18n } from 'vue-i18n'
 import { useToast } from '@/composables/useToast'
@@ -146,7 +146,7 @@ const unlockEntry = async () => {
         isUnlocked.value = true
         // Load the existing entry into the editing state
         if (store.todayEntry) {
-            store.currentEntry = structuredClone(store.todayEntry)
+            store.currentEntry = structuredClone(toRaw(store.todayEntry))
         }
     } else {
         toastError(t('auth_failed'))

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, toRaw } from 'vue'
 import { db as dexieDb, type JournalEntry } from '@/db'
 import { db as firestore, auth } from '@/firebase'
 import {
@@ -93,16 +93,16 @@ export const useJournalStore = defineStore('journal', () => {
 
     const id = currentEntry.value.id || uuidv4()
 
-    const rawEntry: JournalEntry = structuredClone({
+    const rawEntry: JournalEntry = structuredClone(toRaw({
         id,
         date: currentEntry.value.date || new Date().toISOString(),
-        gratitude: currentEntry.value.gratitude,
-        moods: currentEntry.value.moods,
+        gratitude: toRaw(currentEntry.value.gratitude),
+        moods: toRaw(currentEntry.value.moods),
         thoughts: currentEntry.value.thoughts,
-        health: currentEntry.value.health,
+        health: toRaw(currentEntry.value.health),
         synced: 0,
         updatedAt: Date.now()
-    }) as JournalEntry
+    })) as JournalEntry
 
     // Save to Local indexedDB first (Offline-first)
     await dexieDb.journal_entries.put(rawEntry)
@@ -142,7 +142,7 @@ export const useJournalStore = defineStore('journal', () => {
   }
 
   const editEntry = (entry: JournalEntry) => {
-    currentEntry.value = structuredClone(entry)
+    currentEntry.value = structuredClone(toRaw(entry))
   }
 
   const deleteEntry = async (id: string) => {

@@ -4,10 +4,12 @@ import { AFFECTS } from '@/constants/affects'
 import { mount } from '@vue/test-utils'
 import MoodAccordion from '@/components/journal/MoodAccordion.vue'
 import MoodDetailModal from '@/components/journal/MoodDetailModal.vue'
+import i18n from '@/i18n'
 
 describe('Affect Theory Implementation', () => {
+    const pinia = createPinia()
     beforeEach(() => {
-        setActivePinia(createPinia())
+        setActivePinia(pinia)
     })
 
     it('AFFECTS constant has correct structure', () => {
@@ -24,6 +26,7 @@ describe('Affect Theory Implementation', () => {
                 affectId: 'interest_excitement'
             },
             global: {
+                plugins: [pinia, i18n],
                 mocks: {
                     $t: (msg: string) => msg
                 }
@@ -37,6 +40,7 @@ describe('Affect Theory Implementation', () => {
     it('MoodAccordion renders 9 basic affects', () => {
         const wrapper = mount(MoodAccordion, {
             global: {
+                plugins: [pinia, i18n],
                 mocks: {
                     $t: (msg: string) => msg
                 }

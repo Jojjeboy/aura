@@ -7,8 +7,18 @@
         <p class="text-aura-muted text-sm transition-colors duration-300">{{ $t('greeting_sub') }}</p>
     </section>
 
-      <!-- Already Logged State (Only show if NOT currently editing/creating a specific date) -->
-      <div v-if="hasLoggedToday && !isUnlocked && !store.isEditing && isTargetingToday" class="flex flex-col items-center justify-center py-20 animate-in fade-in duration-500">
+      <!-- PIN Unlock State -->
+      <div v-if="hasLoggedToday && isEnteringPin && !isUnlocked && !store.isEditing && isTargetingToday" class="flex flex-col items-center justify-center py-10 animate-in fade-in duration-500">
+         <PinPad
+           mode="unlock"
+           :error="pinError"
+           @submit="handleUnlock"
+           @forgot="handleForgot"
+         />
+      </div>
+
+      <!-- Already Logged State (Not Entering PIN and Not Unlocked) -->
+      <div v-else-if="hasLoggedToday && !isUnlocked && !store.isEditing && isTargetingToday" class="flex flex-col items-center justify-center py-20 animate-in fade-in duration-500">
          <div class="bg-aura-accent/10 p-6 rounded-full mb-6">
              <svg class="w-10 h-10 text-aura-accent" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2v4m0 12v4M2 12h4m12 0h4M4.2 4.2l2.9 2.9m9.8 9.8 2.9 2.9M4.2 19.8l2.9-2.9m9.8-9.8 2.9-2.9"/>
@@ -19,7 +29,7 @@
             {{ $t('caught_up_sub') }}
          </p>
          <button
-           @click="unlockEntry"
+           @click="initiateUnlock"
            class="bg-white dark:bg-aura-card-dark text-aura-text dark:text-aura-text-dark px-8 py-3 rounded-[2rem] font-semibold shadow-soft hover:shadow-glow transition-all flex items-center gap-2"
          >
             <svg class="w-5 h-5 text-aura-accent" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -67,6 +77,16 @@
           </button>
         </div>
       </main>
+
+      <AppModal
+        :show="showResetModal"
+        :title="$t('change_pin')"
+        :message="$t('reset_pin_confirm_msg') || 'Authenticate with Google to reset your PIN?'"
+        :confirm-text="$t('authenticate') || 'Authenticate'"
+        :cancel-text="$t('cancel')"
+        @confirm="handleForgotConfirm"
+        @cancel="showResetModal = false"
+      />
   </div>
 </template>
 
@@ -75,42 +95,49 @@ import GratitudeInput from '@/components/journal/GratitudeInput.vue'
 import MoodAccordion from '@/components/journal/MoodAccordion.vue'
 import ThoughtsInput from '@/components/journal/ThoughtsInput.vue'
 import { useJournalStore } from '@/stores/journal'
+import type { JournalEntry } from '@/db'
 import { useRouter } from 'vue-router'
 import { computed, ref, onMounted, toRaw } from 'vue'
-import { useBiometricLock } from '@/composables/useBiometricLock'
+import { useSettingsStore } from '@/stores/settings'
+import PinPad from '@/components/ui/PinPad.vue'
 import { useI18n } from 'vue-i18n'
 import { useToast } from '@/composables/useToast'
 import { useAuthStore } from '@/stores/auth'
+import AppModal from '@/components/ui/AppModal.vue'
 
+const settingsStore = useSettingsStore()
 const store = useJournalStore()
 const authStore = useAuthStore()
 const router = useRouter()
 const { t } = useI18n()
-const { authenticate } = useBiometricLock()
 const { error: toastError, success } = useToast()
 
 const isUnlocked = ref(false)
+const isEnteringPin = ref(false)
+const pinError = ref('')
+const showResetModal = ref(false)
 
 onMounted(async () => {
-  await store.loadEntries()
+    // Reload entries to be sure we have the latest
+    await store.loadEntries()
 
-  // Check for date in query parameter (for past date logging from calendar)
-  const queryDate = router.currentRoute.value.query.date as string
-  if (queryDate && !store.isEditing) {
-    const targetDate = new Date(queryDate)
-    if (!Number.isNaN(targetDate.getTime())) {
-      // Check if entry already exists for this date
-      const dateStr = targetDate.toLocaleDateString()
-      const existing = store.entries.find(e => new Date(e.date).toLocaleDateString() === dateStr)
+    // Check for date in query parameter (for past date logging from calendar)
+    const queryDate = router.currentRoute.value.query.date as string
+    if (queryDate && !store.isEditing) {
+        const targetDate = new Date(queryDate)
+        if (!Number.isNaN(targetDate.getTime())) {
+            // Check if entry already exists for this date
+            const dateStr = targetDate.toLocaleDateString()
+            const existing = store.entries.find((e: JournalEntry) => new Date(e.date).toLocaleDateString() === dateStr)
 
-      if (existing) {
-        store.editEntry(existing)
-      } else {
-        store.resetEntry()
-        store.currentEntry.date = targetDate.toISOString()
-      }
+            if (existing) {
+                store.editEntry(existing)
+            } else {
+                store.resetEntry()
+                store.currentEntry.date = targetDate.toISOString()
+            }
+        }
     }
-  }
 })
 
 const hasLoggedToday = computed(() => !!store.todayEntry)
@@ -138,18 +165,49 @@ const dynamicGreeting = computed(() => {
 // If user navigates away and back, reset lock state for security
 onMounted(() => {
     isUnlocked.value = false
+    isEnteringPin.value = false
 })
 
-const unlockEntry = async () => {
-    const successResult = await authenticate()
-    if (successResult) {
+const initiateUnlock = () => {
+    if (settingsStore.pinHash) {
+        isEnteringPin.value = true
+    } else {
         isUnlocked.value = true
+        // Load existing today entry
+        if (store.todayEntry) {
+            store.currentEntry = structuredClone(toRaw(store.todayEntry))
+        }
+    }
+}
+
+const handleUnlock = async (pin: string) => {
+    const isValid = await settingsStore.verifyPin(pin)
+    if (isValid) {
+        isUnlocked.value = true
+        pinError.value = ''
         // Load the existing entry into the editing state
         if (store.todayEntry) {
             store.currentEntry = structuredClone(toRaw(store.todayEntry))
         }
     } else {
-        toastError(t('auth_failed'))
+        pinError.value = t('wrong_pin')
+        setTimeout(() => pinError.value = '', 2000)
+    }
+}
+
+const handleForgot = () => {
+    showResetModal.value = true
+}
+
+const handleForgotConfirm = async () => {
+    showResetModal.value = false
+    const isSuccess = await authStore.reauthenticate()
+    if (isSuccess) {
+        await settingsStore.removePin()
+        success('App Lock removed!')
+        isUnlocked.value = true
+    } else {
+        toastError('Authentication failed.')
     }
 }
 

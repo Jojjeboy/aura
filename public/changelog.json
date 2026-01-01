@@ -1,5 +1,63 @@
 [
   {
+    "hash": "4c6e855",
+    "author": "Jojjeboy",
+    "date": "Thu Jan 1 16:44:01 2026 +0100",
+    "message": "UI fixes",
+    "files": [
+      "src/views/HistoryView.vue"
+    ]
+  },
+  {
+    "hash": "63be9dc",
+    "author": "Jojjeboy",
+    "date": "Thu Jan 1 16:36:30 2026 +0100",
+    "message": "Fix for saving old entries",
+    "files": [
+      "src/stores/journal.ts",
+      "src/views/JournalView.vue"
+    ]
+  },
+  {
+    "hash": "c412263",
+    "author": "Jojjeboy",
+    "date": "Tue Dec 30 22:55:13 2025 +0100",
+    "message": "Custom field for thoughts",
+    "files": [
+      "package.json",
+      "src/components/journal/ThoughtsInput.vue",
+      "src/db.ts",
+      "src/locales/en.json",
+      "src/locales/sv.json",
+      "src/stores/journal.ts",
+      "src/views/HistoryView.vue",
+      "src/views/JournalView.vue"
+    ]
+  },
+  {
+    "hash": "afe934b",
+    "author": "Jojjeboy",
+    "date": "Tue Dec 30 22:39:17 2025 +0100",
+    "message": "fix: translate legacy English emotion IDs in HistoryView for Swedish locale",
+    "files": [
+      "src/locales/en.json",
+      "src/locales/sv.json",
+      "src/views/HistoryView.vue"
+    ]
+  },
+  {
+    "hash": "07be9e5",
+    "author": "Jojjeboy",
+    "date": "Tue Dec 30 22:36:55 2025 +0100",
+    "message": "fix: swedish translations for affects, increase vite chunk size warning limit to 1MB",
+    "files": [
+      "public/changelog.json",
+      "src/locales/sv.json",
+      "test_output.txt",
+      "vite.config.ts"
+    ]
+  },
+  {
     "hash": "6a4edec",
     "author": "Jojjeboy",
     "date": "Tue Dec 30 22:26:39 2025 +0100",
@@ -555,70 +613,6 @@
       "public/changelog.json",
       "src/stores/journal.ts",
       "src/views/NotesView.vue"
-    ]
-  },
-  {
-    "hash": "de1a098",
-    "author": "Jojjeboy",
-    "date": "Sun Dec 28 14:32:01 2025 +0100",
-    "message": "Changelog",
-    "files": [
-      ".github/workflows/deploy.yml",
-      "package.json",
-      "public/changelog.json",
-      "scripts/generate-changelog.js",
-      "src/locales/en.json",
-      "src/locales/sv.json",
-      "src/router/index.ts",
-      "src/views/ChangelogView.vue",
-      "src/views/SettingsView.vue"
-    ]
-  },
-  {
-    "hash": "47dd419",
-    "author": "Jojjeboy",
-    "date": "Sun Dec 28 14:27:36 2025 +0100",
-    "message": "Package.json",
-    "files": [
-      "package.json"
-    ]
-  },
-  {
-    "hash": "bee7cc4",
-    "author": "Jojjeboy",
-    "date": "Sun Dec 28 14:24:21 2025 +0100",
-    "message": "3.0",
-    "files": [
-      "package-lock.json",
-      "package.json",
-      "src/views/SettingsView.vue",
-      "vite.config.ts"
-    ]
-  },
-  {
-    "hash": "c867c03",
-    "author": "Jojjeboy",
-    "date": "Sun Dec 28 14:21:18 2025 +0100",
-    "message": "Fixes",
-    "files": [
-      "src/components/ui/PinPad.vue",
-      "src/locales/en.json",
-      "src/locales/sv.json",
-      "src/stores/auth.ts",
-      "src/stores/settings.ts",
-      "src/views/HistoryView.vue",
-      "src/views/SettingsView.vue"
-    ]
-  },
-  {
-    "hash": "ef9ed61",
-    "author": "Jojjeboy",
-    "date": "Sun Dec 28 14:00:36 2025 +0100",
-    "message": "Biometric 2",
-    "files": [
-      "src/composables/useBiometricLock.ts",
-      "src/stores/settings.ts",
-      "src/views/SettingsView.vue"
     ]
   }
 ]

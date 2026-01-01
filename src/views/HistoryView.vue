@@ -104,8 +104,12 @@
                 <span
                   v-for="(mood, idx) in entry.moods"
                   :key="idx"
-                  class="px-2.5 py-1 text-[0.65rem] font-bold rounded-full whitespace-nowrap"
-                  :class="idx === 0 ? 'bg-aura-accent text-white' : 'bg-aura-accent/10 text-aura-accent'"
+                  class="px-2.5 py-1 text-[0.65rem] font-bold rounded-full whitespace-nowrap border"
+                  :class="[
+                    isCustomMood(mood)
+                      ? 'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/40 dark:text-yellow-200 dark:border-yellow-800/60'
+                      : (idx === 0 ? 'bg-aura-accent text-white border-aura-accent' : 'bg-aura-accent/10 text-aura-accent border-aura-accent/20')
+                  ]"
                 >
                   {{ getMoodLabel(mood) }}
                 </span>
@@ -335,7 +339,8 @@
                   </div>
                   <div class="h-1.5 w-full bg-slate-100 dark:bg-white/5 rounded-full overflow-hidden">
                     <div
-                      class="h-full bg-aura-accent rounded-full transition-all duration-1000"
+                      class="h-full rounded-full transition-all duration-1000"
+                      :class="isCustomMood(stat.name) ? 'bg-yellow-400 dark:bg-yellow-500/80' : 'bg-aura-accent'"
                       :style="{ width: `${stat.percentage}%` }"
                     ></div>
                   </div>
@@ -405,8 +410,12 @@
               <span
                 v-for="(mood, idx) in selectedEntry.moods"
                 :key="idx"
-                class="px-2 py-0.5 text-xs rounded-full"
-                :class="idx === 0 ? 'bg-aura-accent/10 text-aura-accent' : 'bg-aura-accent/5 text-aura-accent/70'"
+                class="px-2 py-0.5 text-xs rounded-full border"
+                :class="[
+                  isCustomMood(mood)
+                    ? 'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/40 dark:text-yellow-200 dark:border-yellow-800/60'
+                    : (idx === 0 ? 'bg-aura-accent/10 text-aura-accent border-aura-accent/20' : 'bg-aura-accent/5 text-aura-accent/70 border-aura-accent/10')
+                ]"
               >
                 {{ getMoodLabel(mood) }}
               </span>
@@ -492,6 +501,10 @@ const settingsStore = useSettingsStore()
 const authStore = useAuthStore()
 const { success, error: toastError } = useToast()
 const { t, te } = useI18n()
+
+const isCustomMood = (moodId: string) => {
+  return !AFFECTS.some(affect => affect.id === moodId || affect.related.includes(moodId))
+}
 
 // Helper function to translate mood/emotion labels
 const getMoodLabel = (moodId: string): string => {

@@ -52,6 +52,47 @@
              </button>
         </div>
 
+        <!-- Custom Mood Section -->
+        <div class="mb-8">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-aura-muted mb-3 flex items-center gap-2">
+                <span>✨</span>
+                {{ $t('mood_custom_label') }}
+            </h3>
+
+            <!-- Custom Moods List (Yellow Pills) -->
+            <div v-if="customMoods.length > 0" class="flex flex-wrap gap-2 mb-4">
+                <button
+                    v-for="mood in customMoods"
+                    :key="mood"
+                    @click="toggleMood(mood)"
+                    class="px-3 py-1.5 rounded-full text-xs font-bold bg-yellow-100 dark:bg-yellow-900/40 text-yellow-800 dark:text-yellow-200 border border-yellow-200 dark:border-yellow-800/60 hover:bg-yellow-200 dark:hover:bg-yellow-900/60 transition-all flex items-center gap-1.5"
+                >
+                    {{ mood }}
+                    <svg class="w-3 h-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Custom Mood Input -->
+            <div class="flex gap-2">
+                <input
+                    v-model="customMoodInput"
+                    type="text"
+                    :placeholder="$t('mood_custom_placeholder')"
+                    @keydown.enter="addCustomMood"
+                    class="flex-1 px-4 py-2 text-sm bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-aura-accent/20 focus:border-aura-accent outline-none transition-all"
+                />
+                <button
+                    @click="addCustomMood"
+                    :disabled="!customMoodInput.trim()"
+                    class="px-4 py-2 bg-aura-accent/10 text-aura-accent font-bold text-sm rounded-xl hover:bg-aura-accent hover:text-white disabled:opacity-30 disabled:pointer-events-none transition-all"
+                >
+                    {{ $t('mood_custom_add') }}
+                </button>
+            </div>
+        </div>
+
         <!-- Close Button -->
         <button
             @click="$emit('close')"
@@ -64,7 +105,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { AFFECTS } from '@/constants/affects'
 import { useJournalStore } from '@/stores/journal'
 import { useI18n } from 'vue-i18n'
@@ -90,6 +131,30 @@ const relatedEmotions = computed(() => {
 
 const isSelected = (mood: string) => {
     return (store.currentEntry.moods || []).includes(mood)
+}
+
+const isStandardMood = (moodId: string) => {
+  return AFFECTS.some(affect => affect.id === moodId || affect.related.includes(moodId))
+}
+
+const customMoods = computed(() => {
+  return (store.currentEntry.moods || []).filter(m => !isStandardMood(m))
+})
+
+const customMoodInput = ref('')
+
+const addCustomMood = () => {
+    const mood = customMoodInput.value.trim()
+    if (!mood) return
+
+    if (!store.currentEntry.moods) store.currentEntry.moods = []
+
+    // Just add if not present
+    if (!store.currentEntry.moods.includes(mood)) {
+        store.currentEntry.moods.push(mood)
+    }
+
+    customMoodInput.value = ''
 }
 
 const toggleMood = (mood: string) => {

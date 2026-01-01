@@ -278,6 +278,9 @@
   "update_task": "Uppdatera uppgift",
   "create_task": "Skapa uppgift",
   "done": "Klar",
+  "mood_custom_label": "Något annat?",
+  "mood_custom_placeholder": "Skriv en egen känsla...",
+  "mood_custom_add": "Lägg till",
   "emotions": {
     "Joy": "Glädje",
     "Surprise": "Förvåning",

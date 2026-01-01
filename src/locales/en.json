@@ -278,6 +278,9 @@
   "update_task": "Update Task",
   "create_task": "Create Task",
   "done": "Done",
+  "mood_custom_label": "Something else?",
+  "mood_custom_placeholder": "Type a custom mood...",
+  "mood_custom_add": "Add",
   "emotions": {
     "Joy": "Joy",
     "Surprise": "Surprise",

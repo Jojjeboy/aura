@@ -45,4 +45,11 @@ describe('Journal Store', () => {
 
     expect(store.currentEntry.moods).toEqual([])
   })
+
+  it('handles custom moods correctly', () => {
+    const store = useJournalStore()
+    const customMood = 'Indifferent'
+    store.currentEntry.moods = [customMood]
+    expect(store.currentEntry.moods).toContain(customMood)
+  })
 })

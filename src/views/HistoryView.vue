@@ -80,33 +80,36 @@
           <!-- Header: Date and Moods (Always Visible, Clickable to Toggle) -->
           <div
             @click="entry.id && toggleEntry(entry.id)"
-            class="p-5 flex justify-between items-start cursor-pointer hover:bg-slate-50/50 dark:hover:bg-aura-accent/5 transition-colors"
+            class="p-5 flex items-start gap-4 cursor-pointer hover:bg-slate-50/50 dark:hover:bg-aura-accent/5 transition-colors"
           >
-            <div class="flex items-start gap-4">
-              <!-- Chevron Indicator -->
-              <div class="mt-1 transition-transform duration-300" :class="{ 'rotate-180': entry.id && expandedEntries.has(entry.id) }">
-                <svg class="w-4 h-4 text-aura-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
-              </div>
-              <div class="flex flex-col">
-                <span class="text-[0.65rem] uppercase tracking-wider text-aura-muted font-bold mb-0.5">
-                  {{ new Date(entry.date).toLocaleDateString(undefined, { weekday: 'long' }) }}
-                </span>
+            <!-- Chevron Indicator -->
+            <div class="mt-1 transition-transform duration-300" :class="{ 'rotate-180': entry.id && expandedEntries.has(entry.id) }">
+              <svg class="w-4 h-4 text-aura-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+
+            <div class="flex flex-col flex-1 min-w-0">
+              <div class="flex justify-between items-baseline mb-2">
                 <span class="text-sm font-bold text-aura-text dark:text-aura-text-dark">
                   {{ new Date(entry.date).toLocaleDateString() }}
                 </span>
+                <span class="text-[0.65rem] uppercase tracking-wider text-aura-muted font-bold">
+                  {{ new Date(entry.date).toLocaleDateString(undefined, { weekday: 'long' }) }}
+                </span>
               </div>
-            </div>
-            <div class="flex flex-wrap gap-1 justify-end max-w-[50%]">
-              <span
-                v-for="(mood, idx) in entry.moods"
-                :key="idx"
-                class="px-2.5 py-1 text-[0.65rem] font-bold rounded-full whitespace-nowrap"
-                :class="idx === 0 ? 'bg-aura-accent text-white' : 'bg-aura-accent/10 text-aura-accent'"
-              >
-                {{ getMoodLabel(mood) }}
-              </span>
+
+              <!-- Mood Pills -->
+              <div class="flex flex-wrap gap-1 justify-start">
+                <span
+                  v-for="(mood, idx) in entry.moods"
+                  :key="idx"
+                  class="px-2.5 py-1 text-[0.65rem] font-bold rounded-full whitespace-nowrap"
+                  :class="idx === 0 ? 'bg-aura-accent text-white' : 'bg-aura-accent/10 text-aura-accent'"
+                >
+                  {{ getMoodLabel(mood) }}
+                </span>
+              </div>
             </div>
           </div>
 

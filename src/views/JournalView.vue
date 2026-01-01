@@ -4,7 +4,7 @@
         <h1 class="text-2xl font-bold text-aura-text dark:text-aura-text-dark transition-colors duration-300">
           {{ dynamicGreeting }}, {{ firstName }}
         </h1>
-        <p class="text-aura-muted text-sm transition-colors duration-300">{{ $t('greeting_sub') }}</p>
+        <p v-if="!hasLoggedToday" class="text-aura-muted text-sm transition-colors duration-300">{{ $t('greeting_sub') }}</p>
     </section>
 
       <!-- PIN Unlock State -->
@@ -18,7 +18,7 @@
       </div>
 
       <!-- Already Logged State (Not Entering PIN and Not Unlocked) -->
-      <div v-else-if="hasLoggedToday && !isUnlocked && !store.isEditing && isTargetingToday" class="flex flex-col items-center justify-center py-20 animate-in fade-in duration-500">
+      <div v-else-if="hasLoggedToday && !isUnlocked && !store.isEditing && isTargetingToday" class="flex flex-col items-center justify-center py-5 animate-in fade-in duration-500">
          <div class="bg-aura-accent/10 p-6 rounded-full mb-6">
              <svg class="w-10 h-10 text-aura-accent" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2v4m0 12v4M2 12h4m12 0h4M4.2 4.2l2.9 2.9m9.8 9.8 2.9 2.9M4.2 19.8l2.9-2.9m9.8-9.8 2.9-2.9"/>

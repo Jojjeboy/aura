@@ -284,6 +284,11 @@
   "mood_custom_add": "Lägg till",
   "settings_custom_moods": "Egna känslor",
   "settings_custom_moods_desc": "Hantera dina egna känslor och sinnestillstånd.",
+  "mood_labels_total": "objekt",
+  "stats_common_days_title": "Dagliga mönster",
+  "stats_peak_performance": "Topprestationsdagar",
+  "stats_most_common_on": "Vanligast på {day}",
+  "stats_best_day_is": "Högst på {day}",
   "edit": "Ändra",
   "delete": "Ta bort",
   "emotions": {

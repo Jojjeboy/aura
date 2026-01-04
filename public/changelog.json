@@ -1,5 +1,24 @@
 [
   {
+    "hash": "330726f",
+    "author": "Jojjeboy",
+    "date": "Thu Jan 1 18:27:35 2026 +0100",
+    "message": "feat: affect-associated custom moods, dedicated settings subpage, and UI refinements (v4.6.1)",
+    "files": [
+      "package.json",
+      "public/changelog.json",
+      "src/components/journal/MoodAccordion.vue",
+      "src/components/journal/MoodDetailModal.vue",
+      "src/locales/en.json",
+      "src/locales/sv.json",
+      "src/router/index.ts",
+      "src/stores/settings.ts",
+      "src/views/CustomMoodsSettingsView.vue",
+      "src/views/HistoryView.vue",
+      "src/views/SettingsView.vue"
+    ]
+  },
+  {
     "hash": "a080d3f",
     "author": "Jojjeboy",
     "date": "Thu Jan 1 17:32:55 2026 +0100",
@@ -586,18 +605,6 @@
       "src/locales/sv.json",
       "src/views/HistoryView.vue",
       "src/views/SettingsView.vue"
-    ]
-  },
-  {
-    "hash": "ecadc8f",
-    "author": "Jojjeboy",
-    "date": "Sun Dec 28 16:16:49 2025 +0100",
-    "message": "Notification fixes",
-    "files": [
-      "public/changelog.json",
-      "src/components/ui/AuraHeader.vue",
-      "src/components/ui/FooterNav.vue",
-      "tailwind.config.js"
     ]
   }
 ]

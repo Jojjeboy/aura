@@ -284,6 +284,11 @@
   "mood_custom_add": "Add",
   "settings_custom_moods": "Custom Moods",
   "settings_custom_moods_desc": "Manage your custom emotions and feelings.",
+  "mood_labels_total": "items",
+  "stats_common_days_title": "Daily Patterns",
+  "stats_peak_performance": "Peak Performance Days",
+  "stats_most_common_on": "Most common on {day}",
+  "stats_best_day_is": "Highest on {day}",
   "edit": "Edit",
   "delete": "Delete",
   "emotions": {

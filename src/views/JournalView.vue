@@ -6,8 +6,11 @@
       >
         {{ dynamicGreeting }}, {{ firstName }}
       </h1>
-      <p v-if="!hasLoggedToday" class="text-aura-muted text-sm transition-colors duration-300">
-        {{ $t('greeting_sub') }}
+      <p
+        v-if="!hasLoggedToday || isUnlocked || store.isEditing"
+        class="text-aura-muted text-sm transition-colors duration-300"
+      >
+        {{ $t('greeting_sub_with_day', { day: currentEntryWeekday }) }}
       </p>
     </section>
 
@@ -216,6 +219,13 @@ const isTargetingToday = computed(() => {
   if (!store.currentEntry.date) return true
   const today = new Date().toLocaleDateString()
   return new Date(store.currentEntry.date).toLocaleDateString() === today
+})
+
+const currentEntryWeekday = computed(() => {
+  if (!store.currentEntry.date) return ''
+  return new Date(store.currentEntry.date).toLocaleDateString(undefined, {
+    weekday: 'long',
+  })
 })
 
 const firstName = computed(() => {

@@ -1,5 +1,47 @@
 [
   {
+    "hash": "9114d19",
+    "author": "Jojjeboy",
+    "date": "Tue Jan 6 20:23:54 2026 +0100",
+    "message": "fix: correct custom mood delete confirmation and update journal subheading",
+    "files": [
+      "package.json",
+      "src/locales/en.json",
+      "src/locales/sv.json",
+      "src/views/CustomMoodsSettingsView.vue",
+      "src/views/JournalView.vue"
+    ]
+  },
+  {
+    "hash": "b2fc23e",
+    "author": "Jojjeboy",
+    "date": "Tue Jan 6 20:15:07 2026 +0100",
+    "message": "feat: allow editing date on log entries with constraints",
+    "files": [
+      "package.json",
+      "src/components/ui/AppDatePicker.vue",
+      "src/locales/en.json",
+      "src/locales/sv.json",
+      "src/views/JournalView.vue"
+    ]
+  },
+  {
+    "hash": "265109e",
+    "author": "Jojjeboy",
+    "date": "Sun Jan 4 12:26:49 2026 +0100",
+    "message": "chore: bump version to 4.6.2 and implement layout/statistics improvements",
+    "files": [
+      "package.json",
+      "public/changelog.json",
+      "src/App.vue",
+      "src/components/layout/DesktopSidebar.vue",
+      "src/locales/en.json",
+      "src/locales/sv.json",
+      "src/views/HistoryView.vue",
+      "src/views/TodoView.vue"
+    ]
+  },
+  {
     "hash": "330726f",
     "author": "Jojjeboy",
     "date": "Thu Jan 1 18:27:35 2026 +0100",
@@ -562,49 +604,6 @@
       "package-lock.json",
       "package.json",
       "vite.config.ts"
-    ]
-  },
-  {
-    "hash": "7e92559",
-    "author": "Jojjeboy",
-    "date": "Sun Dec 28 17:11:35 2025 +0100",
-    "message": "Add unit tests for HistoryView, toast notifications, and user reminders. Update README with new features.",
-    "files": [
-      "README.md",
-      "notifications_fail.txt",
-      "notifications_verbose.txt",
-      "src/__tests__/history.spec.ts",
-      "src/__tests__/notifications.spec.ts",
-      "src/__tests__/toast.spec.ts",
-      "test_output.txt"
-    ]
-  },
-  {
-    "hash": "78542bd",
-    "author": "Jojjeboy",
-    "date": "Sun Dec 28 16:54:06 2025 +0100",
-    "message": "Bump version to 3.8.0 and implement Tabbed History with Interactive Calendar and app-wide Toast integration",
-    "files": [
-      "package.json",
-      "public/changelog.json",
-      "src/locales/en.json",
-      "src/locales/sv.json",
-      "src/views/HistoryView.vue",
-      "src/views/JournalView.vue",
-      "src/views/NotesView.vue"
-    ]
-  },
-  {
-    "hash": "d05c548",
-    "author": "Jojjeboy",
-    "date": "Sun Dec 28 16:27:36 2025 +0100",
-    "message": "Notification fixes",
-    "files": [
-      "src/composables/useNotifications.ts",
-      "src/locales/en.json",
-      "src/locales/sv.json",
-      "src/views/HistoryView.vue",
-      "src/views/SettingsView.vue"
     ]
   }
 ]

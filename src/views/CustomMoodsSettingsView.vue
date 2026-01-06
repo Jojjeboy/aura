@@ -113,6 +113,8 @@
           </div>
         </div>
       </section>
+    </div>
+
     <AppModal
       :show="showDeleteModal"
       :title="$t('delete')"

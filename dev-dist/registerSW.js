@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) navigator.serviceWorker.register('/aura/dev-sw.js?dev-sw', { scope: '/aura/', type: 'module' })

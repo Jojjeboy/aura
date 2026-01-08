@@ -4,6 +4,8 @@ export interface JournalEntry {
   id?: string // UUID-like
   date: string // ISO date string
   gratitude: string[]
+  wellDone?: string[]
+  improvement?: string[]
   moods: string[] // 'Joy', 'Anger', etc.
   thoughts?: string
   health: {
@@ -32,17 +34,13 @@ const db = new Dexie('AuraDB') as Dexie & {
 }
 
 // Schema definition
-db.version(5).stores({
+db.version(6).stores({
   journal_entries: 'id, date, synced, updatedAt',
   todos: 'id, date, priority, completed, synced, updatedAt'
 }).upgrade(tx => {
-  // Transfer notes to todos if they exist
-  return tx.table('notes').toArray().then(async notes => {
-    const todos = notes.map(n => ({
-      ...n,
-      completed: false
-    }))
-    await tx.table('todos').bulkAdd(todos)
+  return tx.table('journal_entries').toCollection().modify(entry => {
+    if (!entry.wellDone) entry.wellDone = ['', '', '']
+    if (!entry.improvement) entry.improvement = ['', '', '']
   })
 })
 

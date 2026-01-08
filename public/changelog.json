@@ -1,5 +1,21 @@
 [
   {
+    "hash": "a3e8c7b",
+    "author": "Jojjeboy",
+    "date": "Tue Jan 6 20:31:54 2026 +0100",
+    "message": "fix: resolve build error in CustomMoodsSettingsView",
+    "files": [
+      "build_error.txt",
+      "build_out.txt",
+      "combined.txt",
+      "combined_vite.txt",
+      "package.json",
+      "public/changelog.json",
+      "src/views/CustomMoodsSettingsView.vue",
+      "stderr.txt"
+    ]
+  },
+  {
     "hash": "9114d19",
     "author": "Jojjeboy",
     "date": "Tue Jan 6 20:23:54 2026 +0100",
@@ -593,17 +609,6 @@
     "message": "Fix TypeScript 'possibly undefined' errors in toast.spec.ts",
     "files": [
       "src/__tests__/toast.spec.ts"
-    ]
-  },
-  {
-    "hash": "5dad350",
-    "author": "Jojjeboy",
-    "date": "Sun Dec 28 17:12:53 2025 +0100",
-    "message": "Remove vue-devtools plugin",
-    "files": [
-      "package-lock.json",
-      "package.json",
-      "vite.config.ts"
     ]
   }
 ]

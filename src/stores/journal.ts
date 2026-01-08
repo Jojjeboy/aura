@@ -19,6 +19,8 @@ export const useJournalStore = defineStore('journal', () => {
   const online = useOnline()
   const currentEntry = ref<Partial<JournalEntry>>({
     gratitude: ['', '', ''],
+    wellDone: ['', '', ''],
+    improvement: ['', '', ''],
     moods: [],
     health: { sleep: 3, food: 3, movement: 3 }
   })
@@ -96,7 +98,9 @@ export const useJournalStore = defineStore('journal', () => {
     const rawEntry: JournalEntry = structuredClone(toRaw({
         id,
         date: currentEntry.value.date || new Date().toISOString(),
-        gratitude: toRaw(currentEntry.value.gratitude),
+        gratitude: toRaw(currentEntry.value.gratitude || []),
+        wellDone: toRaw(currentEntry.value.wellDone || []),
+        improvement: toRaw(currentEntry.value.improvement || []),
         moods: toRaw(currentEntry.value.moods),
         thoughts: currentEntry.value.thoughts,
         health: toRaw(currentEntry.value.health),
@@ -135,6 +139,8 @@ export const useJournalStore = defineStore('journal', () => {
   const resetEntry = () => {
     currentEntry.value = {
       gratitude: ['', '', ''],
+      wellDone: ['', '', ''],
+      improvement: ['', '', ''],
       moods: [],
       thoughts: '',
       health: { sleep: 3, food: 3, movement: 3 }

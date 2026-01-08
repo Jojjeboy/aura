@@ -164,24 +164,62 @@
               <div
                 class="grid grid-cols-1 sm:grid-cols-2 gap-4 py-4 border-y border-slate-50 dark:border-slate-800/30"
               >
-                <!-- Gratitude Section -->
-                <div class="space-y-1.5">
-                  <h4
-                    class="text-[0.6rem] uppercase tracking-wider text-aura-muted font-black mb-1 flex items-center gap-1"
-                  >
-                    <span>✨</span>
-                    <span>{{ $t('grateful_prompt') }}</span>
-                  </h4>
-                  <div class="space-y-1">
-                    <p
-                      v-for="(g, i) in entry.gratitude.filter((item) => item.trim() !== '')"
-                      :key="i"
-                      class="text-sm text-aura-text dark:text-aura-text-dark leading-relaxed break-words"
+                  <!-- Gratitude Section -->
+                  <div class="space-y-1.5">
+                    <h4
+                      class="text-[0.6rem] uppercase tracking-wider text-aura-muted font-black mb-1 flex items-center gap-1"
                     >
-                      <span class="text-aura-accent opacity-50">•</span> {{ g }}
-                    </p>
+                      <span>✨</span>
+                      <span>{{ $t('grateful_prompt') }}</span>
+                    </h4>
+                    <div class="space-y-1">
+                      <p
+                        v-for="(g, i) in entry.gratitude.filter((item) => item.trim() !== '')"
+                        :key="i"
+                        class="text-sm text-aura-text dark:text-aura-text-dark leading-relaxed break-words"
+                      >
+                        <span class="text-aura-accent opacity-50">•</span> {{ g }}
+                      </p>
+                    </div>
                   </div>
-                </div>
+
+                  <!-- Well Done Section -->
+                  <div v-if="entry.wellDone?.some(item => item.trim() !== '')" class="space-y-1.5">
+                    <h4
+                      class="text-[0.6rem] uppercase tracking-wider text-aura-muted font-black mb-1 flex items-center gap-1"
+                    >
+                      <span>✅</span>
+                      <span>{{ $t('journal_well_done_label') }}</span>
+                    </h4>
+                    <div class="space-y-1">
+                      <p
+                        v-for="(g, i) in entry.wellDone.filter((item) => item.trim() !== '')"
+                        :key="i"
+                        class="text-sm text-aura-text dark:text-aura-text-dark leading-relaxed break-words"
+                      >
+                        <span class="text-aura-accent opacity-50">•</span> {{ g }}
+                      </p>
+                    </div>
+                  </div>
+
+                  <!-- Improvement Section -->
+                  <div v-if="entry.improvement?.some(item => item.trim() !== '')" class="space-y-1.5">
+                    <h4
+                      class="text-[0.6rem] uppercase tracking-wider text-aura-muted font-black mb-1 flex items-center gap-1"
+                    >
+                      <span>🚀</span>
+                      <span>{{ $t('journal_improvement_label') }}</span>
+                    </h4>
+                    <div class="space-y-1">
+                      <p
+                        v-for="(g, i) in entry.improvement.filter((item) => item.trim() !== '')"
+                        :key="i"
+                        class="text-sm text-aura-text dark:text-aura-text-dark leading-relaxed break-words"
+                      >
+                        <span class="text-aura-accent opacity-50">•</span> {{ g }}
+                      </p>
+                    </div>
+                  </div>
 
                 <!-- Health Metrics Section -->
                 <div class="bg-slate-50/50 dark:bg-slate-800/30 rounded-2xl p-4 space-y-3">
@@ -699,7 +737,31 @@
             <h4 class="text-xs font-bold text-aura-muted mb-2">{{ $t('grateful_prompt') }}</h4>
             <div class="space-y-1">
               <p
-                v-for="(g, i) in selectedEntry.gratitude"
+                v-for="(g, i) in selectedEntry.gratitude.filter((item) => item.trim() !== '')"
+                :key="i"
+                class="text-sm text-aura-text dark:text-aura-text-dark"
+              >
+                • {{ g }}
+              </p>
+            </div>
+          </div>
+          <div v-if="selectedEntry.wellDone?.some(item => item.trim() !== '')" class="mb-4">
+            <h4 class="text-xs font-bold text-aura-muted mb-2">{{ $t('journal_well_done_label') }}</h4>
+            <div class="space-y-1">
+              <p
+                v-for="(g, i) in selectedEntry.wellDone.filter((item) => item.trim() !== '')"
+                :key="i"
+                class="text-sm text-aura-text dark:text-aura-text-dark"
+              >
+                • {{ g }}
+              </p>
+            </div>
+          </div>
+          <div v-if="selectedEntry.improvement?.some(item => item.trim() !== '')" class="mb-4">
+            <h4 class="text-xs font-bold text-aura-muted mb-2">{{ $t('journal_improvement_label') }}</h4>
+            <div class="space-y-1">
+              <p
+                v-for="(g, i) in selectedEntry.improvement.filter((item) => item.trim() !== '')"
                 :key="i"
                 class="text-sm text-aura-text dark:text-aura-text-dark"
               >

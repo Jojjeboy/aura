@@ -116,7 +116,31 @@
 
       <!-- Gratitude Section -->
       <section>
-        <GratitudeInput />
+        <JournalSectionInput
+          :label="$t('greeting_sub')"
+          :placeholder="$t('grateful_placeholder')"
+          v-model="store.currentEntry.gratitude!"
+        />
+      </section>
+
+      <!-- Well Done Section -->
+      <section>
+        <JournalSectionInput
+          :label="$t('journal_well_done_label')"
+          :placeholder="$t('grateful_placeholder')"
+          :model-value="store.currentEntry.wellDone || []"
+          @update:model-value="store.currentEntry.wellDone = $event"
+        />
+      </section>
+
+      <!-- Improvement Section -->
+      <section>
+        <JournalSectionInput
+          :label="$t('journal_improvement_label')"
+          :placeholder="$t('grateful_placeholder')"
+          :model-value="store.currentEntry.improvement || []"
+          @update:model-value="store.currentEntry.improvement = $event"
+        />
       </section>
 
       <!-- Mood & Health Section -->
@@ -160,7 +184,7 @@
 </template>
 
 <script setup lang="ts">
-import GratitudeInput from '@/components/journal/GratitudeInput.vue'
+import JournalSectionInput from '@/components/journal/JournalSectionInput.vue'
 import MoodAccordion from '@/components/journal/MoodAccordion.vue'
 import ThoughtsInput from '@/components/journal/ThoughtsInput.vue'
 import { useJournalStore } from '@/stores/journal'

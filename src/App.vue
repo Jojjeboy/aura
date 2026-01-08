@@ -7,6 +7,7 @@ import AuraHeader from '@/components/ui/AuraHeader.vue'
 import DesktopSidebar from '@/components/layout/DesktopSidebar.vue'
 import ReloadPrompt from '@/components/ui/ReloadPrompt.vue'
 import AppToast from '@/components/ui/AppToast.vue'
+import QuoteModal from '@/components/ui/QuoteModal.vue'
 
 import { useAuthStore } from '@/stores/auth'
 import { useSettingsStore } from '@/stores/settings'
@@ -57,6 +58,7 @@ onMounted(() => {
 
 <template>
   <ReloadPrompt />
+  <QuoteModal />
 
   <!-- Toast Container -->
   <div class="fixed top-20 right-4 z-50 flex flex-col items-end space-y-2">

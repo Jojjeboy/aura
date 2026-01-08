@@ -1,5 +1,15 @@
 [
   {
+    "hash": "65d7d5d",
+    "author": "Jojjeboy",
+    "date": "Thu Jan 8 13:59:32 2026 +0100",
+    "message": "Deletion of prev logs",
+    "files": [
+      "public/changelog.json",
+      "src/views/HistoryView.vue"
+    ]
+  },
+  {
     "hash": "fc33d1f",
     "author": "Jojjeboy",
     "date": "Thu Jan 8 13:55:34 2026 +0100",
@@ -615,16 +625,6 @@
     "files": [
       "src/locales/en.json",
       "src/locales/sv.json",
-      "src/views/HistoryView.vue"
-    ]
-  },
-  {
-    "hash": "e03a9a0",
-    "author": "Jojjeboy",
-    "date": "Sun Dec 28 17:40:05 2025 +0100",
-    "message": "Persist HistoryView unlock state in authStore during local session navigation",
-    "files": [
-      "src/stores/auth.ts",
       "src/views/HistoryView.vue"
     ]
   }

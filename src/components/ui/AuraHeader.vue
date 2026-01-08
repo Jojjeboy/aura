@@ -2,14 +2,15 @@
   <header class="sticky top-0 z-50 bg-white dark:bg-aura-bg-dark border-b border-slate-200 dark:border-slate-800 shadow-lg transition-colors duration-300">
     <div class="px-6 py-4 flex justify-between items-center max-w-lg mx-auto">
       <div
-        @click="router.push('/journal')"
-        class="flex items-center gap-3 cursor-pointer group"
+        @click="handleHeaderClick"
+        @dblclick="quotesStore.showRandomQuote()"
+        class="flex items-center gap-3 cursor-pointer group select-none"
       >
         <div class="w-12 h-12 rounded-full flex items-center justify-center p-1.5 shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden bg-white dark:bg-slate-900 transition-colors group-hover:border-aura-accent/50">
           <img
             src="/logo.jpg"
             alt="Aura Logo"
-            class="w-full h-full object-contain dark:rounded-full"
+            class="w-full h-full object-contain dark:rounded-full pointer-events-none"
           />
         </div>
         <div class="flex flex-col">
@@ -40,7 +41,27 @@
 <script setup lang="ts">
 import { useSettingsStore } from '@/stores/settings'
 import { useRouter } from 'vue-router'
+import { ref } from 'vue'
+import { useQuotesStore } from '@/stores/quotes'
 
 const settingsStore = useSettingsStore()
+const quotesStore = useQuotesStore()
 const router = useRouter()
+
+const lastTap = ref(0)
+const handleHeaderClick = () => {
+  const now = Date.now()
+  const DOUBLE_TAP_DELAY = 300
+
+  if (now - lastTap.value < DOUBLE_TAP_DELAY) {
+    // Double tap detected
+    quotesStore.showRandomQuote()
+    lastTap.value = 0
+  } else {
+    lastTap.value = now
+    // Single tap still navigates, but we wait a tiny bit to check for double tap
+    // (Actually, navigating immediately is fine, but on mobile we want to check for double tap)
+    router.push('/journal')
+  }
+}
 </script>

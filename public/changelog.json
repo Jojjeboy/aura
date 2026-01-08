@@ -1,5 +1,22 @@
 [
   {
+    "hash": "fc33d1f",
+    "author": "Jojjeboy",
+    "date": "Thu Jan 8 13:55:34 2026 +0100",
+    "message": "Qoutes feature",
+    "files": [
+      "public/changelog.json",
+      "src/assets/qoutes.json",
+      "src/components/ui/FooterNav.vue",
+      "src/locales/en.json",
+      "src/locales/sv.json",
+      "src/stores/settings.ts",
+      "src/views/HistoryView.vue",
+      "src/views/JournalView.vue",
+      "src/views/SettingsView.vue"
+    ]
+  },
+  {
     "hash": "f231ec6",
     "author": "Jojjeboy",
     "date": "Thu Jan 8 13:25:56 2026 +0100",
@@ -609,15 +626,6 @@
     "files": [
       "src/stores/auth.ts",
       "src/views/HistoryView.vue"
-    ]
-  },
-  {
-    "hash": "9c8454f",
-    "author": "Jojjeboy",
-    "date": "Sun Dec 28 17:23:02 2025 +0100",
-    "message": "mc",
-    "files": [
-      "public/changelog.json"
     ]
   }
 ]

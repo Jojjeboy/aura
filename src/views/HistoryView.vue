@@ -822,6 +822,12 @@
           >
             {{ $t('edit_entry') }}
           </button>
+          <button
+            @click="confirmDelete(selectedEntry)"
+            class="w-full mt-3 py-2 text-sm font-bold text-red-500 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+          >
+            {{ $t('delete_entry') }}
+          </button>
         </div>
 
         <!-- If no entry exists -->
@@ -1246,9 +1252,17 @@ const confirmDelete = (entry: JournalEntry) => {
 
 const handleDelete = async () => {
   if (!entryToDelete.value?.id) return
-  await store.deleteEntry(entryToDelete.value.id)
+  const deletedId = entryToDelete.value.id
+  await store.deleteEntry(deletedId)
   success(t('entry_deleted'))
   showDeleteModal.value = false
+
+  // If we're viewing the same entry in the calendar modal, close it
+  if (selectedEntry.value?.id === deletedId) {
+    selectedDate.value = null
+    selectedEntry.value = null
+  }
+
   entryToDelete.value = null
 }
 

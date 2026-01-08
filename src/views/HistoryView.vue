@@ -129,7 +129,7 @@
               <div class="flex flex-col flex-1 min-w-0">
                 <div class="flex justify-between items-baseline mb-2">
                   <span class="text-sm font-bold text-aura-text dark:text-aura-text-dark">
-                    {{ new Date(entry.date).toLocaleDateString() }}
+                    {{ formatDate(entry.date) }}
                   </span>
                   <span class="text-[0.65rem] uppercase tracking-wider text-aura-muted font-bold">
                     {{ new Date(entry.date).toLocaleDateString(undefined, { weekday: 'long' }) }}
@@ -571,6 +571,42 @@
               </div>
             </div>
 
+            <!-- Top Wins -->
+            <div class="bg-white dark:bg-aura-card-dark rounded-card p-6 shadow-soft space-y-4">
+              <h4
+                class="text-sm font-bold text-aura-text dark:text-aura-text-dark flex items-center gap-2"
+              >
+                <span>✅</span> {{ $t('journal_well_done_label') }}
+              </h4>
+              <div class="space-y-3">
+                <div v-if="wellDoneCount === 0" class="text-xs text-aura-muted py-4 text-center italic">
+                  {{ $t('no_data_yet') || 'No wins recorded yet' }}
+                </div>
+                <div v-else class="flex flex-col items-center justify-center py-4 bg-slate-50 dark:bg-slate-800/40 rounded-2xl">
+                  <span class="text-3xl font-black text-aura-accent">{{ wellDoneCount }}</span>
+                  <span class="text-[10px] uppercase font-bold text-aura-muted mt-1">{{ $t('stats_total_wins') || 'Total Wins' }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Top Improvements -->
+            <div class="bg-white dark:bg-aura-card-dark rounded-card p-6 shadow-soft space-y-4">
+              <h4
+                class="text-sm font-bold text-aura-text dark:text-aura-text-dark flex items-center gap-2"
+              >
+                <span>🚀</span> {{ $t('journal_improvement_label') }}
+              </h4>
+              <div class="space-y-3">
+                <div v-if="improvementCount === 0" class="text-xs text-aura-muted py-4 text-center italic">
+                  {{ $t('no_data_yet') || 'No improvements recorded yet' }}
+                </div>
+                <div v-else class="flex flex-col items-center justify-center py-4 bg-slate-50 dark:bg-slate-800/40 rounded-2xl">
+                  <span class="text-3xl font-black text-aura-accent">{{ improvementCount }}</span>
+                  <span class="text-[10px] uppercase font-bold text-aura-muted mt-1">{{ $t('stats_total_improvements') || 'Total Improvements' }}</span>
+                </div>
+              </div>
+            </div>
+
             <!-- Average Scores -->
             <div class="bg-white dark:bg-aura-card-dark rounded-card p-6 shadow-soft space-y-4">
               <h4
@@ -695,7 +731,7 @@
       >
         <div class="flex justify-between items-center mb-4">
           <h3 class="text-lg font-bold text-aura-text dark:text-aura-text-dark">
-            {{ selectedDate.toLocaleDateString() }}
+            {{ formatDate(selectedDate) }}
           </h3>
           <button
             @click="selectedDate = null"
@@ -847,6 +883,26 @@ const authStore = useAuthStore()
 const { success, error: toastError } = useToast()
 const { t, te } = useI18n()
 
+const formatDate = (dateInput: string | Date): string => {
+  const d = new Date(dateInput)
+  const today = new Date()
+  const yesterday = new Date()
+  yesterday.setDate(yesterday.getDate() - 1)
+  const dayBeforeYesterday = new Date()
+  dayBeforeYesterday.setDate(dayBeforeYesterday.getDate() - 2)
+
+  const dateStr = d.toLocaleDateString()
+  const todayStr = today.toLocaleDateString()
+  const yesterdayStr = yesterday.toLocaleDateString()
+  const dayBeforeYesterdayStr = dayBeforeYesterday.toLocaleDateString()
+
+  if (dateStr === todayStr) return t('page_titles.today')
+  if (dateStr === yesterdayStr) return t('page_titles.yesterday')
+  if (dateStr === dayBeforeYesterdayStr) return t('page_titles.day_before_yesterday')
+
+  return dateStr
+}
+
 const isCustomMood = (moodId: string) => {
   return settingsStore.customMoods.some((m) => m.mood === moodId)
 }
@@ -901,6 +957,18 @@ const feelingStats = computed(() => {
     .sort((a, b) => b.count - a.count)
 })
 
+const wellDoneCount = computed(() => {
+  return entries.value.reduce((acc, entry) => {
+    return acc + (entry.wellDone?.filter(item => item && item.trim().length > 0).length || 0)
+  }, 0)
+})
+
+const improvementCount = computed(() => {
+  return entries.value.reduce((acc, entry) => {
+    return acc + (entry.improvement?.filter(item => item && item.trim().length > 0).length || 0)
+  }, 0)
+})
+
 const filteredEntries = computed(() => {
   if (!searchQuery.value.trim()) return entries.value
 
@@ -909,6 +977,14 @@ const filteredEntries = computed(() => {
     // Check gratitude
     const hasGratitude = entry.gratitude.some((g) => g.toLowerCase().includes(query))
     if (hasGratitude) return true
+
+    // Check well done
+    const hasWellDone = entry.wellDone?.some((g) => g.toLowerCase().includes(query))
+    if (hasWellDone) return true
+
+    // Check improvements
+    const hasImprovement = entry.improvement?.some((g) => g.toLowerCase().includes(query))
+    if (hasImprovement) return true
 
     // Check moods
     const hasMood = entry.moods.some((m) => getMoodLabel(m).toLowerCase().includes(query))
@@ -965,7 +1041,7 @@ const emotionDayPatterns = computed(() => {
       Object.entries(counts).forEach(([day, count]) => {
         if (count > maxCount) {
           maxCount = count
-          bestDay = parseInt(day)
+          bestDay = Number.parseInt(day)
         }
       })
       return { mood, bestDay, count: maxCount }
@@ -1007,7 +1083,7 @@ const bestHealthDays = computed(() => {
         const avg = data.sum / data.count
         if (avg > maxAvg) {
           maxAvg = avg
-          bestDay = parseInt(day)
+          bestDay = Number.parseInt(day)
         }
       })
     }

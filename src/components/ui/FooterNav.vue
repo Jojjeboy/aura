@@ -23,6 +23,17 @@
         <span class="text-[0.6rem] font-bold uppercase tracking-tighter">{{ $t('nav_history') }}</span>
       </button>
 
+      <button
+        @click="router.push('/todo')"
+        class="flex flex-col items-center gap-1 p-2 rounded-xl transition-all flex-1"
+        :class="route.path === '/todo' ? 'text-aura-accent' : 'text-slate-400 hover:text-aura-text dark:text-slate-500 dark:hover:text-slate-300'"
+      >
+        <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 9h6m-6 3h6m-6 3h6M6.996 9h.01m-.01 3h.01m-.01 3h.01M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"/>
+        </svg>
+        <span class="text-[0.6rem] font-bold uppercase tracking-tighter">{{ $t('nav_todo') }}</span>
+      </button>
+
 
       <button
         @click="router.push('/settings')"

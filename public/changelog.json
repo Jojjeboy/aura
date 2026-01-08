@@ -1,5 +1,23 @@
 [
   {
+    "hash": "f231ec6",
+    "author": "Jojjeboy",
+    "date": "Thu Jan 8 13:25:56 2026 +0100",
+    "message": "More fields",
+    "files": [
+      "dev-dist/registerSW.js",
+      "package.json",
+      "public/changelog.json",
+      "src/components/journal/JournalSectionInput.vue",
+      "src/db.ts",
+      "src/locales/en.json",
+      "src/locales/sv.json",
+      "src/stores/journal.ts",
+      "src/views/HistoryView.vue",
+      "src/views/JournalView.vue"
+    ]
+  },
+  {
     "hash": "a3e8c7b",
     "author": "Jojjeboy",
     "date": "Tue Jan 6 20:31:54 2026 +0100",
@@ -600,15 +618,6 @@
     "message": "mc",
     "files": [
       "public/changelog.json"
-    ]
-  },
-  {
-    "hash": "f07707e",
-    "author": "Jojjeboy",
-    "date": "Sun Dec 28 17:22:05 2025 +0100",
-    "message": "Fix TypeScript 'possibly undefined' errors in toast.spec.ts",
-    "files": [
-      "src/__tests__/toast.spec.ts"
     ]
   }
 ]

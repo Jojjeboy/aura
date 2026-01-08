@@ -123,6 +123,33 @@
         </div>
       </section>
 
+      <!-- Post-Logging Inspiration -->
+      <section class="space-y-4">
+        <h2 class="text-sm font-semibold text-aura-muted uppercase tracking-wider">{{ $t('quote_modal_title') }}</h2>
+        <div class="bg-white dark:bg-aura-card-dark rounded-card shadow-soft p-6">
+          <div class="flex items-center justify-between">
+            <div class="flex-1">
+              <h3 class="font-semibold text-aura-text dark:text-aura-text-dark">{{ $t('settings_show_quotes') }}</h3>
+              <p class="text-xs text-aura-muted mt-1">{{ $t('settings_show_quotes_desc') }}</p>
+            </div>
+            <button
+              @click="settingsStore.showQuotesAfterLogging = !settingsStore.showQuotesAfterLogging"
+              :class="[
+                'relative inline-flex h-6 w-11 items-center rounded-full transition-colors',
+                settingsStore.showQuotesAfterLogging ? 'bg-aura-accent' : 'bg-slate-300 dark:bg-slate-700'
+              ]"
+            >
+              <span
+                :class="[
+                  'inline-block h-4 w-4 transform rounded-full bg-white transition-transform',
+                  settingsStore.showQuotesAfterLogging ? 'translate-x-6' : 'translate-x-1'
+                ]"
+              />
+            </button>
+          </div>
+        </div>
+      </section>
+
       <!-- Features -->
       <section class="space-y-4">
          <h2 class="text-sm font-semibold text-aura-muted uppercase tracking-wider">{{ $t('settings.features') }}</h2>

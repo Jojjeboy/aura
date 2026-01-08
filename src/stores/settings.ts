@@ -12,6 +12,7 @@ export const useSettingsStore = defineStore('settings', () => {
   const pinHash = ref<string | null>(localStorage.getItem('aura-pin-hash'))
   const reminderEnabled = ref(false)
   const reminderTime = ref('20:00') // Default 8 PM
+  const showQuotesAfterLogging = ref(false)
   interface CustomMood { mood: string; affectId: string }
   const customMoods = ref<CustomMood[]>([])
 
@@ -27,13 +28,14 @@ export const useSettingsStore = defineStore('settings', () => {
       pinHash: pinHash.value,
       reminderEnabled: reminderEnabled.value,
       reminderTime: reminderTime.value,
+      showQuotesAfterLogging: showQuotesAfterLogging.value,
       customMoods: customMoods.value,
       updatedAt: serverTimestamp()
     }, { merge: true })
   }
 
   // Use a targeted watch array instead of whole store to avoid loops
-  watch([isDark, locale, pinHash, reminderEnabled, reminderTime], () => {
+  watch([isDark, locale, pinHash, reminderEnabled, reminderTime, showQuotesAfterLogging], () => {
     saveSettings()
   })
 
@@ -89,38 +91,51 @@ export const useSettingsStore = defineStore('settings', () => {
     }
   }
 
+  interface SettingsData {
+    isDark?: boolean
+    locale?: string
+    pinHash?: string | null
+    reminderEnabled?: boolean
+    reminderTime?: string
+    showQuotesAfterLogging?: boolean
+    customMoods?: (string | CustomMood)[]
+  }
+
+  const processSettingsData = (data: SettingsData) => {
+    if (data.isDark !== undefined) isDark.value = data.isDark
+    if (data.locale) locale.value = data.locale
+    if (data.pinHash !== undefined) {
+      pinHash.value = data.pinHash
+      if (data.pinHash) {
+        localStorage.setItem('aura-pin-hash', data.pinHash)
+      } else {
+        localStorage.removeItem('aura-pin-hash')
+      }
+    }
+    if (data.reminderEnabled !== undefined) reminderEnabled.value = data.reminderEnabled
+    if (data.reminderTime) reminderTime.value = data.reminderTime
+    if (data.showQuotesAfterLogging !== undefined) showQuotesAfterLogging.value = data.showQuotesAfterLogging
+
+    if (data.customMoods && JSON.stringify(data.customMoods) !== JSON.stringify(customMoods.value)) {
+      if (Array.isArray(data.customMoods) && data.customMoods.length > 0 && typeof data.customMoods[0] === 'string') {
+        customMoods.value = (data.customMoods as string[]).map(m => ({ mood: m, affectId: 'interest_excitement' }))
+      } else {
+        customMoods.value = [...data.customMoods] as CustomMood[]
+      }
+    }
+  }
+
   const loadSettings = async () => {
     if (!auth.currentUser) return
     loading.value = true
 
+    const userRef = doc(db, 'users', auth.currentUser.uid, 'settings', 'prefs')
+
     try {
-      const userRef = doc(db, 'users', auth.currentUser.uid, 'settings', 'prefs')
       const docSnap = await getDoc(userRef)
 
       if (docSnap.exists()) {
-        const data = docSnap.data()
-        if (data.isDark !== undefined) isDark.value = data.isDark
-        if (data.locale) locale.value = data.locale
-        if (data.pinHash !== undefined) {
-          pinHash.value = data.pinHash
-          if (data.pinHash) {
-             localStorage.setItem('aura-pin-hash', data.pinHash)
-          } else {
-             localStorage.removeItem('aura-pin-hash')
-          }
-        }
-        if (data.reminderEnabled !== undefined) reminderEnabled.value = data.reminderEnabled
-        if (data.reminderTime) reminderTime.value = data.reminderTime
-
-        // Use deep equality check to prevent reactivity loops
-        if (data.customMoods && JSON.stringify(data.customMoods) !== JSON.stringify(customMoods.value)) {
-          // Migration: convert string[] to { mood: string, affectId: string }[] if needed
-          if (Array.isArray(data.customMoods) && data.customMoods.length > 0 && typeof data.customMoods[0] === 'string') {
-             customMoods.value = (data.customMoods as string[]).map(m => ({ mood: m, affectId: 'interest_excitement' }))
-          } else {
-             customMoods.value = [...data.customMoods]
-          }
-        }
+        processSettingsData(docSnap.data() as SettingsData)
       }
     } catch (error) {
       console.error('Error loading settings:', error)
@@ -130,30 +145,9 @@ export const useSettingsStore = defineStore('settings', () => {
 
     // Setup listener for real-time sync across devices
     if (unsubscribe) unsubscribe()
-    const userRef = doc(db, 'users', auth.currentUser.uid, 'settings', 'prefs')
-    unsubscribe = onSnapshot(userRef, (doc) => {
-      if (doc.exists()) {
-        const data = doc.data()
-        if (data.isDark !== undefined) isDark.value = data.isDark
-        if (data.locale) locale.value = data.locale
-        if (data.pinHash !== undefined) {
-           pinHash.value = data.pinHash
-           if (data.pinHash) {
-              localStorage.setItem('aura-pin-hash', data.pinHash)
-           } else {
-              localStorage.removeItem('aura-pin-hash')
-           }
-        }
-        if (data.reminderEnabled !== undefined) reminderEnabled.value = data.reminderEnabled
-        if (data.reminderTime) reminderTime.value = data.reminderTime
-
-        if (data.customMoods && JSON.stringify(data.customMoods) !== JSON.stringify(customMoods.value)) {
-          if (Array.isArray(data.customMoods) && data.customMoods.length > 0 && typeof data.customMoods[0] === 'string') {
-             customMoods.value = (data.customMoods as string[]).map(m => ({ mood: m, affectId: 'interest_excitement' }))
-          } else {
-             customMoods.value = [...data.customMoods]
-          }
-        }
+    unsubscribe = onSnapshot(userRef, (snapshot) => {
+      if (snapshot.exists()) {
+        processSettingsData(snapshot.data() as SettingsData)
       }
     })
   }
@@ -165,6 +159,7 @@ export const useSettingsStore = defineStore('settings', () => {
     pinHash,
     reminderEnabled,
     reminderTime,
+    showQuotesAfterLogging,
     customMoods,
     loading,
     setPin,

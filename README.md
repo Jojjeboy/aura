@@ -4,14 +4,17 @@ A minimalist, offline-first micro-journaling application built with Vue 3, Tailw
 
 ## Features
 
-- **Soft UI Design**: Airy, card-based interface with smooth animations.
+- **Soft UI Design**: Airy, glassmorphism-inspired interface with smooth micro-animations.
 - **Interactive History**: Three-tabbed view (Log, Calendar, Stats) for a complete overview.
-- **Real-time Search**: Quick filtering of history logs by content, mood, or date.
-- **Collapsible Logs**: Clean, scannable history with toggleable detail views.
+- **Mood Trends**: Interactive line charts visualizing emotional shifts over the last 14 days.
 - **Journal Statistics**: Visualized health trends and emotional patterns (unlocked after 10 entries).
-- **Gratitude Inspiration**: Integrated library of 100+ localized suggestions to help you get started.
-- **Micro-Reflection**: Log moods, gratitude, and health metrics.
-- **Toast Notifications**: Modern, non-blocking feedback system.
+- **Voice-to-Text**: Dictate reflections using the integrated Web Speech API for hands-free journaling.
+- **Categorized Gratitude**: Organize daily highlights into meaningful categories like Self, Work, or Family.
+- **Data Portability**: Export your entire journal history to JSON from Settings for personal backup.
+- **Multi-device Sync Dashboard**: Real-time monitoring of connectivity and sync status for all linked devices.
+- **Real-time Search**: Quick filtering of logs by content, mood, or date.
+- **Collapsible Logs**: Clean, scannable history with toggleable detail views.
+- **Gratitude Inspiration**: Integrated library of 100+ localized suggestions.
 - **Offline First**: Uses IndexedDB (Dexie) for local storage and syncs to Firestore when online.
 - **Biometric Security**: Optional WebAuthn/PIN locking for history.
 - **Gamification**: Streak counter and mood tracking.

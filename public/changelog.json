@@ -1,5 +1,18 @@
 [
   {
+    "hash": "d29cd37",
+    "author": "Jojjeboy",
+    "date": "Fri Jan 9 08:27:14 2026 +0100",
+    "message": "fix(stats): resolve i18n issues and hardcoded strings on statistics page",
+    "files": [
+      "package.json",
+      "public/changelog.json",
+      "src/locales/en.json",
+      "src/locales/sv.json",
+      "src/views/HistoryView.vue"
+    ]
+  },
+  {
     "hash": "7feac63",
     "author": "Jojjeboy",
     "date": "Fri Jan 9 08:22:33 2026 +0100",
@@ -621,18 +634,6 @@
     "message": "UI Refinement: remove header subtitle and use icons for history log actions",
     "files": [
       "src/components/ui/AuraHeader.vue",
-      "src/views/HistoryView.vue"
-    ]
-  },
-  {
-    "hash": "1c3ef14",
-    "author": "Jojjeboy",
-    "date": "Sun Dec 28 18:19:38 2025 +0100",
-    "message": "Implement journal entry deletion in HistoryView",
-    "files": [
-      "src/locales/en.json",
-      "src/locales/sv.json",
-      "src/stores/journal.ts",
       "src/views/HistoryView.vue"
     ]
   }

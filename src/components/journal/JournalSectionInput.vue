@@ -22,25 +22,42 @@
         <div
           v-for="(item, index) in modelValue"
           :key="index"
-          v-show="index === 0 || (modelValue[index - 1] && modelValue[index - 1]!.length > 0)"
+          v-show="index === 0 || (modelValue[index - 1] && getItemText(modelValue[index - 1]!) && getItemText(modelValue[index - 1]!).length > 0)"
           class="animate-in fade-in slide-in-from-top-2 duration-300"
         >
           <div
-            class="bg-white dark:bg-aura-card-dark rounded-[2rem] shadow-soft p-4 flex items-center gap-4 transition-all duration-300 focus-within:shadow-glow focus-within:ring-1 focus-within:ring-aura-accent/30 relative"
+            class="bg-white dark:bg-aura-card-dark rounded-[2rem] shadow-soft p-4 flex flex-col gap-3 transition-all duration-300 focus-within:shadow-glow focus-within:ring-1 focus-within:ring-aura-accent/30 relative"
           >
-            <div
-              class="flex items-center justify-center w-8 h-8 rounded-full bg-slate-50 dark:bg-slate-800 text-slate-400 text-sm font-medium shrink-0"
-            >
-              {{ index + 1 }}
+            <div class="flex items-center gap-4">
+              <div
+                class="flex items-center justify-center w-8 h-8 rounded-full bg-slate-50 dark:bg-slate-800 text-slate-400 text-sm font-medium shrink-0"
+              >
+                {{ index + 1 }}
+              </div>
+              <input
+                :id="'section-' + label + '-' + index"
+                type="text"
+                :value="getItemText(item)"
+                @input="updateItemText(index, ($event.target as HTMLInputElement).value)"
+                :placeholder="placeholder"
+                class="w-full bg-transparent border-none outline-none text-aura-text dark:text-aura-text-dark placeholder-aura-muted"
+              />
             </div>
-            <input
-              :id="'section-' + label + '-' + index"
-              type="text"
-              :value="item"
-              @input="updateItem(index, ($event.target as HTMLInputElement).value)"
-              :placeholder="placeholder"
-              class="w-full bg-transparent border-none outline-none text-aura-text dark:text-aura-text-dark placeholder-aura-muted"
-            />
+
+            <!-- Categories -->
+            <div v-if="hasCategories" class="flex flex-wrap gap-2 ml-12">
+              <button
+                v-for="cat in availableCategories"
+                :key="cat"
+                @click="updateItemCategory(index, cat)"
+                class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider transition-all duration-200"
+                :class="getItemCategory(item) === cat
+                  ? 'bg-aura-accent text-white shadow-glow'
+                  : 'bg-slate-50 dark:bg-slate-800 text-aura-muted hover:bg-slate-100 dark:hover:bg-slate-700'"
+              >
+                {{ $t('gratitude_cat_' + cat) }}
+              </button>
+            </div>
           </div>
         </div>
 
@@ -73,32 +90,72 @@ const props = defineProps<{
   label: string
   placeholder: string
   modelValue: string[]
+  hasCategories?: boolean
 }>()
+
+const availableCategories = ['self', 'work', 'family', 'health', 'nature', 'other']
 
 const emit = defineEmits(['update:modelValue'])
 
+const getItemText = (item: string | undefined): string => {
+  if (!item) return ''
+  if (item.includes('|')) {
+    return item.split('|')[1] || ''
+  }
+  return item
+}
+
+const getItemCategory = (item: string | undefined): string => {
+  if (!item) return ''
+  if (item.includes('|')) {
+    return item.split('|')[0] || ''
+  }
+  return ''
+}
+
 const progressHeight = computed(() => {
-  const filled = props.modelValue.filter((item) => item && item.trim().length > 0).length
+  const filled = props.modelValue.filter((item) => {
+    const text = getItemText(item)
+    return text && text.trim().length > 0
+  }).length
   return `${(filled / 3) * 100}%`
 })
 
 const canAddMore = computed(() => {
-  const filledCount = props.modelValue.filter((item) => item && item.trim().length > 0).length
-  const visibleCount = props.modelValue.filter(
-    (item, i) => i === 0 || (props.modelValue[i - 1] && props.modelValue[i - 1]!.length > 0),
-  ).length
+  const filledCount = props.modelValue.filter((item) => {
+    const text = getItemText(item)
+    return text && text.trim().length > 0
+  }).length
+
+  const visibleCount = props.modelValue.filter((_item, i) => {
+    if (i === 0) return true
+    const prevText = getItemText(props.modelValue[i - 1])
+    return prevText && prevText.length > 0
+  }).length
+
   return filledCount < 3 && filledCount === visibleCount && props.modelValue.length === 3
 })
 
-const updateItem = (index: number, value: string) => {
+const updateItemText = (index: number, text: string) => {
   const newValue = [...props.modelValue]
-  newValue[index] = value
+  const currentCat = getItemCategory(newValue[index])
+  newValue[index] = currentCat ? `${currentCat}|${text}` : text
+  emit('update:modelValue', newValue)
+}
+
+const updateItemCategory = (index: number, category: string) => {
+  const newValue = [...props.modelValue]
+  const currentText = getItemText(newValue[index])
+  if (getItemCategory(newValue[index]) === category) {
+    // Toggle off
+    newValue[index] = currentText
+  } else {
+    newValue[index] = `${category}|${currentText}`
+  }
   emit('update:modelValue', newValue)
 }
 
 const addMore = () => {
-  // Reveal logic is handled by v-show and updateItem.
-  // We can add a simple space to the next hidden item to trigger v-show
-  // but it's better to let the user type.
+  // Logic handled by v-show
 }
 </script>

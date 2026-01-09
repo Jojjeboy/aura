@@ -15,10 +15,25 @@
       ></textarea>
 
       <!-- Subtle Decorative Element -->
-      <div class="absolute bottom-4 right-4 opacity-10 group-focus-within:opacity-30 transition-opacity">
-        <svg class="w-6 h-6 text-aura-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-        </svg>
+      <div class="absolute bottom-4 right-4 flex items-center gap-2">
+        <button
+          v-if="isSupported"
+          @click="toggleVoiceInput"
+          class="p-2 rounded-full transition-all duration-300"
+          :class="isListening ? 'bg-red-500 text-white animate-pulse' : 'text-aura-accent opacity-20 hover:opacity-100 hover:bg-aura-accent/10'"
+          :title="isListening ? $t('voice_stop') : $t('voice_start')"
+        >
+          <svg v-if="!isListening" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+          </svg>
+          <span v-else class="text-[10px] font-bold uppercase tracking-wider">{{ $t('voice_listening') }}</span>
+        </button>
+
+        <div class="opacity-10 group-focus-within:opacity-30 transition-opacity">
+          <svg class="w-6 h-6 text-aura-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          </svg>
+        </div>
       </div>
     </div>
   </div>
@@ -27,9 +42,26 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useJournalStore } from '@/stores/journal'
+import { useVoiceInput } from '@/composables/useVoiceInput'
 
 const store = useJournalStore()
 const textarea = ref<HTMLTextAreaElement | null>(null)
+const { isListening, isSupported, startListening } = useVoiceInput()
+
+const toggleVoiceInput = () => {
+  if (isListening.value) {
+    return
+  }
+
+  startListening((text) => {
+    if (store.currentEntry.thoughts) {
+      store.currentEntry.thoughts += ' ' + text
+    } else {
+      store.currentEntry.thoughts = text
+    }
+    adjustHeight()
+  })
+}
 
 const adjustHeight = () => {
   if (textarea.value) {

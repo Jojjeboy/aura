@@ -114,12 +114,12 @@
         </button>
       </div>
 
-      <!-- Gratitude Section -->
       <section>
         <JournalSectionInput
           :label="$t('greeting_sub')"
           :placeholder="$t('grateful_placeholder')"
           v-model="store.currentEntry.gratitude!"
+          has-categories
         />
       </section>
 

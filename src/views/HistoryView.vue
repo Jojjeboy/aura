@@ -538,6 +538,14 @@
             </div>
           </div>
 
+          <!-- Mood Trends Chart -->
+          <div class="bg-white dark:bg-aura-card-dark rounded-card p-6 shadow-soft space-y-4">
+            <h4 class="text-sm font-bold text-aura-text dark:text-aura-text-dark flex items-center gap-2">
+              <span>📊</span> {{ $t('stats_mood_trends_title') }}
+            </h4>
+            <MoodTrendChart :entries="entries" />
+          </div>
+
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Top Feelings -->
             <div class="bg-white dark:bg-aura-card-dark rounded-card p-6 shadow-soft space-y-4">
@@ -880,6 +888,7 @@ import { useToast } from '@/composables/useToast'
 import { useI18n } from 'vue-i18n'
 import AppModal from '@/components/ui/AppModal.vue'
 import { AFFECTS } from '@/constants/affects'
+import MoodTrendChart from '@/components/stats/MoodTrendChart.vue'
 
 const store = useJournalStore()
 const router = useRouter()

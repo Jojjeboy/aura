@@ -204,6 +204,33 @@
          </div>
       </section>
 
+      <!-- Data Management -->
+      <section class="space-y-4">
+         <h2 class="text-sm font-semibold text-aura-muted uppercase tracking-wider">{{ $t('settings_data_mgmt') }}</h2>
+         <div class="bg-white dark:bg-aura-card-dark rounded-card shadow-soft p-1">
+            <button
+               @click="exportData"
+               class="w-full flex items-center justify-between p-4 group hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors rounded-card"
+            >
+               <div class="flex items-center gap-3">
+                  <span class="text-xl">💾</span>
+                  <div class="flex flex-col items-start text-left">
+                     <span class="text-aura-text dark:text-aura-text-dark font-medium">{{ $t('settings_export_data') }}</span>
+                     <span class="text-xs text-aura-muted">{{ $t('settings_export_desc') }}</span>
+                  </div>
+               </div>
+               <svg class="w-5 h-5 text-aura-muted group-hover:translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+               </svg>
+            </button>
+         </div>
+      </section>
+
+      <!-- Sync Dashboard -->
+      <section v-if="authStore.user">
+        <SyncDashboard />
+      </section>
+
       <!-- Account -->
        <section class="space-y-4">
          <h2 class="text-sm font-semibold text-aura-muted uppercase tracking-wider">{{ $t('settings.account') }}</h2>
@@ -272,6 +299,9 @@ import { useI18n } from 'vue-i18n'
 
 import PinPad from '@/components/ui/PinPad.vue'
 import { useRegisterSW } from 'virtual:pwa-register/vue'
+import { useJournalStore } from '@/stores/journal'
+import { useAuthStore } from '@/stores/auth'
+import SyncDashboard from '@/components/settings/SyncDashboard.vue'
 
 const { updateServiceWorker } = useRegisterSW()
 const appVersion = import.meta.env.APP_VERSION
@@ -282,6 +312,7 @@ const handleForceUpdate = async () => {
 
 const router = useRouter()
 const settingsStore = useSettingsStore()
+const authStore = useAuthStore()
 const { notificationPermission, requestPermission, subscribeToPush, scheduleReminder, saveNotificationPreferences } = useNotifications()
 const { success, error, info } = useToast()
 const { t } = useI18n()
@@ -404,6 +435,21 @@ const handleTimeChange = async () => {
         // Save new time to Firestore
         saveNotificationPreferences()
     }
+}
+
+const journalStore = useJournalStore()
+const exportData = () => {
+  const data = JSON.stringify(journalStore.entries, null, 2)
+  const blob = new Blob([data], { type: 'application/json' })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = `aura-export-${new Date().toISOString().split('T')[0]}.json`
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  URL.revokeObjectURL(url)
+  success(t('settings_export_success'))
 }
 
 const logout = async () => {

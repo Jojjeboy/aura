@@ -1,640 +1,122 @@
 [
   {
+    "hash": "099cfd8",
+    "author": "Jojjeboy",
+    "date": "Fri Jan 9 10:03:11 2026 +0100",
+    "message": "docs: update README with new features"
+  },
+  {
+    "hash": "af3927d",
+    "author": "Jojjeboy",
+    "date": "Fri Jan 9 09:13:47 2026 +0100",
+    "message": "feat(journal): implement mood trends, data export, voice input, gratitude categories and sync dashboard"
+  },
+  {
     "hash": "d29cd37",
     "author": "Jojjeboy",
     "date": "Fri Jan 9 08:27:14 2026 +0100",
-    "message": "fix(stats): resolve i18n issues and hardcoded strings on statistics page",
-    "files": [
-      "package.json",
-      "public/changelog.json",
-      "src/locales/en.json",
-      "src/locales/sv.json",
-      "src/views/HistoryView.vue"
-    ]
+    "message": "fix(stats): resolve i18n issues and hardcoded strings on statistics page"
   },
   {
     "hash": "7feac63",
     "author": "Jojjeboy",
     "date": "Fri Jan 9 08:22:33 2026 +0100",
-    "message": "Reload prompt history",
-    "files": [
-      "public/changelog.json",
-      "src/components/ui/ReloadPrompt.vue",
-      "src/locales/en.json",
-      "src/locales/sv.json"
-    ]
+    "message": "Reload prompt history"
   },
   {
     "hash": "e15a8f2",
     "author": "Jojjeboy",
     "date": "Thu Jan 8 14:13:42 2026 +0100",
-    "message": "Doubletap for qoute",
-    "files": [
-      "public/changelog.json",
-      "src/App.vue",
-      "src/components/ui/AuraHeader.vue",
-      "src/components/ui/QuoteModal.vue",
-      "src/locales/en.json",
-      "src/locales/sv.json",
-      "src/stores/quotes.ts",
-      "src/views/JournalView.vue"
-    ]
+    "message": "Doubletap for qoute"
   },
   {
     "hash": "65d7d5d",
     "author": "Jojjeboy",
     "date": "Thu Jan 8 13:59:32 2026 +0100",
-    "message": "Deletion of prev logs",
-    "files": [
-      "public/changelog.json",
-      "src/views/HistoryView.vue"
-    ]
+    "message": "Deletion of prev logs"
   },
   {
     "hash": "fc33d1f",
     "author": "Jojjeboy",
     "date": "Thu Jan 8 13:55:34 2026 +0100",
-    "message": "Qoutes feature",
-    "files": [
-      "public/changelog.json",
-      "src/assets/qoutes.json",
-      "src/components/ui/FooterNav.vue",
-      "src/locales/en.json",
-      "src/locales/sv.json",
-      "src/stores/settings.ts",
-      "src/views/HistoryView.vue",
-      "src/views/JournalView.vue",
-      "src/views/SettingsView.vue"
-    ]
+    "message": "Qoutes feature"
   },
   {
     "hash": "f231ec6",
     "author": "Jojjeboy",
     "date": "Thu Jan 8 13:25:56 2026 +0100",
-    "message": "More fields",
-    "files": [
-      "dev-dist/registerSW.js",
-      "package.json",
-      "public/changelog.json",
-      "src/components/journal/JournalSectionInput.vue",
-      "src/db.ts",
-      "src/locales/en.json",
-      "src/locales/sv.json",
-      "src/stores/journal.ts",
-      "src/views/HistoryView.vue",
-      "src/views/JournalView.vue"
-    ]
+    "message": "More fields"
   },
   {
     "hash": "a3e8c7b",
     "author": "Jojjeboy",
     "date": "Tue Jan 6 20:31:54 2026 +0100",
-    "message": "fix: resolve build error in CustomMoodsSettingsView",
-    "files": [
-      "build_error.txt",
-      "build_out.txt",
-      "combined.txt",
-      "combined_vite.txt",
-      "package.json",
-      "public/changelog.json",
-      "src/views/CustomMoodsSettingsView.vue",
-      "stderr.txt"
-    ]
+    "message": "fix: resolve build error in CustomMoodsSettingsView"
   },
   {
     "hash": "9114d19",
     "author": "Jojjeboy",
     "date": "Tue Jan 6 20:23:54 2026 +0100",
-    "message": "fix: correct custom mood delete confirmation and update journal subheading",
-    "files": [
-      "package.json",
-      "src/locales/en.json",
-      "src/locales/sv.json",
-      "src/views/CustomMoodsSettingsView.vue",
-      "src/views/JournalView.vue"
-    ]
+    "message": "fix: correct custom mood delete confirmation and update journal subheading"
   },
   {
     "hash": "b2fc23e",
     "author": "Jojjeboy",
     "date": "Tue Jan 6 20:15:07 2026 +0100",
-    "message": "feat: allow editing date on log entries with constraints",
-    "files": [
-      "package.json",
-      "src/components/ui/AppDatePicker.vue",
-      "src/locales/en.json",
-      "src/locales/sv.json",
-      "src/views/JournalView.vue"
-    ]
+    "message": "feat: allow editing date on log entries with constraints"
   },
   {
     "hash": "265109e",
     "author": "Jojjeboy",
     "date": "Sun Jan 4 12:26:49 2026 +0100",
-    "message": "chore: bump version to 4.6.2 and implement layout/statistics improvements",
-    "files": [
-      "package.json",
-      "public/changelog.json",
-      "src/App.vue",
-      "src/components/layout/DesktopSidebar.vue",
-      "src/locales/en.json",
-      "src/locales/sv.json",
-      "src/views/HistoryView.vue",
-      "src/views/TodoView.vue"
-    ]
+    "message": "chore: bump version to 4.6.2 and implement layout/statistics improvements"
   },
   {
     "hash": "330726f",
     "author": "Jojjeboy",
     "date": "Thu Jan 1 18:27:35 2026 +0100",
-    "message": "feat: affect-associated custom moods, dedicated settings subpage, and UI refinements (v4.6.1)",
-    "files": [
-      "package.json",
-      "public/changelog.json",
-      "src/components/journal/MoodAccordion.vue",
-      "src/components/journal/MoodDetailModal.vue",
-      "src/locales/en.json",
-      "src/locales/sv.json",
-      "src/router/index.ts",
-      "src/stores/settings.ts",
-      "src/views/CustomMoodsSettingsView.vue",
-      "src/views/HistoryView.vue",
-      "src/views/SettingsView.vue"
-    ]
+    "message": "feat: affect-associated custom moods, dedicated settings subpage, and UI refinements (v4.6.1)"
   },
   {
     "hash": "a080d3f",
     "author": "Jojjeboy",
     "date": "Thu Jan 1 17:32:55 2026 +0100",
-    "message": "Custom mood functionality and styling.",
-    "files": [
-      "package.json",
-      "public/changelog.json",
-      "src/__tests__/journal.spec.ts",
-      "src/components/journal/MoodDetailModal.vue",
-      "src/locales/en.json",
-      "src/locales/sv.json",
-      "src/views/HistoryView.vue"
-    ]
+    "message": "Custom mood functionality and styling."
   },
   {
     "hash": "d7a2a15",
     "author": "Jojjeboy",
     "date": "Thu Jan 1 17:11:34 2026 +0100",
-    "message": "mc",
-    "files": [
-      "src/views/JournalView.vue"
-    ]
+    "message": "mc"
   },
   {
     "hash": "639775c",
     "author": "Jojjeboy",
     "date": "Thu Jan 1 17:03:22 2026 +0100",
-    "message": "mc",
-    "files": [
-      "src/views/JournalView.vue"
-    ]
+    "message": "mc"
   },
   {
     "hash": "c697d75",
     "author": "Jojjeboy",
     "date": "Thu Jan 1 17:02:13 2026 +0100",
-    "message": "Add weekday to editing info and bump version to 4.5.5",
-    "files": [
-      "package.json",
-      "public/changelog.json",
-      "src/views/JournalView.vue"
-    ]
+    "message": "Add weekday to editing info and bump version to 4.5.5"
   },
   {
     "hash": "f6d8764",
     "author": "Jojjeboy",
     "date": "Thu Jan 1 16:57:49 2026 +0100",
-    "message": "PIN flow refinement and version bump to 4.5.4",
-    "files": [
-      "package.json",
-      "public/changelog.json",
-      "src/__tests__/integration_moods.spec.ts",
-      "src/views/JournalView.vue"
-    ]
+    "message": "PIN flow refinement and version bump to 4.5.4"
   },
   {
     "hash": "4c6e855",
     "author": "Jojjeboy",
     "date": "Thu Jan 1 16:44:01 2026 +0100",
-    "message": "UI fixes",
-    "files": [
-      "src/views/HistoryView.vue"
-    ]
+    "message": "UI fixes"
   },
   {
     "hash": "63be9dc",
     "author": "Jojjeboy",
     "date": "Thu Jan 1 16:36:30 2026 +0100",
-    "message": "Fix for saving old entries",
-    "files": [
-      "src/stores/journal.ts",
-      "src/views/JournalView.vue"
-    ]
-  },
-  {
-    "hash": "c412263",
-    "author": "Jojjeboy",
-    "date": "Tue Dec 30 22:55:13 2025 +0100",
-    "message": "Custom field for thoughts",
-    "files": [
-      "package.json",
-      "src/components/journal/ThoughtsInput.vue",
-      "src/db.ts",
-      "src/locales/en.json",
-      "src/locales/sv.json",
-      "src/stores/journal.ts",
-      "src/views/HistoryView.vue",
-      "src/views/JournalView.vue"
-    ]
-  },
-  {
-    "hash": "afe934b",
-    "author": "Jojjeboy",
-    "date": "Tue Dec 30 22:39:17 2025 +0100",
-    "message": "fix: translate legacy English emotion IDs in HistoryView for Swedish locale",
-    "files": [
-      "src/locales/en.json",
-      "src/locales/sv.json",
-      "src/views/HistoryView.vue"
-    ]
-  },
-  {
-    "hash": "07be9e5",
-    "author": "Jojjeboy",
-    "date": "Tue Dec 30 22:36:55 2025 +0100",
-    "message": "fix: swedish translations for affects, increase vite chunk size warning limit to 1MB",
-    "files": [
-      "public/changelog.json",
-      "src/locales/sv.json",
-      "test_output.txt",
-      "vite.config.ts"
-    ]
-  },
-  {
-    "hash": "6a4edec",
-    "author": "Jojjeboy",
-    "date": "Tue Dec 30 22:26:39 2025 +0100",
-    "message": "fix: emotion translation in HistoryView with affect-based system, bump to 4.5.1",
-    "files": [
-      "package.json",
-      "public/changelog.json",
-      "src/views/HistoryView.vue"
-    ]
-  },
-  {
-    "hash": "1e088a1",
-    "author": "Jojjeboy",
-    "date": "Tue Dec 30 22:15:10 2025 +0100",
-    "message": "feat: enhance changelog with file lists and GitHub links, fix lint errors, bump to 4.5.0",
-    "files": [
-      "package.json",
-      "public/changelog.json",
-      "scripts/generate-changelog.js",
-      "src/__tests__/affects.spec.ts",
-      "src/__tests__/integration_moods.spec.ts",
-      "src/__tests__/notifications.spec.ts",
-      "src/composables/useNotifications.ts",
-      "src/stores/journal.ts",
-      "src/views/ChangelogView.vue",
-      "vitest.config.ts",
-      "vitest.setup.ts"
-    ]
-  },
-  {
-    "hash": "64b2a67",
-    "author": "Jojjeboy",
-    "date": "Tue Dec 30 21:49:18 2025 +0100",
-    "message": "fix: resolve TS2532 build errors in Mood components",
-    "files": [
-      "src/components/journal/MoodAccordion.vue",
-      "src/components/journal/MoodDetailModal.vue"
-    ]
-  },
-  {
-    "hash": "3956885",
-    "author": "Jojjeboy",
-    "date": "Tue Dec 30 21:45:11 2025 +0100",
-    "message": "feat: implement Affect Theory moods, fix i18n and bump version to 4.4.5",
-    "files": [
-      "package.json",
-      "src/__tests__/affects.spec.ts",
-      "src/__tests__/integration_moods.spec.ts",
-      "src/components/journal/MoodAccordion.vue",
-      "src/components/journal/MoodDetailModal.vue",
-      "src/constants/affects.ts",
-      "src/locales/en.json",
-      "src/locales/sv.json"
-    ]
-  },
-  {
-    "hash": "744ffdf",
-    "author": "Jojjeboy",
-    "date": "Tue Dec 30 21:15:59 2025 +0100",
-    "message": "Reminder hour and i18n",
-    "files": [
-      "package.json",
-      "public/changelog.json",
-      "scripts/send-daily-reminders.js",
-      "src/composables/useNotifications.ts",
-      "src/locales/en.json",
-      "src/locales/sv.json",
-      "src/views/HistoryView.vue",
-      "src/views/JournalView.vue",
-      "src/views/SettingsView.vue",
-      "src/views/TodoView.vue"
-    ]
-  },
-  {
-    "hash": "f87c429",
-    "author": "Jojjeboy",
-    "date": "Tue Dec 30 20:55:59 2025 +0100",
-    "message": "Users can now set their own reminder times, and the system will respect them.",
-    "files": [
-      ".github/workflows/daily-push.yml",
-      "package.json",
-      "scripts/send-daily-reminders.js",
-      "src/composables/useNotifications.ts",
-      "src/views/SettingsView.vue"
-    ]
-  },
-  {
-    "hash": "ed8c8b6",
-    "author": "Jojjeboy",
-    "date": "Tue Dec 30 20:44:37 2025 +0100",
-    "message": "Patch bump",
-    "files": [
-      "package.json"
-    ]
-  },
-  {
-    "hash": "1951ab1",
-    "author": "Jojjeboy",
-    "date": "Tue Dec 30 20:41:26 2025 +0100",
-    "message": "fix: correct date range check in service worker",
-    "files": [
-      "src/sw.ts"
-    ]
-  },
-  {
-    "hash": "83ecc4d",
-    "author": "Jojjeboy",
-    "date": "Tue Dec 30 20:35:08 2025 +0100",
-    "message": "fix: resolve sw.ts typescript error",
-    "files": [
-      "src/sw.ts"
-    ]
-  },
-  {
-    "hash": "197cacc",
-    "author": "Jojjeboy",
-    "date": "Tue Dec 30 20:32:15 2025 +0100",
-    "message": ".gitignore",
-    "files": [
-      ".gitignore"
-    ]
-  },
-  {
-    "hash": "2431c32",
-    "author": "Jojjeboy",
-    "date": "Tue Dec 30 20:31:39 2025 +0100",
-    "message": "feat: enable background push notifications with daily scheduler",
-    "files": [
-      ".github/workflows/daily-push.yml",
-      "env.d.ts",
-      "package-lock.json",
-      "package.json",
-      "scripts/send-daily-reminders.js",
-      "scripts/test-push.js",
-      "src/composables/useNotifications.ts",
-      "src/firebase.ts",
-      "src/sw.ts",
-      "src/views/SettingsView.vue",
-      "vite.config.ts"
-    ]
-  },
-  {
-    "hash": "982e13e",
-    "author": "Jojjeboy",
-    "date": "Mon Dec 29 16:58:06 2025 +0100",
-    "message": "Bump",
-    "files": [
-      "package.json"
-    ]
-  },
-  {
-    "hash": "ca86b3f",
-    "author": "Jojjeboy",
-    "date": "Mon Dec 29 16:23:11 2025 +0100",
-    "message": "feat(todo): cleanup list UX, restrict expand to title, and localize strings",
-    "files": [
-      "src/__tests__/todo_ux.spec.ts",
-      "src/locales/en.json",
-      "src/locales/sv.json",
-      "src/views/TodoView.vue"
-    ]
-  },
-  {
-    "hash": "ae49955",
-    "author": "Jojjeboy",
-    "date": "Mon Dec 29 08:29:00 2025 +0100",
-    "message": "test: fix type errors and suppress i18n warnings in history tests",
-    "files": [
-      "public/changelog.json",
-      "src/__tests__/history_features.spec.ts"
-    ]
-  },
-  {
-    "hash": "c80749e",
-    "author": "Jojjeboy",
-    "date": "Mon Dec 29 08:22:54 2025 +0100",
-    "message": "docs: update README with new features and add comprehensive unit tests",
-    "files": [
-      "README.md",
-      "package.json",
-      "src/__tests__/gratitude_inspiration.spec.ts",
-      "src/__tests__/history_features.spec.ts"
-    ]
-  },
-  {
-    "hash": "e83868e",
-    "author": "Jojjeboy",
-    "date": "Mon Dec 29 08:08:10 2025 +0100",
-    "message": "feat: implement gratitude inspiration with 100+ localized suggestions",
-    "files": [
-      "package.json",
-      "src/components/journal/GratitudeInput.vue",
-      "src/locales/en.json",
-      "src/locales/sv.json"
-    ]
-  },
-  {
-    "hash": "a1afe19",
-    "author": "Jojjeboy",
-    "date": "Mon Dec 29 08:02:58 2025 +0100",
-    "message": "feat: implement real-time search and filtering for history logs",
-    "files": [
-      "package.json",
-      "src/locales/en.json",
-      "src/locales/sv.json",
-      "src/views/HistoryView.vue"
-    ]
-  },
-  {
-    "hash": "30e8069",
-    "author": "Jojjeboy",
-    "date": "Mon Dec 29 07:58:35 2025 +0100",
-    "message": "feat: implement collapsible log entries for improved scannability",
-    "files": [
-      "package.json",
-      "src/views/HistoryView.vue"
-    ]
-  },
-  {
-    "hash": "34209c6",
-    "author": "Jojjeboy",
-    "date": "Mon Dec 29 07:54:44 2025 +0100",
-    "message": "feat: implement journal statistics and highlight today in calendar",
-    "files": [
-      "package.json",
-      "src/locales/en.json",
-      "src/locales/sv.json",
-      "src/views/HistoryView.vue"
-    ]
-  },
-  {
-    "hash": "65d5fff",
-    "author": "Jojjeboy",
-    "date": "Mon Dec 29 07:45:03 2025 +0100",
-    "message": "feat: transform notes into todo list with firestore migration and ux improvements",
-    "files": [
-      "package.json",
-      "src/views/TodoView.vue"
-    ]
-  },
-  {
-    "hash": "a8af6cb",
-    "author": "Jojjeboy",
-    "date": "Mon Dec 29 07:36:44 2025 +0100",
-    "message": "Todos instead of Notes and other small fixes",
-    "files": [
-      "firestore.rules",
-      "package.json",
-      "src/components/journal/MoodAccordion.vue",
-      "src/db.ts",
-      "src/locales/en.json",
-      "src/locales/sv.json",
-      "src/router/index.ts",
-      "src/stores/notes.ts",
-      "src/stores/todo.ts",
-      "src/views/HistoryView.vue",
-      "src/views/JournalView.vue",
-      "src/views/NotesView.vue",
-      "src/views/SettingsView.vue",
-      "src/views/TodoView.vue"
-    ]
-  },
-  {
-    "hash": "a2db7aa",
-    "author": "Jojjeboy",
-    "date": "Sun Dec 28 21:20:11 2025 +0100",
-    "message": "mc",
-    "files": [
-      "src/stores/journal.ts"
-    ]
-  },
-  {
-    "hash": "cd26e0b",
-    "author": "Jojjeboy",
-    "date": "Sun Dec 28 21:11:45 2025 +0100",
-    "message": "feat: implement real-time Firestore sync for journal entries",
-    "files": [
-      "src/stores/journal.ts"
-    ]
-  },
-  {
-    "hash": "6175117",
-    "author": "Jojjeboy",
-    "date": "Sun Dec 28 21:05:34 2025 +0100",
-    "message": "fix: resolve DataCloneError by deep cloning journal entries before saving",
-    "files": [
-      "src/stores/journal.ts"
-    ]
-  },
-  {
-    "hash": "5b7fc1c",
-    "author": "Jojjeboy",
-    "date": "Sun Dec 28 21:01:30 2025 +0100",
-    "message": "feat: implement Firestore sync for journal entries and standardize synced status",
-    "files": [
-      "src/db.ts",
-      "src/stores/journal.ts",
-      "src/stores/notes.ts"
-    ]
-  },
-  {
-    "hash": "a811866",
-    "author": "Jojjeboy",
-    "date": "Sun Dec 28 20:52:19 2025 +0100",
-    "message": "feat: make header logo and title clickable and redirect to journal",
-    "files": [
-      "src/components/ui/AuraHeader.vue"
-    ]
-  },
-  {
-    "hash": "77ca157",
-    "author": "Jojjeboy",
-    "date": "Sun Dec 28 20:51:09 2025 +0100",
-    "message": "feat: regenerate icons from logo.jpg, remove notes from footer, and refine UI",
-    "files": [
-      "index.html",
-      "public/apple-touch-icon.png",
-      "public/favicon-16x16.png",
-      "public/favicon-32x32.png",
-      "public/favicon.ico",
-      "public/img/icons/android-chrome-192x192.png",
-      "public/img/icons/android-chrome-512x512.png",
-      "public/logo.png",
-      "scripts/generate_icons.py",
-      "src/components/ui/AuraHeader.vue",
-      "src/components/ui/FooterNav.vue",
-      "src/locales/en.json",
-      "src/locales/sv.json",
-      "vite.config.ts"
-    ]
-  },
-  {
-    "hash": "b23ab36",
-    "author": "Jojjeboy",
-    "date": "Sun Dec 28 20:34:06 2025 +0100",
-    "message": "Modern UI: Implement Tailwind UI modals and Flowbite icons throughout the app",
-    "files": [
-      "package-lock.json",
-      "package.json",
-      "public/logo.jpg",
-      "src/components/ui/AppModal.vue",
-      "src/components/ui/AuraHeader.vue",
-      "src/components/ui/FooterNav.vue",
-      "src/components/ui/PinPad.vue",
-      "src/views/HistoryView.vue",
-      "src/views/JournalView.vue",
-      "src/views/NotesView.vue",
-      "src/views/SettingsView.vue"
-    ]
-  },
-  {
-    "hash": "eb0f124",
-    "author": "Jojjeboy",
-    "date": "Sun Dec 28 18:40:43 2025 +0100",
-    "message": "UI Refinement: remove header subtitle and use icons for history log actions",
-    "files": [
-      "src/components/ui/AuraHeader.vue",
-      "src/views/HistoryView.vue"
-    ]
+    "message": "Fix for saving old entries"
   }
 ]

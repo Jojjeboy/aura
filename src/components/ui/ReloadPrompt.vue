@@ -16,13 +16,26 @@
            </p>
 
            <!-- Changelog Message -->
-           <div v-if="latestMessage" class="mt-4 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl text-left border border-slate-100 dark:border-slate-800/50 w-full">
-             <span class="text-[0.6rem] uppercase tracking-wider text-aura-muted font-bold block mb-1">
+           <div v-if="newMessages.length > 0" class="mt-4 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl text-left border border-slate-100 dark:border-slate-800/50 w-full">
+             <span class="text-[0.6rem] uppercase tracking-wider text-aura-muted font-bold block mb-2">
                {{ $t('pwa_whats_new') }}
              </span>
-             <p class="text-xs font-bold text-aura-text dark:text-aura-text-dark leading-relaxed italic">
-               "{{ latestMessage }}"
-             </p>
+             <ul class="space-y-2">
+               <li v-for="(msg, i) in newMessages.slice(0, 5)" :key="i" class="text-xs font-bold text-aura-text dark:text-aura-text-dark leading-relaxed flex gap-2">
+                 <span class="text-aura-accent">•</span>
+                 <span>{{ msg }}</span>
+               </li>
+               <li v-if="newMessages.length > 5" class="text-[10px] text-aura-muted italic pl-4">
+                 + {{ newMessages.length - 5 }} more updates...
+               </li>
+             </ul>
+             <a
+               href="https://github.com/Jojjeboy/aura/commits/develop"
+               target="_blank"
+               class="mt-3 block text-[10px] text-aura-accent hover:underline font-bold text-center"
+             >
+               View all changes on GitHub →
+             </a>
            </div>
         </div>
 
@@ -34,7 +47,7 @@
             {{ $t('pwa_close') }}
           </button>
           <button
-            @click="updateServiceWorker()"
+            @click="handleUpdate"
             class="flex-1 px-4 py-2 rounded-xl text-sm font-bold bg-aura-accent text-white shadow-glow hover:opacity-90 transition-opacity"
           >
             {{ $t('pwa_update_button') }}
@@ -49,22 +62,67 @@
 import { ref, onMounted } from 'vue'
 import { useRegisterSW } from 'virtual:pwa-register/vue'
 
+interface Commit {
+  hash: string
+  message: string
+}
+
 const { needRefresh, updateServiceWorker } = useRegisterSW()
-const latestMessage = ref('')
+const newMessages = ref<string[]>([])
+const STORAGE_KEY = 'aura-last-seen-hash'
 
 onMounted(async () => {
   try {
     const response = await fetch('/changelog.json')
     if (response.ok) {
-      const data = await response.json()
+      const data = (await response.json()) as Commit[]
       if (Array.isArray(data) && data.length > 0) {
-        latestMessage.value = data[0].message
+        const lastSeenHash = localStorage.getItem(STORAGE_KEY)
+
+        if (!lastSeenHash) {
+          // If no hash stored, initialize with current latest and show only the very latest check
+          if (data[0]) {
+            localStorage.setItem(STORAGE_KEY, data[0].hash)
+            newMessages.value = [data[0].message]
+          }
+        } else {
+          // Find where the user was
+          const lastIndex = data.findIndex((c) => c.hash === lastSeenHash)
+
+          if (lastIndex === -1) {
+            // Hash not found (maybe pushed too many commits), show only latest
+            if (data[0]) newMessages.value = [data[0].message]
+          } else if (lastIndex === 0) {
+            // Already on latest (shouldn't happen if needRefresh is true, but for safety)
+            newMessages.value = []
+          } else {
+            // Show everything since last seen
+            newMessages.value = data.slice(0, lastIndex).map((c) => c.message)
+          }
+        }
       }
     }
-  } catch (e) {
-    console.error('Failed to load changelog:', e)
+  } catch (err) {
+    console.error('Failed to load changelog:', err)
   }
 })
+
+const handleUpdate = async () => {
+  // Update the hash before reloading so the new version knows where it is
+  try {
+    const response = await fetch('/changelog.json')
+    if (response.ok) {
+      const data = (await response.json()) as Commit[]
+      if (data.length > 0 && data[0]) {
+        localStorage.setItem(STORAGE_KEY, data[0].hash)
+      }
+    }
+  } catch {
+    /* ignore */
+  }
+
+  updateServiceWorker()
+}
 
 const close = () => {
   needRefresh.value = false

@@ -5,26 +5,21 @@ import { join } from 'node:path'
 try {
   console.log('Generating changelog...')
 
-  // Get git log with a specific delimiter for easier parsing of files
-  // Format: "DELIMITER|hash|author|date|message" followed by file list
-  const logData = execSync('git log -n 50 --pretty=format:"DELIMITER|%h|%an|%ad|%s" --name-only', { encoding: 'utf-8' })
+  // Get git log with a specific delimiter for easier parsing
+  // Format: "DELIMITER|hash|author|date|message"
+  const logData = execSync('git log -n 20 --pretty=format:"DELIMITER|%h|%an|%ad|%s"', { encoding: 'utf-8' })
 
   const commits = logData
     .split('DELIMITER|')
     .filter(Boolean) // Remove empty strings
-    .map(block => {
-      const lines = block.trim().split('\n')
-      const header = lines[0]
-      const files = lines.slice(1).filter(f => f.trim()) // Remaining lines are files
-
-      const [hash, author, date, message] = header.split('|')
+    .map(header => {
+      const [hash, author, date, message] = header.trim().split('|')
 
       return {
         hash,
         author,
         date,
-        message,
-        files
+        message
       }
     })
 

@@ -195,6 +195,7 @@
   "pwa_update_desc": "A new version of Aura is available. Update now to get the latest features and improvements.",
   "pwa_update_button": "Update Now",
   "pwa_close": "Not Now",
+  "pwa_whats_new": "What's new:",
   "enter_pin": "Enter PIN",
   "set_pin": "Set PIN",
   "confirm_pin": "Confirm PIN",

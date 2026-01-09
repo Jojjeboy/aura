@@ -1,5 +1,21 @@
 [
   {
+    "hash": "e15a8f2",
+    "author": "Jojjeboy",
+    "date": "Thu Jan 8 14:13:42 2026 +0100",
+    "message": "Doubletap for qoute",
+    "files": [
+      "public/changelog.json",
+      "src/App.vue",
+      "src/components/ui/AuraHeader.vue",
+      "src/components/ui/QuoteModal.vue",
+      "src/locales/en.json",
+      "src/locales/sv.json",
+      "src/stores/quotes.ts",
+      "src/views/JournalView.vue"
+    ]
+  },
+  {
     "hash": "65d7d5d",
     "author": "Jojjeboy",
     "date": "Thu Jan 8 13:59:32 2026 +0100",
@@ -614,17 +630,6 @@
     "date": "Sun Dec 28 17:47:38 2025 +0100",
     "message": "Filter empty gratitude bullets in HistoryView log cards",
     "files": [
-      "src/views/HistoryView.vue"
-    ]
-  },
-  {
-    "hash": "12a1d1b",
-    "author": "Jojjeboy",
-    "date": "Sun Dec 28 17:46:20 2025 +0100",
-    "message": "Refine History Log design and display health metrics (Sleep, Nutrition, Activity) in entry cards",
-    "files": [
-      "src/locales/en.json",
-      "src/locales/sv.json",
       "src/views/HistoryView.vue"
     ]
   }

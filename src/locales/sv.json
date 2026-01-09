@@ -195,6 +195,7 @@
   "pwa_update_desc": "En ny version av Aura finns tillgänglig. Uppdatera nu för att få de senaste funktionerna och förbättringarna.",
   "pwa_update_button": "Uppdatera Nu",
   "pwa_close": "Inte nu",
+  "pwa_whats_new": "Nyheter i denna version:",
   "enter_pin": "Ange PIN",
   "set_pin": "Ställ in PIN",
   "confirm_pin": "Bekräfta PIN",

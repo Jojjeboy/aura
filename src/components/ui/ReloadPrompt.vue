@@ -14,6 +14,16 @@
            <p class="text-sm text-aura-muted">
              {{ $t('pwa_update_desc') }}
            </p>
+
+           <!-- Changelog Message -->
+           <div v-if="latestMessage" class="mt-4 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl text-left border border-slate-100 dark:border-slate-800/50 w-full">
+             <span class="text-[0.6rem] uppercase tracking-wider text-aura-muted font-bold block mb-1">
+               {{ $t('pwa_whats_new') }}
+             </span>
+             <p class="text-xs font-bold text-aura-text dark:text-aura-text-dark leading-relaxed italic">
+               "{{ latestMessage }}"
+             </p>
+           </div>
         </div>
 
         <div class="flex gap-3 pt-2">
@@ -36,9 +46,25 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import { useRegisterSW } from 'virtual:pwa-register/vue'
 
 const { needRefresh, updateServiceWorker } = useRegisterSW()
+const latestMessage = ref('')
+
+onMounted(async () => {
+  try {
+    const response = await fetch('/changelog.json')
+    if (response.ok) {
+      const data = await response.json()
+      if (Array.isArray(data) && data.length > 0) {
+        latestMessage.value = data[0].message
+      }
+    }
+  } catch (e) {
+    console.error('Failed to load changelog:', e)
+  }
+})
 
 const close = () => {
   needRefresh.value = false

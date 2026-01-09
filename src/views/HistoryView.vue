@@ -580,11 +580,11 @@
               </h4>
               <div class="space-y-3">
                 <div v-if="wellDoneCount === 0" class="text-xs text-aura-muted py-4 text-center italic">
-                  {{ $t('no_data_yet') || 'No wins recorded yet' }}
+                  {{ $t('no_data_yet') }}
                 </div>
                 <div v-else class="flex flex-col items-center justify-center py-4 bg-slate-50 dark:bg-slate-800/40 rounded-2xl">
                   <span class="text-3xl font-black text-aura-accent">{{ wellDoneCount }}</span>
-                  <span class="text-[10px] uppercase font-bold text-aura-muted mt-1">{{ $t('stats_total_wins') || 'Total Wins' }}</span>
+                  <span class="text-[10px] uppercase font-bold text-aura-muted mt-1">{{ $t('stats_total_wins') }}</span>
                 </div>
               </div>
             </div>
@@ -598,11 +598,11 @@
               </h4>
               <div class="space-y-3">
                 <div v-if="improvementCount === 0" class="text-xs text-aura-muted py-4 text-center italic">
-                  {{ $t('no_data_yet') || 'No improvements recorded yet' }}
+                  {{ $t('no_data_yet') }}
                 </div>
                 <div v-else class="flex flex-col items-center justify-center py-4 bg-slate-50 dark:bg-slate-800/40 rounded-2xl">
                   <span class="text-3xl font-black text-aura-accent">{{ improvementCount }}</span>
-                  <span class="text-[10px] uppercase font-bold text-aura-muted mt-1">{{ $t('stats_total_improvements') || 'Total Improvements' }}</span>
+                  <span class="text-[10px] uppercase font-bold text-aura-muted mt-1">{{ $t('stats_total_improvements') }}</span>
                 </div>
               </div>
             </div>
@@ -680,7 +680,7 @@
                   </div>
                   <div class="text-aura-accent">
                     <span class="text-lg font-black">{{ pattern.count }}</span>
-                    <span class="text-[8px] uppercase font-bold ml-1 opacity-60">times</span>
+                    <span class="text-[8px] uppercase font-bold ml-1 opacity-60">{{ $t('stats_times') }}</span>
                   </div>
                 </div>
               </div>

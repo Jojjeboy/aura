@@ -1,5 +1,17 @@
 [
   {
+    "hash": "7feac63",
+    "author": "Jojjeboy",
+    "date": "Fri Jan 9 08:22:33 2026 +0100",
+    "message": "Reload prompt history",
+    "files": [
+      "public/changelog.json",
+      "src/components/ui/ReloadPrompt.vue",
+      "src/locales/en.json",
+      "src/locales/sv.json"
+    ]
+  },
+  {
     "hash": "e15a8f2",
     "author": "Jojjeboy",
     "date": "Thu Jan 8 14:13:42 2026 +0100",
@@ -621,15 +633,6 @@
       "src/locales/en.json",
       "src/locales/sv.json",
       "src/stores/journal.ts",
-      "src/views/HistoryView.vue"
-    ]
-  },
-  {
-    "hash": "a451d61",
-    "author": "Jojjeboy",
-    "date": "Sun Dec 28 17:47:38 2025 +0100",
-    "message": "Filter empty gratitude bullets in HistoryView log cards",
-    "files": [
       "src/views/HistoryView.vue"
     ]
   }

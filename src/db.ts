@@ -5,7 +5,6 @@ export interface JournalEntry {
   date: string // ISO date string
   gratitude: string[]
   wellDone?: string[]
-  improvement?: string[]
   moods: string[] // 'Joy', 'Anger', etc.
   thoughts?: string
   health: {
@@ -40,7 +39,7 @@ db.version(6).stores({
 }).upgrade(tx => {
   return tx.table('journal_entries').toCollection().modify(entry => {
     if (!entry.wellDone) entry.wellDone = ['', '', '']
-    if (!entry.improvement) entry.improvement = ['', '', '']
+    delete entry.improvement
   })
 })
 

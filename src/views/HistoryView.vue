@@ -202,24 +202,7 @@
                     </div>
                   </div>
 
-                  <!-- Improvement Section -->
-                  <div v-if="entry.improvement?.some(item => item.trim() !== '')" class="space-y-1.5">
-                    <h4
-                      class="text-[0.6rem] uppercase tracking-wider text-aura-muted font-black mb-1 flex items-center gap-1"
-                    >
-                      <span>🚀</span>
-                      <span>{{ $t('journal_improvement_label') }}</span>
-                    </h4>
-                    <div class="space-y-1">
-                      <p
-                        v-for="(g, i) in entry.improvement.filter((item) => item.trim() !== '')"
-                        :key="i"
-                        class="text-sm text-aura-text dark:text-aura-text-dark leading-relaxed break-words"
-                      >
-                        <span class="text-aura-accent opacity-50">•</span> {{ g }}
-                      </p>
-                    </div>
-                  </div>
+
 
                 <!-- Health Metrics Section -->
                 <div class="bg-slate-50/50 dark:bg-slate-800/30 rounded-2xl p-4 space-y-3">
@@ -597,23 +580,7 @@
               </div>
             </div>
 
-            <!-- Top Improvements -->
-            <div class="bg-white dark:bg-aura-card-dark rounded-card p-6 shadow-soft space-y-4">
-              <h4
-                class="text-sm font-bold text-aura-text dark:text-aura-text-dark flex items-center gap-2"
-              >
-                <span>🚀</span> {{ $t('journal_improvement_label') }}
-              </h4>
-              <div class="space-y-3">
-                <div v-if="improvementCount === 0" class="text-xs text-aura-muted py-4 text-center italic">
-                  {{ $t('no_data_yet') }}
-                </div>
-                <div v-else class="flex flex-col items-center justify-center py-4 bg-slate-50 dark:bg-slate-800/40 rounded-2xl">
-                  <span class="text-3xl font-black text-aura-accent">{{ improvementCount }}</span>
-                  <span class="text-[10px] uppercase font-bold text-aura-muted mt-1">{{ $t('stats_total_improvements') }}</span>
-                </div>
-              </div>
-            </div>
+
 
             <!-- Average Scores -->
             <div class="bg-white dark:bg-aura-card-dark rounded-card p-6 shadow-soft space-y-4">
@@ -801,18 +768,7 @@
               </p>
             </div>
           </div>
-          <div v-if="selectedEntry.improvement?.some(item => item.trim() !== '')" class="mb-4">
-            <h4 class="text-xs font-bold text-aura-muted mb-2">{{ $t('journal_improvement_label') }}</h4>
-            <div class="space-y-1">
-              <p
-                v-for="(g, i) in selectedEntry.improvement.filter((item) => item.trim() !== '')"
-                :key="i"
-                class="text-sm text-aura-text dark:text-aura-text-dark"
-              >
-                • {{ g }}
-              </p>
-            </div>
-          </div>
+
           <div
             v-if="selectedEntry.thoughts"
             class="mb-4 pt-4 border-t border-slate-50 dark:border-slate-800/30"
@@ -978,11 +934,7 @@ const wellDoneCount = computed(() => {
   }, 0)
 })
 
-const improvementCount = computed(() => {
-  return entries.value.reduce((acc, entry) => {
-    return acc + (entry.improvement?.filter(item => item && item.trim().length > 0).length || 0)
-  }, 0)
-})
+
 
 const filteredEntries = computed(() => {
   if (!searchQuery.value.trim()) return entries.value
@@ -996,10 +948,6 @@ const filteredEntries = computed(() => {
     // Check well done
     const hasWellDone = entry.wellDone?.some((g) => g.toLowerCase().includes(query))
     if (hasWellDone) return true
-
-    // Check improvements
-    const hasImprovement = entry.improvement?.some((g) => g.toLowerCase().includes(query))
-    if (hasImprovement) return true
 
     // Check moods
     const hasMood = entry.moods.some((m) => getMoodLabel(m).toLowerCase().includes(query))

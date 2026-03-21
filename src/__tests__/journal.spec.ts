@@ -9,7 +9,7 @@ describe('Journal Store', () => {
 
   it('initializes with empty gratitude and default health', () => {
     const store = useJournalStore()
-    expect(store.currentEntry.gratitude).toEqual(['', '', ''])
+    expect(store.currentEntry.gratitude).toEqual([''])
     expect(store.currentEntry.moods).toEqual([])
     expect(store.currentEntry.health).toEqual({ sleep: 3, food: 3, movement: 3 })
   })
@@ -38,7 +38,7 @@ describe('Journal Store', () => {
 
     // Manual state manipulation simulating save
     store.currentEntry = {
-        gratitude: ['', '', ''],
+        gratitude: [''],
         moods: [],
         health: { sleep: 3, food: 3, movement: 3 }
     }

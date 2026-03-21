@@ -12,53 +12,100 @@ const i18n = createI18n({
     en: {
       grateful_placeholder: 'I am grateful for...',
       reveal_more: 'Reveal more',
-      gratitude_examples: ['Example 1', 'Example 2', 'Example 3', 'Example 4', 'Example 5', 'Example 6', 'Example 7', 'Example 8', 'Example 9', 'Example 10', 'Example 11']
+      gratitude_inspiration_title: 'Need inspiration?'
     }
   }
 })
 
-describe('GratitudeInput.vue Inspiration', () => {
+describe('GratitudeInput.vue', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
   })
 
-  it('shows inspiration list when lightbulb is clicked', async () => {
-    const wrapper = mount(GratitudeInput, {
-      global: {
-        plugins: [i18n]
-      }
-    })
-
-    const bulb = wrapper.find('button[title]') // Title is "Need inspiration?" translated
-    expect(bulb.exists()).toBe(true)
-
-    expect(wrapper.text()).not.toContain('Example 1')
-
-    await bulb.trigger('click')
-
-    // Check if some examples are rendered
-    const buttons = wrapper.findAll('.flex-wrap button')
-    expect(buttons.length).toBeGreaterThan(0)
-  })
-
-  it('fills input when example is clicked', async () => {
+  it('adds a new empty field when the last field is populated', async () => {
     const wrapper = mount(GratitudeInput, {
       global: {
         plugins: [i18n]
       }
     })
     const store = useJournalStore()
+    store.currentEntry.gratitude = ['']
 
-    const bulb = wrapper.find('button')
+    let inputs = wrapper.findAll('input')
+    expect(inputs.length).toBe(1)
+
+    // Simulate typing in the first input
+    store.currentEntry.gratitude[0] = 'Family'
+    
+    // The watcher should push an empty string
+    await wrapper.vm.$nextTick()
+    
+    inputs = wrapper.findAll('input')
+    expect(inputs.length).toBe(2)
+    expect(store.currentEntry.gratitude.length).toBe(2)
+    expect(store.currentEntry.gratitude[1]).toBe('')
+  })
+
+  it('shows inspiration modal when click on button', async () => {
+    const wrapper = mount(GratitudeInput, {
+      global: {
+        plugins: [i18n]
+      }
+    })
+
+    const bulb = wrapper.find('[data-test="inspiration-btn"]')
+    expect(bulb.exists()).toBe(true)
+
+    expect(wrapper.find('.fixed').exists()).toBe(false)
+
     await bulb.trigger('click')
 
-    const firstExample = wrapper.find('.flex-wrap button')
-    const exampleText = firstExample.text()
+    expect(wrapper.find('.fixed').exists()).toBe(true)
+  })
 
-    await firstExample.trigger('click')
+  it('fills input when example is selected and added', async () => {
+    const wrapper = mount(GratitudeInput, {
+      global: {
+        plugins: [i18n]
+      }
+    })
+    const store = useJournalStore()
+    store.currentEntry.gratitude = ['']
 
-    expect(store.currentEntry.gratitude![0]).toBe(exampleText)
-    // List should close after selection
-    expect(wrapper.find('.flex-wrap').exists()).toBe(false)
+    // Open Modal
+    await wrapper.find('[data-test="inspiration-btn"]').trigger('click')
+
+    // Find the first option
+    const options = wrapper.findAll('.fixed button')
+    // Find buttons that are likely gratitude options (not action buttons)
+    const gratitudeOptions = options.filter(b => 
+      !b.text().includes('Add') && 
+      !b.text().includes('Cancel') && 
+      !b.text().includes('Show others') &&
+      !b.text().includes('quote_new_quote') &&
+      !b.text().includes('Slumpa')
+    )
+    
+    expect(gratitudeOptions.length).toBeGreaterThan(0)
+    const firstOption = gratitudeOptions[0]
+    const exampleText = firstOption.text()
+
+    // Select it
+    await firstOption.trigger('click')
+
+    // Find the add button
+    const addBtn = wrapper.findAll('.fixed button').find(b => 
+      b.text().includes('Add') || 
+      b.text().includes('journal_add_item') ||
+      b.text().includes('Lägg till')
+    )
+    
+    expect(addBtn).toBeDefined()
+    await addBtn!.trigger('click')
+    
+    expect(store.currentEntry.gratitude[0]).toBe(exampleText)
+    // Watcher in component will have added another empty string
+    expect(store.currentEntry.gratitude.length).toBe(2)
+    expect(store.currentEntry.gratitude[1]).toBe('')
   })
 })

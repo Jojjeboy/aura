@@ -18,9 +18,8 @@ import { useOnline } from '@vueuse/core'
 export const useJournalStore = defineStore('journal', () => {
   const online = useOnline()
   const currentEntry = ref<Partial<JournalEntry>>({
-    gratitude: ['', '', ''],
+    gratitude: [''],
     wellDone: ['', '', ''],
-    improvement: ['', '', ''],
     moods: [],
     health: { sleep: 3, food: 3, movement: 3 }
   })
@@ -100,7 +99,6 @@ export const useJournalStore = defineStore('journal', () => {
         date: currentEntry.value.date || new Date().toISOString(),
         gratitude: toRaw(currentEntry.value.gratitude || []),
         wellDone: toRaw(currentEntry.value.wellDone || []),
-        improvement: toRaw(currentEntry.value.improvement || []),
         moods: toRaw(currentEntry.value.moods),
         thoughts: currentEntry.value.thoughts,
         health: toRaw(currentEntry.value.health),
@@ -138,9 +136,8 @@ export const useJournalStore = defineStore('journal', () => {
 
   const resetEntry = () => {
     currentEntry.value = {
-      gratitude: ['', '', ''],
+      gratitude: [''],
       wellDone: ['', '', ''],
-      improvement: ['', '', ''],
       moods: [],
       thoughts: '',
       health: { sleep: 3, food: 3, movement: 3 }

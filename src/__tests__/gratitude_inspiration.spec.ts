@@ -5,6 +5,18 @@ import { createPinia, setActivePinia } from 'pinia'
 import { createI18n } from 'vue-i18n'
 import { useJournalStore } from '@/stores/journal'
 
+// Mock Firestore parts if needed, but here we can just mock the store
+vi.mock('@/stores/settings', () => ({
+  useSettingsStore: () => ({
+    gratitudeSuggestions: ['Suggestion 1', 'Suggestion 2', 'Suggestion 3', 'Suggestion 4', 'Suggestion 5'],
+    addGratitudeSuggestion: vi.fn(),
+    removeGratitudeSuggestion: vi.fn(),
+    updateGratitudeSuggestion: vi.fn()
+  })
+}))
+
+import { vi } from 'vitest'
+
 const i18n = createI18n({
   legacy: false,
   locale: 'en',
@@ -78,30 +90,38 @@ describe('GratitudeInput.vue', () => {
     // Find the first option
     const options = wrapper.findAll('.fixed button')
     // Find buttons that are likely gratitude options (not action buttons)
-    const gratitudeOptions = options.filter(b => 
-      !b.text().includes('Add') && 
-      !b.text().includes('Cancel') && 
-      !b.text().includes('Show others') &&
-      !b.text().includes('quote_new_quote') &&
-      !b.text().includes('Slumpa')
-    )
+    const gratitudeOptions = options.filter(b => {
+      const txt = b.text()
+      return !txt.includes('Add') && 
+             !txt.includes('Cancel') && 
+             !txt.includes('Show others') &&
+             !txt.includes('Slumpa') &&
+             !txt.includes('Redigera') &&
+             !txt.includes('Tillbaka') &&
+             !txt.includes('Visa') &&
+             !txt.includes('Stäng') &&
+             !txt.includes('Lägg till')
+    })
     
     expect(gratitudeOptions.length).toBeGreaterThan(0)
     const firstOption = gratitudeOptions[0]
+    if (!firstOption) throw new Error('No gratitude options found')
+    
     const exampleText = firstOption.text()
 
     // Select it
     await firstOption.trigger('click')
 
     // Find the add button
-    const addBtn = wrapper.findAll('.fixed button').find(b => 
-      b.text().includes('Add') || 
-      b.text().includes('journal_add_item') ||
-      b.text().includes('Lägg till')
-    )
+    const addBtn = wrapper.findAll('.fixed button').find(b => {
+      const txt = b.text()
+      return txt.includes('Lägg till') || txt.includes('Add') || txt.includes('journal_add_item')
+    })
     
     expect(addBtn).toBeDefined()
-    await addBtn!.trigger('click')
+    if (addBtn) {
+      await addBtn.trigger('click')
+    }
     
     expect(store.currentEntry.gratitude[0]).toBe(exampleText)
     // Watcher in component will have added another empty string

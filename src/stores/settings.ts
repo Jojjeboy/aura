@@ -15,6 +15,7 @@ export const useSettingsStore = defineStore('settings', () => {
   const showQuotesAfterLogging = ref(false)
   interface CustomMood { mood: string; affectId: string }
   const customMoods = ref<CustomMood[]>([])
+  const gratitudeSuggestions = ref<string[]>([])
 
   const loading = ref(false)
   let unsubscribe: (() => void) | null = null
@@ -30,14 +31,15 @@ export const useSettingsStore = defineStore('settings', () => {
       reminderTime: reminderTime.value,
       showQuotesAfterLogging: showQuotesAfterLogging.value,
       customMoods: customMoods.value,
+      gratitudeSuggestions: gratitudeSuggestions.value,
       updatedAt: serverTimestamp()
     }, { merge: true })
   }
 
   // Use a targeted watch array instead of whole store to avoid loops
-  watch([isDark, locale, pinHash, reminderEnabled, reminderTime, showQuotesAfterLogging], () => {
+  watch([isDark, locale, pinHash, reminderEnabled, reminderTime, showQuotesAfterLogging, gratitudeSuggestions], () => {
     saveSettings()
-  })
+  }, { deep: true })
 
   const setPin = async (hash: string) => {
     pinHash.value = hash
@@ -91,6 +93,42 @@ export const useSettingsStore = defineStore('settings', () => {
     }
   }
 
+  const addGratitudeSuggestion = async (suggestion: string) => {
+    if (!suggestion || gratitudeSuggestions.value.includes(suggestion)) return
+    gratitudeSuggestions.value.push(suggestion)
+    await saveSettings()
+  }
+
+  const removeGratitudeSuggestion = async (suggestion: string) => {
+    gratitudeSuggestions.value = gratitudeSuggestions.value.filter(s => s !== suggestion)
+    await saveSettings()
+  }
+
+  const updateGratitudeSuggestion = async (oldValue: string, newValue: string) => {
+    if (!newValue || gratitudeSuggestions.value.includes(newValue)) return
+    const index = gratitudeSuggestions.value.indexOf(oldValue)
+    if (index !== -1) {
+      gratitudeSuggestions.value[index] = newValue
+      await saveSettings()
+    }
+  }
+
+  const seedGratitudeSuggestions = async () => {
+    if (gratitudeSuggestions.value.length > 0) return
+    try {
+      const data = (await import('@/assets/gratitude_list.json')).default
+      let all: string[] = []
+      if (data && data.gratitude_list) {
+        data.gratitude_list.forEach((category: { items?: string[] }) => {
+          if (category.items) all = all.concat(category.items)
+        })
+      }
+      gratitudeSuggestions.value = all
+    } catch (e) {
+      console.error('Failed to seed gratitude suggestions:', e)
+    }
+  }
+
   interface SettingsData {
     isDark?: boolean
     locale?: string
@@ -99,6 +137,7 @@ export const useSettingsStore = defineStore('settings', () => {
     reminderTime?: string
     showQuotesAfterLogging?: boolean
     customMoods?: (string | CustomMood)[]
+    gratitudeSuggestions?: string[]
   }
 
   const processSettingsData = (data: SettingsData) => {
@@ -122,6 +161,12 @@ export const useSettingsStore = defineStore('settings', () => {
       } else {
         customMoods.value = [...data.customMoods] as CustomMood[]
       }
+    }
+
+    if (data.gratitudeSuggestions && Array.isArray(data.gratitudeSuggestions)) {
+      gratitudeSuggestions.value = [...data.gratitudeSuggestions]
+    } else if (data.gratitudeSuggestions === undefined && gratitudeSuggestions.value.length === 0) {
+      seedGratitudeSuggestions()
     }
   }
 
@@ -161,6 +206,7 @@ export const useSettingsStore = defineStore('settings', () => {
     reminderTime,
     showQuotesAfterLogging,
     customMoods,
+    gratitudeSuggestions,
     loading,
     setPin,
     removePin,
@@ -168,6 +214,9 @@ export const useSettingsStore = defineStore('settings', () => {
     addCustomMood,
     removeCustomMood,
     updateCustomMood,
+    addGratitudeSuggestion,
+    removeGratitudeSuggestion,
+    updateGratitudeSuggestion,
     loadSettings,
     saveSettings,
     setLocale,

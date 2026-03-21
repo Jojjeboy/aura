@@ -9,7 +9,8 @@ export const useSettingsStore = defineStore('settings', () => {
   const isDark = useDark()
   const toggleDark = useToggle(isDark)
   const { locale } = useI18n()
-  const pinHash = ref<string | null>(localStorage.getItem('aura-pin-hash'))
+  // pinHash is loaded per-user in loadSettings — not read from localStorage at init
+  const pinHash = ref<string | null>(null)
   const showQuotesAfterLogging = ref(false)
   interface CustomMood { mood: string; affectId: string }
   const customMoods = ref<CustomMood[]>([])
@@ -39,13 +40,13 @@ export const useSettingsStore = defineStore('settings', () => {
 
   const setPin = async (hash: string) => {
     pinHash.value = hash
-    localStorage.setItem('aura-pin-hash', hash)
+    if (auth.currentUser) localStorage.setItem(`aura-pin-hash-${auth.currentUser.uid}`, hash)
     await saveSettings()
   }
 
   const removePin = async () => {
     pinHash.value = null
-    localStorage.removeItem('aura-pin-hash')
+    if (auth.currentUser) localStorage.removeItem(`aura-pin-hash-${auth.currentUser.uid}`)
     await saveSettings()
   }
 
@@ -62,6 +63,7 @@ export const useSettingsStore = defineStore('settings', () => {
   const clearSettings = () => {
     pinHash.value = null
     customMoods.value = []
+    gratitudeSuggestions.value = []
     if (unsubscribe) {
       unsubscribe()
       unsubscribe = null
@@ -141,10 +143,12 @@ export const useSettingsStore = defineStore('settings', () => {
     if (data.locale) locale.value = data.locale
     if (data.pinHash !== undefined) {
       pinHash.value = data.pinHash
-      if (data.pinHash) {
-        localStorage.setItem('aura-pin-hash', data.pinHash)
-      } else {
-        localStorage.removeItem('aura-pin-hash')
+      if (auth.currentUser) {
+        if (data.pinHash) {
+          localStorage.setItem(`aura-pin-hash-${auth.currentUser.uid}`, data.pinHash)
+        } else {
+          localStorage.removeItem(`aura-pin-hash-${auth.currentUser.uid}`)
+        }
       }
     }
     if (data.showQuotesAfterLogging !== undefined) showQuotesAfterLogging.value = data.showQuotesAfterLogging
@@ -168,7 +172,11 @@ export const useSettingsStore = defineStore('settings', () => {
     if (!auth.currentUser) return
     loading.value = true
 
-    const userRef = doc(db, 'users', auth.currentUser.uid, 'settings', 'prefs')
+    const uid = auth.currentUser.uid
+    // Load scoped pin from localStorage for this user
+    pinHash.value = localStorage.getItem(`aura-pin-hash-${uid}`)
+
+    const userRef = doc(db, 'users', uid, 'settings', 'prefs')
 
     try {
       const docSnap = await getDoc(userRef)

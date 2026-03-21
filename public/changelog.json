@@ -1,5 +1,29 @@
 [
   {
+    "hash": "bc46d67",
+    "author": "Johannes Kärnstam",
+    "date": "Sat Mar 21 23:42:19 2026 +0100",
+    "message": "Rename of file"
+  },
+  {
+    "hash": "658ca5a",
+    "author": "Johannes Kärnstam",
+    "date": "Sat Mar 21 23:42:19 2026 +0100",
+    "message": "Rename of file"
+  },
+  {
+    "hash": "3c1a305",
+    "author": "Johannes Kärnstam",
+    "date": "Sat Mar 21 23:42:19 2026 +0100",
+    "message": "Rename of file"
+  },
+  {
+    "hash": "bf8bb9d",
+    "author": "Johannes Kärnstam",
+    "date": "Sat Mar 21 23:41:12 2026 +0100",
+    "message": "feat: Implement service worker update checks with toast notifications and remove the old notification system."
+  },
+  {
     "hash": "8e45e90",
     "author": "Johannes Kärnstam",
     "date": "Sat Mar 21 23:37:52 2026 +0100",
@@ -94,29 +118,5 @@
     "author": "Jojjeboy",
     "date": "Tue Jan 6 20:15:07 2026 +0100",
     "message": "feat: allow editing date on log entries with constraints"
-  },
-  {
-    "hash": "265109e",
-    "author": "Jojjeboy",
-    "date": "Sun Jan 4 12:26:49 2026 +0100",
-    "message": "chore: bump version to 4.6.2 and implement layout/statistics improvements"
-  },
-  {
-    "hash": "330726f",
-    "author": "Jojjeboy",
-    "date": "Thu Jan 1 18:27:35 2026 +0100",
-    "message": "feat: affect-associated custom moods, dedicated settings subpage, and UI refinements (v4.6.1)"
-  },
-  {
-    "hash": "a080d3f",
-    "author": "Jojjeboy",
-    "date": "Thu Jan 1 17:32:55 2026 +0100",
-    "message": "Custom mood functionality and styling."
-  },
-  {
-    "hash": "d7a2a15",
-    "author": "Jojjeboy",
-    "date": "Thu Jan 1 17:11:34 2026 +0100",
-    "message": "mc"
   }
 ]

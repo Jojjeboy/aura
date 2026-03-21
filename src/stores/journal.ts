@@ -19,7 +19,7 @@ export const useJournalStore = defineStore('journal', () => {
   const online = useOnline()
   const currentEntry = ref<Partial<JournalEntry>>({
     gratitude: [''],
-    wellDone: ['', '', ''],
+    wellDone: [''],
     moods: [],
     health: { sleep: 3, food: 3, movement: 3 }
   })
@@ -137,7 +137,7 @@ export const useJournalStore = defineStore('journal', () => {
   const resetEntry = () => {
     currentEntry.value = {
       gratitude: [''],
-      wellDone: ['', '', ''],
+      wellDone: [''],
       moods: [],
       thoughts: '',
       health: { sleep: 3, food: 3, movement: 3 }
@@ -164,12 +164,14 @@ export const useJournalStore = defineStore('journal', () => {
     }
   }
 
-  const clearSync = () => {
+  const clearSync = async () => {
     if (unsubscribe) {
       unsubscribe()
       unsubscribe = null
     }
     entries.value = []
+    // Clear local cache so the next user doesn't see this user's data
+    await dexieDb.journal_entries.clear()
   }
 
   // Auto-sync watcher: push local-only changes when coming online

@@ -11,11 +11,15 @@ import QuoteModal from '@/components/ui/QuoteModal.vue'
 
 import { useAuthStore } from '@/stores/auth'
 import { useSettingsStore } from '@/stores/settings'
+import { useJournalStore } from '@/stores/journal'
+import { useTodoStore } from '@/stores/todo'
 import { useToast } from '@/composables/useToast'
 
 const route = useRoute()
 const authStore = useAuthStore()
 const settingsStore = useSettingsStore()
+const journalStore = useJournalStore()
+const todoStore = useTodoStore()
 const { t, locale } = useI18n()
 const { toasts, remove: removeToast } = useToast()
 
@@ -37,7 +41,11 @@ watch(
   (newUser) => {
     if (newUser) {
       settingsStore.loadSettings()
+      journalStore.loadEntries()
+      todoStore.loadTodos()
     } else {
+      journalStore.clearSync()
+      todoStore.clearTodos()
       settingsStore.clearSettings()
     }
   },

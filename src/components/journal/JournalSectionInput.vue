@@ -22,7 +22,6 @@
         <div
           v-for="(item, index) in modelValue"
           :key="index"
-          v-show="index === 0 || (modelValue[index - 1] && getItemText(modelValue[index - 1]!) && getItemText(modelValue[index - 1]!).length > 0)"
           class="animate-in fade-in slide-in-from-top-2 duration-300"
         >
           <div
@@ -118,22 +117,13 @@ const progressHeight = computed(() => {
     const text = getItemText(item)
     return text && text.trim().length > 0
   }).length
-  return `${(filled / 3) * 100}%`
+  return `${Math.min((filled / 3) * 100, 100)}%`
 })
 
 const canAddMore = computed(() => {
-  const filledCount = props.modelValue.filter((item) => {
-    const text = getItemText(item)
-    return text && text.trim().length > 0
-  }).length
-
-  const visibleCount = props.modelValue.filter((_item, i) => {
-    if (i === 0) return true
-    const prevText = getItemText(props.modelValue[i - 1])
-    return prevText && prevText.length > 0
-  }).length
-
-  return filledCount < 3 && filledCount === visibleCount && props.modelValue.length === 3
+  const lastItem = props.modelValue[props.modelValue.length - 1]
+  const text = getItemText(lastItem)
+  return text && text.trim().length > 0
 })
 
 const updateItemText = (index: number, text: string) => {
@@ -156,6 +146,6 @@ const updateItemCategory = (index: number, category: string) => {
 }
 
 const addMore = () => {
-  // Logic handled by v-show
+  emit('update:modelValue', [...props.modelValue, ''])
 }
 </script>

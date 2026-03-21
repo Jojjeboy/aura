@@ -10,8 +10,6 @@ export const useSettingsStore = defineStore('settings', () => {
   const toggleDark = useToggle(isDark)
   const { locale } = useI18n()
   const pinHash = ref<string | null>(localStorage.getItem('aura-pin-hash'))
-  const reminderEnabled = ref(false)
-  const reminderTime = ref('20:00') // Default 8 PM
   const showQuotesAfterLogging = ref(false)
   interface CustomMood { mood: string; affectId: string }
   const customMoods = ref<CustomMood[]>([])
@@ -27,8 +25,6 @@ export const useSettingsStore = defineStore('settings', () => {
       isDark: isDark.value,
       locale: locale.value,
       pinHash: pinHash.value,
-      reminderEnabled: reminderEnabled.value,
-      reminderTime: reminderTime.value,
       showQuotesAfterLogging: showQuotesAfterLogging.value,
       customMoods: customMoods.value,
       gratitudeSuggestions: gratitudeSuggestions.value,
@@ -37,7 +33,7 @@ export const useSettingsStore = defineStore('settings', () => {
   }
 
   // Use a targeted watch array instead of whole store to avoid loops
-  watch([isDark, locale, pinHash, reminderEnabled, reminderTime, showQuotesAfterLogging, gratitudeSuggestions], () => {
+  watch([isDark, locale, pinHash, showQuotesAfterLogging, gratitudeSuggestions], () => {
     saveSettings()
   }, { deep: true })
 
@@ -65,7 +61,6 @@ export const useSettingsStore = defineStore('settings', () => {
 
   const clearSettings = () => {
     pinHash.value = null
-    reminderEnabled.value = false
     customMoods.value = []
     if (unsubscribe) {
       unsubscribe()
@@ -136,8 +131,6 @@ export const useSettingsStore = defineStore('settings', () => {
     isDark?: boolean
     locale?: string
     pinHash?: string | null
-    reminderEnabled?: boolean
-    reminderTime?: string
     showQuotesAfterLogging?: boolean
     customMoods?: (string | CustomMood)[]
     gratitudeSuggestions?: string[]
@@ -154,8 +147,6 @@ export const useSettingsStore = defineStore('settings', () => {
         localStorage.removeItem('aura-pin-hash')
       }
     }
-    if (data.reminderEnabled !== undefined) reminderEnabled.value = data.reminderEnabled
-    if (data.reminderTime) reminderTime.value = data.reminderTime
     if (data.showQuotesAfterLogging !== undefined) showQuotesAfterLogging.value = data.showQuotesAfterLogging
 
     if (data.customMoods && JSON.stringify(data.customMoods) !== JSON.stringify(customMoods.value)) {
@@ -214,8 +205,6 @@ export const useSettingsStore = defineStore('settings', () => {
     toggleDark,
     locale,
     pinHash,
-    reminderEnabled,
-    reminderTime,
     showQuotesAfterLogging,
     customMoods,
     gratitudeSuggestions,

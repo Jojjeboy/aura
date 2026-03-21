@@ -62,67 +62,6 @@
          </div>
       </section>
 
-      <!-- Daily Reminder -->
-      <section class="space-y-4">
-        <h2 class="text-sm font-semibold text-aura-muted uppercase tracking-wider">{{ $t('daily_reminder') }}</h2>
-        <div class="bg-white dark:bg-aura-card-dark rounded-card shadow-soft p-6 space-y-4">
-          <div class="flex items-center justify-between">
-            <div class="flex-1">
-              <h3 class="font-semibold text-aura-text dark:text-aura-text-dark">{{ $t('enable_reminder') }}</h3>
-              <p class="text-xs text-aura-muted mt-1">{{ $t('reminder_desc') }}</p>
-            </div>
-            <button
-              @click="toggleReminder"
-              :class="[
-                'relative inline-flex h-6 w-11 items-center rounded-full transition-colors',
-                settingsStore.reminderEnabled ? 'bg-aura-accent' : 'bg-slate-300 dark:bg-slate-700'
-              ]"
-            >
-              <span
-                :class="[
-                  'inline-block h-4 w-4 transform rounded-full bg-white transition-transform',
-                  settingsStore.reminderEnabled ? 'translate-x-6' : 'translate-x-1'
-                ]"
-              />
-            </button>
-          </div>
-
-          <div v-if="settingsStore.reminderEnabled" class="space-y-2">
-            <label for="reminder-time" class="text-sm font-medium text-aura-text dark:text-aura-text-dark">{{ $t('reminder_time') }} {{ $t('reminder_time_approx') }}</label>
-            <select
-              id="reminder-time"
-              v-model="settingsStore.reminderTime"
-              @change="handleTimeChange"
-              class="w-full px-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-aura-text dark:text-aura-text-dark focus:outline-none focus:ring-2 focus:ring-aura-accent appearance-none cursor-pointer"
-            >
-              <option
-                v-for="h in 24"
-                :key="h"
-                :value="String(h-1).padStart(2, '0') + ':00'"
-              >
-                {{ String(h-1).padStart(2, '0') }}:00
-              </option>
-            </select>
-            <p class="text-[10px] text-aura-muted italic">*{{ $t('reminder_top_of_hour') }}</p>
-            <p v-if="notificationPermission !== 'granted'" class="text-xs text-amber-600 dark:text-amber-400">
-              {{ $t('notification_permission_needed') }}
-            </p>
-            <div v-else-if="pushToken" class="flex flex-col gap-1">
-              <p class="text-[10px] text-green-600 dark:text-green-400 font-medium flex items-center gap-1">
-                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"></path></svg>
-                {{ $t('notifications_active') }}
-              </p>
-              <button
-                @click="copyToken"
-                class="text-[9px] text-aura-muted hover:text-aura-accent transition-colors text-left"
-              >
-                {{ $t('copy_debug_token') }}
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <!-- Post-Logging Inspiration -->
       <section class="space-y-4">
         <h2 class="text-sm font-semibold text-aura-muted uppercase tracking-wider">{{ $t('quote_modal_title') }}</h2>
@@ -292,7 +231,6 @@ import { ref } from 'vue'
 import { useSettingsStore } from '@/stores/settings'
 import { auth } from '@/firebase'
 import { signOut } from 'firebase/auth'
-import { useNotifications } from '@/composables/useNotifications'
 import { useToast } from '@/composables/useToast'
 import AppModal from '@/components/ui/AppModal.vue'
 import { useI18n } from 'vue-i18n'
@@ -313,18 +251,8 @@ const handleForceUpdate = async () => {
 const router = useRouter()
 const settingsStore = useSettingsStore()
 const authStore = useAuthStore()
-const { notificationPermission, requestPermission, subscribeToPush, scheduleReminder, saveNotificationPreferences } = useNotifications()
-const { success, error, info } = useToast()
+const { success } = useToast()
 const { t } = useI18n()
-
-const pushToken = ref<string | null>(null)
-
-const copyToken = () => {
-    if (pushToken.value) {
-        navigator.clipboard.writeText(pushToken.value)
-        success(t('token_copied'))
-    }
-}
 
 const user = ref(auth.currentUser)
 const availableLocales = ['en', 'sv']
@@ -378,63 +306,6 @@ const confirmRemovePin = async () => {
     showRemovePinModal.value = false
     await settingsStore.removePin()
     success(t('app_lock_removed'))
-}
-const toggleReminder = async () => {
-    // Check if browser supports notifications
-    if (globalThis.Notification === undefined) {
-        error(t('notifications_not_supported'))
-        return
-    }
-
-    if (settingsStore.reminderEnabled) {
-        // Disabling the reminder
-        settingsStore.reminderEnabled = false
-        pushToken.value = null
-        await settingsStore.saveSettings()
-        info(t('reminder_disabled'))
-    } else {
-        // If trying to enable, request permission first
-        // Check current permission state
-        if (globalThis.Notification && globalThis.Notification.permission === 'denied') {
-            error(t('notifications_blocked'))
-            return
-        }
-
-        // Request permission and subscribe to Push
-        const token = await subscribeToPush()
-        if (token) {
-            pushToken.value = token
-            settingsStore.reminderEnabled = true
-            await settingsStore.saveSettings()
-            scheduleReminder()
-            success(t('reminder_enabled_background'))
-        } else {
-            // Fallback: If push subscription failed but permission might still be granted
-            const granted = await requestPermission()
-            if (granted) {
-               settingsStore.reminderEnabled = true
-               await settingsStore.saveSettings()
-               // Re-schedule local notification
-               scheduleReminder()
-
-               // Update remote preferences if logged in and enabled
-               saveNotificationPreferences()
-
-               success(t('reminder_enabled_foreground'))
-            } else {
-               error(t('notification_permission_denied'))
-            }
-        }
-    }
-}
-
-const handleTimeChange = async () => {
-    await settingsStore.saveSettings()
-    if (settingsStore.reminderEnabled) {
-        scheduleReminder()
-        // Save new time to Firestore
-        saveNotificationPreferences()
-    }
 }
 
 const journalStore = useJournalStore()

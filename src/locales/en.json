@@ -215,6 +215,7 @@
   "change_pin": "Change PIN",
   "turn_off_lock": "Turn Off Lock",
   "check_updates": "Check for Updates",
+  "check_updates_complete": "Check complete",
   "changelog": "What's New",
   "no_commits_found": "No change history found.",
   "settings_show_quotes": "Show Quotes After Logging",

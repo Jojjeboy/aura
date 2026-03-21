@@ -241,18 +241,40 @@ import { useJournalStore } from '@/stores/journal'
 import { useAuthStore } from '@/stores/auth'
 import SyncDashboard from '@/components/settings/SyncDashboard.vue'
 
-const { updateServiceWorker } = useRegisterSW()
+useRegisterSW()
 const appVersion = import.meta.env.APP_VERSION
 
+const { success, info } = useToast()
+const { t } = useI18n()
+
 const handleForceUpdate = async () => {
-    await updateServiceWorker(true)
+    info(t('check_updates') + '...')
+    
+    if ('serviceWorker' in navigator) {
+        try {
+            const registration = await navigator.serviceWorker.getRegistration()
+            if (registration) {
+                await registration.update()
+                // If updateServiceWorker(true) was intended to reload, 
+                // we can call it if the check found something.
+                // But registration.update() triggers the 'updatefound' etc.
+                success(t('check_updates_complete') || 'Check complete')
+            } else {
+                // No SW registration found, maybe just reload?
+                window.location.reload()
+            }
+        } catch (err) {
+            console.error('SW update failed:', err)
+            window.location.reload()
+        }
+    } else {
+        window.location.reload()
+    }
 }
 
 const router = useRouter()
 const settingsStore = useSettingsStore()
 const authStore = useAuthStore()
-const { success } = useToast()
-const { t } = useI18n()
 
 const user = ref(auth.currentUser)
 const availableLocales = ['en', 'sv']

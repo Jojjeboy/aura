@@ -11,14 +11,12 @@ import QuoteModal from '@/components/ui/QuoteModal.vue'
 
 import { useAuthStore } from '@/stores/auth'
 import { useSettingsStore } from '@/stores/settings'
-import { useNotifications } from '@/composables/useNotifications'
 import { useToast } from '@/composables/useToast'
 
 const route = useRoute()
 const authStore = useAuthStore()
 const settingsStore = useSettingsStore()
 const { t, locale } = useI18n()
-const { init } = useNotifications()
 const { toasts, remove: removeToast } = useToast()
 
 const updateTitle = () => {
@@ -50,8 +48,6 @@ onMounted(() => {
   updateTitle()
   if (authStore.user) {
     settingsStore.loadSettings()
-    // Initialize notification system
-    init()
   }
 })
 </script>

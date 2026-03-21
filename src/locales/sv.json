@@ -215,6 +215,7 @@
   "change_pin": "Ändra PIN",
   "turn_off_lock": "Stäng av lås",
   "check_updates": "Sök efter uppdateringar",
+  "check_updates_complete": "Sökning slutförd",
   "changelog": "Nyheter",
   "no_commits_found": "Ingen ändringshistorik hittades.",
   "settings_show_quotes": "Visa citat efter loggning",

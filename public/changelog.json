@@ -1,5 +1,23 @@
 [
   {
+    "hash": "8e45e90",
+    "author": "Johannes Kärnstam",
+    "date": "Sat Mar 21 23:37:52 2026 +0100",
+    "message": "feat: remove daily reminder functionality, including its UI, state, and localization strings."
+  },
+  {
+    "hash": "20d3639",
+    "author": "Johannes Kärnstam",
+    "date": "Sat Mar 21 23:34:10 2026 +0100",
+    "message": "Settingsfile"
+  },
+  {
+    "hash": "9c72535",
+    "author": "Johannes Kärnstam",
+    "date": "Sat Mar 21 23:28:01 2026 +0100",
+    "message": "Fix of errors"
+  },
+  {
     "hash": "11737a0",
     "author": "Johannes Kärnstam",
     "date": "Sat Mar 21 23:22:06 2026 +0100",
@@ -100,23 +118,5 @@
     "author": "Jojjeboy",
     "date": "Thu Jan 1 17:11:34 2026 +0100",
     "message": "mc"
-  },
-  {
-    "hash": "639775c",
-    "author": "Jojjeboy",
-    "date": "Thu Jan 1 17:03:22 2026 +0100",
-    "message": "mc"
-  },
-  {
-    "hash": "c697d75",
-    "author": "Jojjeboy",
-    "date": "Thu Jan 1 17:02:13 2026 +0100",
-    "message": "Add weekday to editing info and bump version to 4.5.5"
-  },
-  {
-    "hash": "f6d8764",
-    "author": "Jojjeboy",
-    "date": "Thu Jan 1 16:57:49 2026 +0100",
-    "message": "PIN flow refinement and version bump to 4.5.4"
   }
 ]

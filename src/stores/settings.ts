@@ -115,6 +115,7 @@ export const useSettingsStore = defineStore('settings', () => {
 
   const seedGratitudeSuggestions = async () => {
     if (gratitudeSuggestions.value.length > 0) return
+    console.log('Seeding gratitude suggestions from local JSON...')
     try {
       const data = (await import('@/assets/gratitude_list.json')).default
       let all: string[] = []
@@ -124,6 +125,8 @@ export const useSettingsStore = defineStore('settings', () => {
         })
       }
       gratitudeSuggestions.value = all
+      console.log(`Successfully seeded ${all.length} suggestions.`)
+      await saveSettings() // Save to Firestore immediately so it's persistent
     } catch (e) {
       console.error('Failed to seed gratitude suggestions:', e)
     }
@@ -181,11 +184,20 @@ export const useSettingsStore = defineStore('settings', () => {
 
       if (docSnap.exists()) {
         processSettingsData(docSnap.data() as SettingsData)
+      } else {
+        // New user or missing settings document
+        console.log('No settings document found, triggering initial seed...')
+        await seedGratitudeSuggestions()
       }
     } catch (error) {
       console.error('Error loading settings:', error)
     } finally {
       loading.value = false
+    }
+
+    // Double check if we need to seed (e.g. if document existed but gratitudeSuggestions field was missing)
+    if (gratitudeSuggestions.value.length === 0) {
+      await seedGratitudeSuggestions()
     }
 
     // Setup listener for real-time sync across devices

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref, watch } from 'vue'
+import { ref, watch, nextTick } from 'vue'
 import { db, auth } from '@/firebase'
 import { doc, getDoc, setDoc, onSnapshot, serverTimestamp } from 'firebase/firestore'
 import { useDark, useToggle } from '@vueuse/core'
@@ -145,6 +145,8 @@ export const useSettingsStore = defineStore('settings', () => {
   const processSettingsData = (data: SettingsData) => {
     // Set flag so the watcher knows NOT to write back to Firestore while we
     // are applying data that just arrived from Firestore (prevents infinite loop).
+    // The flag must stay true until after Vue's watcher flush cycle (which is async),
+    // so we defer the reset to the next tick.
     _isApplyingRemote = true
     try {
       if (data.isDark !== undefined) isDark.value = data.isDark
@@ -175,7 +177,9 @@ export const useSettingsStore = defineStore('settings', () => {
         seedGratitudeSuggestions()
       }
     } finally {
-      _isApplyingRemote = false
+      // Defer to next tick so the flag remains true during Vue's async watcher flush,
+      // preventing the watcher from writing back to Firestore due to our own changes.
+      nextTick(() => { _isApplyingRemote = false })
     }
   }
 

@@ -907,6 +907,40 @@ const error = ref('')
 const activeTab = ref<'log' | 'calendar' | 'stats'>('log')
 const selectedDate = ref<Date | null>(null)
 
+// Performance optimization: Pre-compute date strings for O(1) lookup in calendar
+const entryDateStrings = computed(() => {
+  const set = new Set<string>()
+  entries.value.forEach(e => {
+    set.add(new Date(e.date).toDateString())
+  })
+  return set
+})
+
+// Performance optimization: Pre-compute mood labels for O(1) lookup during filtering
+const moodLabelMap = computed(() => {
+  const map = new Map<string, string>()
+  for (const affect of AFFECTS) {
+    // Primary affect name (e.g. "Interest")
+    const translation = t(`affects.${affect.id}.name`)
+    const primaryName = (typeof translation === 'string' && translation) 
+      ? translation.split('–')[0].trim() 
+      : affect.id
+    map.set(affect.id, primaryName)
+    
+    // Related emotions
+    for (const relatedId of affect.related) {
+      const relTranslation = t(`affects.${affect.id}.related.${relatedId}`)
+      if (typeof relTranslation === 'string') map.set(relatedId, relTranslation)
+    }
+  }
+  return map
+})
+
+const getMoodLabelFast = (moodId: string): string => {
+  return moodLabelMap.value.get(moodId) || 
+         (te(`emotions.${moodId}`) ? t(`emotions.${moodId}`) : moodId)
+}
+
 // Statistics Calculations
 const feelingStats = computed(() => {
   if (entries.value.length === 0) return []
@@ -949,8 +983,8 @@ const filteredEntries = computed(() => {
     const hasWellDone = entry.wellDone?.some((g) => g.toLowerCase().includes(query))
     if (hasWellDone) return true
 
-    // Check moods
-    const hasMood = entry.moods.some((m) => getMoodLabel(m).toLowerCase().includes(query))
+    // Check moods (using fast lookup)
+    const hasMood = entry.moods.some((m) => getMoodLabelFast(m).toLowerCase().includes(query))
     if (hasMood) return true
 
     // Check date
@@ -1120,7 +1154,7 @@ const calendarDays = computed(() => {
     const date = new Date(year, month, i)
     date.setHours(0, 0, 0, 0)
     const dateStr = date.toDateString()
-    const hasEntry = entries.value.some((e) => new Date(e.date).toDateString() === dateStr)
+    const hasEntry = entryDateStrings.value.has(dateStr)
     const isFuture = date > today
     const isToday = date.toDateString() === today.toDateString()
     days.push({ day: i, date, hasEntry, isFuture, isToday })

@@ -18,6 +18,7 @@ export const useSettingsStore = defineStore('settings', () => {
 
   const loading = ref(false)
   let unsubscribe: (() => void) | null = null
+  let _isApplyingRemote = false
 
   const saveSettings = async () => {
     if (!auth.currentUser) return
@@ -33,8 +34,11 @@ export const useSettingsStore = defineStore('settings', () => {
     }, { merge: true })
   }
 
-  // Use a targeted watch array instead of whole store to avoid loops
+  // Use a targeted watch array instead of whole store to avoid loops.
+  // Guard: skip saving when we are applying data received from Firestore,
+  // otherwise the snapshot triggers a write which triggers another snapshot → infinite loop.
   watch([isDark, locale, pinHash, showQuotesAfterLogging, gratitudeSuggestions], () => {
+    if (_isApplyingRemote) return
     saveSettings()
   }, { deep: true })
 
@@ -139,32 +143,39 @@ export const useSettingsStore = defineStore('settings', () => {
   }
 
   const processSettingsData = (data: SettingsData) => {
-    if (data.isDark !== undefined) isDark.value = data.isDark
-    if (data.locale) locale.value = data.locale
-    if (data.pinHash !== undefined) {
-      pinHash.value = data.pinHash
-      if (auth.currentUser) {
-        if (data.pinHash) {
-          localStorage.setItem(`aura-pin-hash-${auth.currentUser.uid}`, data.pinHash)
-        } else {
-          localStorage.removeItem(`aura-pin-hash-${auth.currentUser.uid}`)
+    // Set flag so the watcher knows NOT to write back to Firestore while we
+    // are applying data that just arrived from Firestore (prevents infinite loop).
+    _isApplyingRemote = true
+    try {
+      if (data.isDark !== undefined) isDark.value = data.isDark
+      if (data.locale) locale.value = data.locale
+      if (data.pinHash !== undefined) {
+        pinHash.value = data.pinHash
+        if (auth.currentUser) {
+          if (data.pinHash) {
+            localStorage.setItem(`aura-pin-hash-${auth.currentUser.uid}`, data.pinHash)
+          } else {
+            localStorage.removeItem(`aura-pin-hash-${auth.currentUser.uid}`)
+          }
         }
       }
-    }
-    if (data.showQuotesAfterLogging !== undefined) showQuotesAfterLogging.value = data.showQuotesAfterLogging
+      if (data.showQuotesAfterLogging !== undefined) showQuotesAfterLogging.value = data.showQuotesAfterLogging
 
-    if (data.customMoods && JSON.stringify(data.customMoods) !== JSON.stringify(customMoods.value)) {
-      if (Array.isArray(data.customMoods) && data.customMoods.length > 0 && typeof data.customMoods[0] === 'string') {
-        customMoods.value = (data.customMoods as string[]).map(m => ({ mood: m, affectId: 'interest_excitement' }))
-      } else {
-        customMoods.value = [...data.customMoods] as CustomMood[]
+      if (data.customMoods && JSON.stringify(data.customMoods) !== JSON.stringify(customMoods.value)) {
+        if (Array.isArray(data.customMoods) && data.customMoods.length > 0 && typeof data.customMoods[0] === 'string') {
+          customMoods.value = (data.customMoods as string[]).map(m => ({ mood: m, affectId: 'interest_excitement' }))
+        } else {
+          customMoods.value = [...data.customMoods] as CustomMood[]
+        }
       }
-    }
 
-    if (data.gratitudeSuggestions && Array.isArray(data.gratitudeSuggestions)) {
-      gratitudeSuggestions.value = [...data.gratitudeSuggestions]
-    } else if (data.gratitudeSuggestions === undefined && gratitudeSuggestions.value.length === 0) {
-      seedGratitudeSuggestions()
+      if (data.gratitudeSuggestions && Array.isArray(data.gratitudeSuggestions)) {
+        gratitudeSuggestions.value = [...data.gratitudeSuggestions]
+      } else if (data.gratitudeSuggestions === undefined && gratitudeSuggestions.value.length === 0) {
+        seedGratitudeSuggestions()
+      }
+    } finally {
+      _isApplyingRemote = false
     }
   }
 

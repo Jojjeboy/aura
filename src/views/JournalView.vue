@@ -201,8 +201,8 @@ const showResetModal = ref(false)
 const showDatePicker = ref(false)
 
 onMounted(async () => {
-  // Reload entries to be sure we have the latest
-  await store.loadEntries()
+  // Store load is now handled with an internal guard to prevent redundant re-initialization
+  store.loadEntries()
 
   // Check for date in query parameter (for past date logging from calendar)
   const queryDate = router.currentRoute.value.query.date as string

@@ -26,6 +26,7 @@ export const useJournalStore = defineStore('journal', () => {
 
   const entries = ref<JournalEntry[]>([])
   const loading = ref(false)
+  const initialized = ref(false)
   let unsubscribe: (() => void) | null = null
 
   // Helper: Sync a single entry to Firestore (for offline-to-online sync)
@@ -125,6 +126,12 @@ export const useJournalStore = defineStore('journal', () => {
   }
 
   const loadEntries = async () => {
+      // Guard: only initialise once per session. Both JournalView and HistoryView
+      // call this on mount — without the guard each navigation restarts the
+      // Firestore listener, doubling cold-start latency.
+      if (initialized.value) return
+      initialized.value = true
+
       // Always load from local Dexie first for speed
       entries.value = await dexieDb.journal_entries.orderBy('date').reverse().toArray()
 
@@ -170,6 +177,7 @@ export const useJournalStore = defineStore('journal', () => {
       unsubscribe = null
     }
     entries.value = []
+    initialized.value = false  // reset so next login triggers a fresh load
     // Clear local cache so the next user doesn't see this user's data
     await dexieDb.journal_entries.clear()
   }
@@ -192,8 +200,9 @@ export const useJournalStore = defineStore('journal', () => {
   const isEditing = computed(() => !!currentEntry.value.id)
 
   const todayEntry = computed(() => {
-    const today = new Date().toLocaleDateString()
-    return entries.value.find(e => new Date(e.date).toLocaleDateString() === today)
+    // toDateString() is faster than toLocaleDateString() and locale-independent
+    const today = new Date().toDateString()
+    return entries.value.find(e => new Date(e.date).toDateString() === today)
   })
 
   return {

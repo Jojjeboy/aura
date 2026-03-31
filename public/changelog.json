@@ -1,5 +1,11 @@
 [
   {
+    "hash": "266dc9f",
+    "author": "Johannes Kärnstam",
+    "date": "Tue Mar 31 05:36:05 2026 +0200",
+    "message": "perf: fix firestore write loop, optimize computations, and indicate mandatory fields"
+  },
+  {
     "hash": "f79242f",
     "author": "Johannes Kärnstam",
     "date": "Tue Mar 31 05:34:13 2026 +0200",
@@ -112,11 +118,5 @@
     "author": "Jojjeboy",
     "date": "Thu Jan 8 13:25:56 2026 +0100",
     "message": "More fields"
-  },
-  {
-    "hash": "a3e8c7b",
-    "author": "Jojjeboy",
-    "date": "Tue Jan 6 20:31:54 2026 +0100",
-    "message": "fix: resolve build error in CustomMoodsSettingsView"
   }
 ]

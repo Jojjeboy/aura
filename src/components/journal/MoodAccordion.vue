@@ -2,7 +2,9 @@
   <div class="space-y-6">
     <!-- Moods -->
     <div class="space-y-3">
-      <h3 class="font-semibold text-aura-text dark:text-aura-text-dark transition-colors">{{ $t('mood_prompt') }}</h3>
+      <h3 class="font-semibold text-aura-text dark:text-aura-text-dark transition-colors">
+        {{ $t('mood_prompt') }} <span class="text-red-500 text-xs font-normal">({{ $t('required') || '*' }})</span>
+      </h3>
       <div class="flex flex-wrap gap-2">
         <button
           v-for="affect in affects"

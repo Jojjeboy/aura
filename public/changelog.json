@@ -1,5 +1,17 @@
 [
   {
+    "hash": "f79242f",
+    "author": "Johannes Kärnstam",
+    "date": "Tue Mar 31 05:34:13 2026 +0200",
+    "message": "Performance and bug fix"
+  },
+  {
+    "hash": "e569d2a",
+    "author": "Johannes Kärnstam",
+    "date": "Sun Mar 22 00:07:15 2026 +0100",
+    "message": "feat: Implement dynamic input fields for journal sections and enhance multi-user data isolation for settings and journal entries."
+  },
+  {
     "hash": "bc46d67",
     "author": "Johannes Kärnstam",
     "date": "Sat Mar 21 23:42:19 2026 +0100",
@@ -106,17 +118,5 @@
     "author": "Jojjeboy",
     "date": "Tue Jan 6 20:31:54 2026 +0100",
     "message": "fix: resolve build error in CustomMoodsSettingsView"
-  },
-  {
-    "hash": "9114d19",
-    "author": "Jojjeboy",
-    "date": "Tue Jan 6 20:23:54 2026 +0100",
-    "message": "fix: correct custom mood delete confirmation and update journal subheading"
-  },
-  {
-    "hash": "b2fc23e",
-    "author": "Jojjeboy",
-    "date": "Tue Jan 6 20:15:07 2026 +0100",
-    "message": "feat: allow editing date on log entries with constraints"
   }
 ]

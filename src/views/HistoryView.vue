@@ -923,7 +923,7 @@ const moodLabelMap = computed(() => {
     // Primary affect name (e.g. "Interest")
     const translation = t(`affects.${affect.id}.name`)
     const primaryName = (typeof translation === 'string' && translation) 
-      ? translation.split('–')[0].trim() 
+      ? (translation.split('–')[0] ?? '').trim() 
       : affect.id
     map.set(affect.id, primaryName)
     

@@ -29,6 +29,41 @@ export const useJournalStore = defineStore('journal', () => {
   const initialized = ref(false)
   let unsubscribe: (() => void) | null = null
 
+  // ---------- Draft persistence helpers ----------
+  const getDraftKey = () =>
+    auth.currentUser ? `aura-draft-${auth.currentUser.uid}` : null
+
+  const saveDraft = (entry: Partial<JournalEntry>) => {
+    const key = getDraftKey()
+    // Only persist drafts for NEW entries (no id = not yet saved)
+    // Editing an existing entry is already persisted in IndexedDB/Firestore
+    if (key && !entry.id) {
+      localStorage.setItem(key, JSON.stringify(entry))
+    }
+  }
+
+  const clearDraft = () => {
+    const key = getDraftKey()
+    if (key) localStorage.removeItem(key)
+  }
+
+  const restoreDraft = () => {
+    const key = getDraftKey()
+    if (!key) return
+    const saved = localStorage.getItem(key)
+    if (!saved) return
+    try {
+      const parsed = JSON.parse(saved) as Partial<JournalEntry>
+      // Only restore if it's genuinely a new-entry draft (no id)
+      if (!parsed.id) {
+        currentEntry.value = parsed
+      }
+    } catch (e) {
+      console.error('Failed to parse journal draft:', e)
+    }
+  }
+  // -----------------------------------------------
+
   // Helper: Sync a single entry to Firestore (for offline-to-online sync)
   const syncToFirestore = async (entry: JournalEntry) => {
     if (!online.value || !auth.currentUser) return false
@@ -138,6 +173,7 @@ export const useJournalStore = defineStore('journal', () => {
       // Then start/restart real-time sync if online
       if (auth.currentUser) {
           startRealtimeSync()
+          restoreDraft()
       }
   }
 
@@ -149,9 +185,12 @@ export const useJournalStore = defineStore('journal', () => {
       thoughts: '',
       health: { sleep: 3, food: 3, movement: 3 }
     }
+    clearDraft()
   }
 
   const editEntry = (entry: JournalEntry) => {
+    // Clear any new-entry draft before loading an existing entry
+    clearDraft()
     currentEntry.value = structuredClone(toRaw(entry))
   }
 
@@ -178,6 +217,7 @@ export const useJournalStore = defineStore('journal', () => {
     }
     entries.value = []
     initialized.value = false  // reset so next login triggers a fresh load
+    clearDraft()
     // Clear local cache so the next user doesn't see this user's data
     await dexieDb.journal_entries.clear()
   }
@@ -193,6 +233,11 @@ export const useJournalStore = defineStore('journal', () => {
       startRealtimeSync()
     }
   })
+
+  // Draft persistence watcher — saves on every change for new entries
+  watch(currentEntry, (newVal) => {
+    saveDraft(toRaw(newVal))
+  }, { deep: true })
 
   // Computed for Streak (placeholder logic)
   const streak = computed(() => 0)

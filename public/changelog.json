@@ -1,5 +1,11 @@
 [
   {
+    "hash": "b01e705",
+    "author": "Johannes Kärnstam",
+    "date": "Tue Mar 31 05:37:42 2026 +0200",
+    "message": "mc"
+  },
+  {
     "hash": "266dc9f",
     "author": "Johannes Kärnstam",
     "date": "Tue Mar 31 05:36:05 2026 +0200",
@@ -112,11 +118,5 @@
     "author": "Jojjeboy",
     "date": "Thu Jan 8 13:55:34 2026 +0100",
     "message": "Qoutes feature"
-  },
-  {
-    "hash": "f231ec6",
-    "author": "Jojjeboy",
-    "date": "Thu Jan 8 13:25:56 2026 +0100",
-    "message": "More fields"
   }
 ]

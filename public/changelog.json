@@ -1,5 +1,11 @@
 [
   {
+    "hash": "e0dc969",
+    "author": "Johannes Kärnstam",
+    "date": "Tue Mar 31 05:56:48 2026 +0200",
+    "message": "More tests"
+  },
+  {
     "hash": "2351cd3",
     "author": "Johannes Kärnstam",
     "date": "Tue Mar 31 05:50:02 2026 +0200",
@@ -112,11 +118,5 @@
     "author": "Jojjeboy",
     "date": "Thu Jan 8 14:13:42 2026 +0100",
     "message": "Doubletap for qoute"
-  },
-  {
-    "hash": "65d7d5d",
-    "author": "Jojjeboy",
-    "date": "Thu Jan 8 13:59:32 2026 +0100",
-    "message": "Deletion of prev logs"
   }
 ]

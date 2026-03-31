@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed, watch, toRaw } from 'vue'
+import { watchDebounced } from '@vueuse/core'
 import { db as dexieDb, type JournalEntry } from '@/db'
 import { db as firestore, auth } from '@/firebase'
 import {
@@ -234,10 +235,10 @@ export const useJournalStore = defineStore('journal', () => {
     }
   })
 
-  // Draft persistence watcher — saves on every change for new entries
-  watch(currentEntry, (newVal) => {
+  // Draft persistence watcher — saves changes but debounced by 500ms to avoid typing lag
+  watchDebounced(currentEntry, (newVal) => {
     saveDraft(toRaw(newVal))
-  }, { deep: true })
+  }, { deep: true, debounce: 500, maxWait: 2000 })
 
   // Computed for Streak (placeholder logic)
   const streak = computed(() => 0)

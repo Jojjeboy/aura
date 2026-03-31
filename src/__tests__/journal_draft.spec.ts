@@ -62,8 +62,8 @@ describe('Journal Store – Draft Persistence', () => {
     const store = useJournalStore()
 
     store.currentEntry.gratitude = ['Sunshine']
-    // Watchers are async — wait one tick
-    await new Promise(r => setTimeout(r, 0))
+    // Watchers are debounced by 500ms — wait 550ms
+    await new Promise(r => setTimeout(r, 550))
 
     const raw = localStorageMock.getItem('aura-draft-user-123')
     expect(raw).not.toBeNull()
